@@ -1,9 +1,17 @@
 {
-  "$schema": "./node_modules/wrangler/config-schema.json",
+  "$schema": "node_modules/wrangler/config-schema.json",
   "name": "campus-service-project",
   "main": "worker/index.ts",
-  "compatibility_date": "2026-06-26",
+  "compatibility_date": "2026-03-10",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
   "assets": {
-    "not_found_handling": "single-page-application"
-  }
+    "directory": "./public"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "upload_source_maps": true
 }
