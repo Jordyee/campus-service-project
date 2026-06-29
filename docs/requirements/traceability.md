@@ -29,9 +29,9 @@ This file starts project traceability from requirements to later design, issues,
 | FR-009 | US-006 | AC-011, AC-012 | BR-003 | SPEC-04, SPEC-05 | Pending | Pending | Pending | Pending | Specified |
 | FR-010 | US-007 | AC-013, AC-014 | BR-004 | SPEC-04, SPEC-05 | Pending | Pending | Pending | Pending | Specified |
 | FR-011 | US-008 | AC-015, AC-016 | BR-001, BR-004, BR-005 | SPEC-04, SPEC-05, INT-001 | Pending | Pending | Pending | Pending | Specified |
-| FR-012 | US-004, US-009 | AC-008, AC-017, AC-018 | BR-006 | SPEC-04, SPEC-05, INT-001 | Pending | Pending | Pending | Pending | Specified |
+| FR-012 | US-004, US-009 | AC-008, AC-017, AC-018 | BR-006 | SPEC-04, SPEC-05, INT-001, CR-002 | Pending | Pending | Pending | Pending | Specified |
 | FR-013 | US-008 | AC-015, AC-016 | BR-005 | SPEC-04, SPEC-05 | Pending | Pending | Pending | Pending | Specified |
-| FR-014 | US-010 | AC-019, AC-020 | BR-003, BR-007 | SPEC-04, SPEC-05, INT-001 | Pending | Pending | Pending | Pending | Specified |
+| FR-014 | US-010 | AC-019, AC-020 | BR-003, BR-007 | SPEC-04, SPEC-05, INT-001, CR-001 | Pending | Pending | Pending | Pending | Specified |
 | FR-015 | US-011 | AC-021, AC-022 | - | SPEC-04, SPEC-05, INT-001 | Pending | Pending | Pending | Pending | Specified |
 
 ## 4. Non-Functional Requirement Traceability
@@ -39,7 +39,7 @@ This file starts project traceability from requirements to later design, issues,
 | Requirement | Related User Stories | Related AC | Evidence | Design | Issue | Code | Test | Status |
 |---|---|---|---|---|---|---|---|---|
 | NFR-001 | US-001 to US-011 | All relevant AC | SPEC-04, SPEC-03 | Pending | Pending | Pending | Pending | Specified |
-| NFR-002 | US-001 to US-011 | Role-sensitive AC | SPEC-04, SPEC-05, INT-001 | Pending | Pending | Pending | Pending | Specified |
+| NFR-002 | US-001 to US-011 | Role-sensitive AC | SPEC-04, SPEC-05, INT-001, CR-003 | Pending | Pending | Pending | Pending | Specified |
 | NFR-003 | US-001 to US-010 | AC-001, AC-015, AC-016, AC-019, AC-020 | SPEC-04, SPEC-05 | Pending | Pending | Pending | Pending | Specified |
 | NFR-004 | US-008, US-010 | AC-015, AC-016, AC-019, AC-020 | SPEC-04, SPEC-05 | Pending | Pending | Pending | Pending | Specified |
 | NFR-005 | US-001 to US-011 | All relevant AC | SPEC-04, AGENTS.md, Skill 03 | Pending | Pending | Pending | Pending | Specified |
@@ -129,7 +129,45 @@ This section records the priority assigned in `docs/requirements/04-prioritizati
 | Testing | Add unit, integration, and acceptance test IDs. |
 | Deployment | Add deployment evidence and release references where applicable. |
 
-## 8. Human Review Notes
+## 8. Validation and Change Traceability
+
+This section records the validation status from `docs/requirements/05-validation-change.md`. It does not approve any change request and does not create design, issue, code, or test artifacts.
+
+### Validation Summary
+
+| Validation Area | Related Items | Result | Notes |
+|---|---|---|---|
+| Core report intake | `FR-001`, `FR-002`, `US-001`, `AC-001`, `AC-002` | Pass | Traceability and acceptance criteria are clear enough for later stages. |
+| Report visibility | `FR-003`, `FR-005`, `US-002`, `AC-003`, `AC-004` | Pass | List/detail behavior is traceable to required case features. |
+| Search and filter | `FR-004`, `US-003`, `AC-005`, `AC-006` | Partial | Requirement is valid; exact controls and matching behavior remain design detail. |
+| Admin review, category, priority, assignment | `FR-006` to `FR-009`, `US-004` to `US-006`, `AC-007` to `AC-012` | Pass | Baseline is consistent with the approved workflow and one-level Administrator scope. |
+| Technician work and status history | `FR-010`, `FR-011`, `FR-013`, `US-007`, `US-008`, `AC-013` to `AC-016` | Pass | Technician progression and history storage are testable at requirements level. |
+| Comments and notes | `FR-012`, `US-009`, `AC-017`, `AC-018` | Pass | `CR-002` approved append-only comments/notes visible to authorized users who can view the report. |
+| Close and reopen | `FR-014`, `US-010`, `AC-019`, `AC-020`, `BR-007` | Pass | `CR-001` approved reopen to Under Review with history reason/context. |
+| Simple dashboard | `FR-015`, `US-011`, `AC-021`, `AC-022` | Pass | Scope remains limited to summary counts and recent reports. |
+| Non-functional requirements | `NFR-001` to `NFR-007` | Partial | `CR-003` approved a simple educational role boundary; exact auth/session mechanism and numeric NFR targets remain later decisions. |
+| Business rules | `BR-001` to `BR-008` | Pass | Rules align with the approved lifecycle and deferred optional scope. |
+| Deferred topics | `DR-001` to `DR-007` | Pass | Optional topics remain deferred and not required. |
+
+### Change Requests
+
+| Change Request | Status | Baseline Affected | Traceability Impact |
+|---|---|---|---|
+| CR-001 | Approved by student on 2026-06-30 | `FR-014`, `US-010`, `AC-020`, `BR-001`, `BR-007` | Specification updated: reopen returns to Under Review and history records reason/context. |
+| CR-002 | Approved by student on 2026-06-30 | `FR-012`, `US-009`, `AC-017`, `AC-018`, `NFR-002`, `OQD-003` | Specification updated: comments/notes are append-only and visible to authorized users who can view the report. |
+| CR-003 | Approved by student on 2026-06-30 | `NFR-002`, `BR-003`, `BR-004`, role-sensitive AC, `OQD-001`, `OQD-002` | Specification updated: simple educational role boundary approved; Google login remains deferred. |
+
+### Student Decisions
+
+| Decision ID | Related Items | Status |
+|---|---|---|
+| SDN-V-001 | `CR-001` reopen target clarification | Complete |
+| SDN-V-002 | `CR-002` comments/notes visibility clarification | Complete |
+| SDN-V-003 | `CR-003` simple role/auth boundary clarification | Complete |
+| SDN-V-004 | Numeric NFR target decision | Pending |
+| SDN-V-005 | Retention/deletion/archive policy decision | Pending |
+
+## 9. Human Review Notes
 
 Status: Prioritization update approved by student on 2026-06-30.
 
@@ -140,5 +178,13 @@ Review outcome:
 - deferred topics remain out of required scope;
 - `INT-001` is used only as student decision evidence, not as a real stakeholder interview;
 - prioritization status has been added without creating design, issue, code, test, or deployment artifacts.
+
+Validation/change update status:
+
+- `docs/requirements/05-validation-change.md` has been approved by student review;
+- `CR-001`, `CR-002`, and `CR-003` are approved clarifications;
+- affected specification rows have been updated before moving to design;
+- no optional feature has been added as required scope;
+- design, issue, code, and test columns remain `Pending`.
 
 Student approved the Specification stage in chat on 2026-06-30 and requested merge to `development`. Student approved the Prioritization stage in chat on 2026-06-30 and allowed merge to `development`.
