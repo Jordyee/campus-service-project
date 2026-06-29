@@ -179,7 +179,7 @@ Reviewer should check:
 
 | Item | Status | Notes |
 |---|---|---|
-| Human review by student | Pending | Required before moving to Skill 02: Elicitation. |
-| Scope approval | Pending | Optional features remain deferred. |
-| Assumption approval | Pending | `ASM-*` entries need student confirmation or revision. |
-| Open question review | Pending | `OQ-*` entries should guide the next elicitation activity. |
+| Human review by student | Approved on 2026-06-30 | Student approved the baseline decisions before completing elicitation readiness. |
+| Scope approval | Approved | Optional features remain deferred. |
+| Assumption approval | Approved for baseline | `ASM-*` entries are accepted as baseline assumptions unless later evidence changes them. |
+| Open question review | Completed for Skill 02 | `OQ-*` entries were carried into `docs/requirements/02-elicitation.md` and answered by student decision evidence. |

@@ -35,9 +35,11 @@ The AI-generated draft output for this stage is stored in:
 
 ## Human Review
 
-Status: Pending student review.
+Status: Approved by student on 2026-06-30.
 
-The student should review:
+The student approved the previously proposed decision set and asked the AI assistant to complete this elicitation stage before Specification.
+
+Review outcome:
 
 - whether the elicitation questions cover all confirmed stakeholders;
 - whether the questions avoid prematurely defining final requirements;
@@ -45,13 +47,17 @@ The student should review:
 - whether the evidence capture template is acceptable;
 - whether simulated stakeholder answers may be used later if clearly labeled and approved.
 
+Decision evidence is recorded in:
+
+- `docs/requirements/02-elicitation.md`, `INT-001: Student Review and Elicitation Decisions`.
+
 ## Final Output
 
-Status: Pending human review.
+Status: Completed for Skill 02 and ready for Skill 03.
 
-After review, this evidence file can be updated with:
+Final notes:
 
-- issues found by the student;
-- corrections requested;
-- final approval or revision decision;
-- any approved `INT-*` interview or simulation evidence references.
+- This stage does not contain real stakeholder interview answers.
+- Student decisions are explicitly labeled as student decision evidence.
+- No optional feature was added to required scope.
+- Specification may use `INT-001` as reviewed baseline evidence, while still labeling any unresolved detail as open or deferred.

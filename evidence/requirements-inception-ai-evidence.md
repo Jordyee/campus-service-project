@@ -32,9 +32,9 @@ The AI-generated draft output for this stage is stored in:
 
 ## Human Review
 
-Status: Pending student review.
+Status: Approved by student on 2026-06-30.
 
-The student should review:
+Review outcome:
 
 - Problem statement accuracy.
 - Stakeholder list.
@@ -45,10 +45,10 @@ The student should review:
 
 ## Final Output
 
-Status: Pending human review.
+Status: Completed for Skill 01.
 
-After review, this evidence file can be updated with:
+Final notes:
 
-- issues found by the student;
-- corrections requested;
-- final approval or revision decision.
+- Student approval was provided in chat on 2026-06-30.
+- Open questions from inception were carried into `docs/requirements/02-elicitation.md`.
+- Elicitation readiness decisions are recorded as `INT-001` in `docs/requirements/02-elicitation.md`.

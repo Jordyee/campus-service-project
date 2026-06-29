@@ -11,7 +11,8 @@
 | SRC-05 | `skills/jordy-workflows/github-workflow-jordy.md` | Branch, worktree, PR, merge, handoff, and quality-check workflow. |
 | SRC-06 | `skills/02-elicitation/SKILL.md` | Elicitation process, output structure, evidence categories, and scope limits for this stage. |
 | SRC-07 | `docs/requirements/01-inception-stakeholder.md` | Baseline stakeholder discovery, assumptions, preliminary scope, risks, and open questions from Skill 01. |
-| SRC-08 | `evidence/requirements-inception-ai-evidence.md` | Evidence status for Skill 01; human review is still recorded as pending. |
+| SRC-08 | `evidence/requirements-inception-ai-evidence.md` | Evidence status for Skill 01; human review is now recorded as approved on 2026-06-30. |
+| SRC-09 | Student review in Codex chat on 2026-06-30 | Student approved the previously proposed decisions so elicitation readiness can be completed before Specification. |
 
 ## 2. Review Status and Boundary
 
@@ -36,9 +37,9 @@ This document does not create:
 | Item | Status | Notes |
 |---|---|---|
 | Skill 01 artifact exists | Confirmed | `docs/requirements/01-inception-stakeholder.md` exists in the current branch and in base branch `development`. |
-| Skill 01 human review | Pending / needs student confirmation | SRC-08 still records human review as pending. The student's current instruction authorizes preparing Skill 02, but it does not automatically approve all assumptions from Skill 01. |
+| Skill 01 human review | Approved by student on 2026-06-30 | Student approved the previously proposed decisions and allowed this stage to be completed. See SRC-09 and INT-001. |
 | Branch boundary | Confirmed | Work is on `requirements/elicitation`, not `main` or `development`. |
-| Elicitation answer boundary | Confirmed | No stakeholder answers are invented. Future answers must be recorded as real interview answers, approved simulation, assumptions, or student decisions. |
+| Elicitation answer boundary | Confirmed | No stakeholder answers are invented. The readiness decisions below are recorded as student decisions, not as real stakeholder interview answers. |
 
 ## 3. Elicitation Objectives
 
@@ -210,47 +211,94 @@ State which topics may be used later for specification. Do not write final requi
 
 | ID | Assumption | Classification | Current Handling |
 |---|---|---|---|
-| ASM-01 | Students and lecturers can be grouped under Reporter/Pelapor for early stakeholder discovery. | Assumption | Test through ELQ-008 before specification. |
-| ASM-02 | Course instructor or reviewer is an external project stakeholder for evidence and grading. | Assumption | Clarify through ELQ-044 to ELQ-048 if needed. |
-| ASM-03 | Student Developer / Maintainer is a project stakeholder for repository, deployment, and evidence work. | Assumption | Clarify through ELQ-049 to ELQ-053 if needed. |
-| ASM-04 | Dashboard supports summary visibility, not advanced analytics at this stage. | Assumption | Test through ELQ-035 to ELQ-043 before specification. |
+| ASM-01 | Students and lecturers can be grouped under Reporter/Pelapor for early stakeholder discovery. | Approved student decision | Approved for scope baseline on 2026-06-30. |
+| ASM-02 | Course instructor or reviewer is an external project stakeholder for evidence and grading. | Approved student decision | Approved as an external stakeholder only, not an application actor. |
+| ASM-03 | Student Developer / Maintainer is a project stakeholder for repository, deployment, and evidence work. | Approved student decision | Approved as a project stakeholder only, not an application actor. |
+| ASM-04 | Dashboard supports summary visibility, not advanced analytics at this stage. | Approved student decision | Approved as dashboard scope boundary for Specification. |
 
 ### Current Interview Answers
 
 | ID | Status | Notes |
 |---|---|---|
-| INT-001 | Not captured | No real interview answer or approved simulation has been recorded yet for Skill 02. |
+| INT-001 | Approved student decision | Student approved the decision set in this document on 2026-06-30. This is not a real stakeholder interview and must be treated as student review/decision evidence. |
+
+### INT-001: Student Review and Elicitation Decisions
+
+| Field | Value |
+|---|---|
+| Answer ID | INT-001 |
+| Date | 2026-06-30 |
+| Stakeholder | Student Developer / Maintainer |
+| Answer Type | Student decision |
+| Related Question IDs | ELQ-008, ELQ-018, ELQ-019, ELQ-035 to ELQ-043, ELQ-044 to ELQ-053 |
+| Related Open Questions | OQ-01 to OQ-10 |
+| Evidence Status | Approved answer |
+| Captured By | AI assistant |
+| Reviewed By | Student |
+| Review Status | Approved |
+
+#### Answer Content
+
+The student approved the previously proposed decision set so elicitation can be completed before Specification:
+
+- Reporter remains one role for both students and lecturers.
+- Course instructor/reviewer is an external stakeholder for evidence and grading, not an application actor.
+- Student developer/maintainer is a project stakeholder, not an application actor.
+- Dashboard remains simple and summary-focused, not advanced analytics.
+- Administrator has one level for the initial scope.
+- Technician may request clarification through comments/notes, but reject/reassign is not a separate feature in the initial scope.
+- Dashboard summary may cover counts by status, category, priority, and recent reports.
+- Duplicate reports do not need a merge feature; administrator can handle them through review and comments/notes.
+- Reopen can be performed by Administrator when the result is not suitable or a related follow-up problem exists.
+- Use the baseline lifecycle only: `Submitted -> Under Review -> Assigned -> In Progress -> Resolved -> Closed`.
+- Initial report fields may include title, description, location, category, simple reporter name/contact, status, priority, and timestamps.
+- Initial categories may include Internet, AC, Peralatan Kelas, Kebersihan, Laboratorium, and Lainnya.
+- Initial priority levels may be Low, Medium, and High.
+- Human review evidence should be recorded in Human Review Notes and related evidence files.
+- Authentication should remain simple for Specification; Google login is not added.
+
+#### AI Handling Notes
+
+AI summarized the student's approval into a structured `INT-*` record and classified it as student decision evidence.
+
+#### Human Review Notes
+
+Student explicitly approved the previously proposed decisions in chat on 2026-06-30.
+
+#### Impact for Skill 03
+
+Skill 03 may use these decisions as approved baseline evidence for drafting requirements, while still labeling any remaining unknown detail as open or deferred.
 
 ## 8. Open Questions and Decision Log
 
-| OQ ID | Open Question from Skill 01 | Related ELQ | Current Classification | Decision Needed Before Skill 03 |
+| OQ ID | Open Question from Skill 01 | Related ELQ | Current Classification | Decision for Skill 03 |
 |---|---|---|---|---|
-| OQ-01 | Are students and lecturers treated identically as Reporter/Pelapor, or do they need different data fields or permissions? | ELQ-008, ELQ-010, ELQ-050 | Student decision needed | Decide whether Reporter is one role or split by user type for specification. |
-| OQ-02 | What exact actions can an Administrator perform, and are there multiple administrator levels? | ELQ-011, ELQ-018, ELQ-021, ELQ-022 | Student decision needed | Decide administrator authority and whether multiple admin levels exist. |
-| OQ-03 | Can a Technician reject, return, or request clarification on an assigned task? | ELQ-026, ELQ-029, ELQ-030 | Student decision needed | Decide whether technician exception handling exists in scope. |
-| OQ-04 | What summary information should the Facility Manager dashboard show? | ELQ-035 to ELQ-043 | Student decision needed | Decide dashboard purpose, summary dimensions, and simple scope boundary. |
-| OQ-05 | Are duplicate reports allowed, merged, or rejected? | ELQ-007, ELQ-017 | Student decision needed | Decide duplicate handling policy or defer with explicit note. |
-| OQ-06 | Who can reopen a closed or resolved report, and under what condition? | ELQ-006, ELQ-018, ELQ-019 | Student decision needed | Decide reopen authority and acceptable reopen conditions. |
-| OQ-07 | Are additional statuses beyond the confirmed lifecycle needed? | ELQ-016, ELQ-027, ELQ-030, ELQ-031 | Student decision needed | Decide whether baseline statuses are enough or whether justified additions are needed later. |
-| OQ-08 | What report fields are required at creation time? | ELQ-002, ELQ-003, ELQ-009 | Student decision needed | Decide report data fields after elicitation answers are reviewed. |
-| OQ-09 | What categories and priority levels should be available? | ELQ-003, ELQ-013, ELQ-014 | Student decision needed | Decide category and priority options or source for those options. |
-| OQ-10 | What human review evidence is expected for each requirements artifact? | ELQ-044, ELQ-046, ELQ-047, ELQ-048, ELQ-052 | Student decision needed | Decide review evidence format before specification artifacts are finalized. |
+| OQ-01 | Are students and lecturers treated identically as Reporter/Pelapor, or do they need different data fields or permissions? | ELQ-008, ELQ-010, ELQ-050 | Approved student decision | Reporter remains one role for both students and lecturers. |
+| OQ-02 | What exact actions can an Administrator perform, and are there multiple administrator levels? | ELQ-011, ELQ-018, ELQ-021, ELQ-022 | Approved student decision | Administrator has one level for initial scope. |
+| OQ-03 | Can a Technician reject, return, or request clarification on an assigned task? | ELQ-026, ELQ-029, ELQ-030 | Approved student decision | Technician may request clarification through comments/notes; no separate reject/reassign feature in initial scope. |
+| OQ-04 | What summary information should the Facility Manager dashboard show? | ELQ-035 to ELQ-043 | Approved student decision | Dashboard may summarize counts by status, category, priority, and recent reports. |
+| OQ-05 | Are duplicate reports allowed, merged, or rejected? | ELQ-007, ELQ-017 | Approved student decision | No merge feature in initial scope; administrator handles duplicates through review and comments/notes. |
+| OQ-06 | Who can reopen a closed or resolved report, and under what condition? | ELQ-006, ELQ-018, ELQ-019 | Approved student decision | Administrator may reopen when the result is not suitable or a follow-up problem exists. |
+| OQ-07 | Are additional statuses beyond the confirmed lifecycle needed? | ELQ-016, ELQ-027, ELQ-030, ELQ-031 | Approved student decision | Use only the baseline lifecycle for initial scope. |
+| OQ-08 | What report fields are required at creation time? | ELQ-002, ELQ-003, ELQ-009 | Approved student decision | Initial fields may include title, description, location, category, reporter name/contact, status, priority, and timestamps. |
+| OQ-09 | What categories and priority levels should be available? | ELQ-003, ELQ-013, ELQ-014 | Approved student decision | Categories: Internet, AC, Peralatan Kelas, Kebersihan, Laboratorium, Lainnya. Priorities: Low, Medium, High. |
+| OQ-10 | What human review evidence is expected for each requirements artifact? | ELQ-044, ELQ-046, ELQ-047, ELQ-048, ELQ-052 | Approved student decision | Record human review in Human Review Notes and related evidence files. |
 
 ### Additional Student Decision Items
 
 | ID | Topic | Why It Needs Student Decision | Related ELQ |
 |---|---|---|---|
-| SDN-01 | Authentication approach | AGENTS.md says to ask first before choosing authentication. | ELQ-049, ELQ-050 |
-| SDN-02 | Role policy | Role visibility and permission details affect later requirements and tests. | ELQ-010, ELQ-021, ELQ-033, ELQ-041, ELQ-050 |
-| SDN-03 | Optional feature boundary | Optional features must not enter scope silently. | ELQ-053 |
-| SDN-04 | Measurable quality targets | NFR targets must not be invented during elicitation. | ELQ-051 |
-| SDN-05 | Approved simulation use | Simulated stakeholder answers need explicit label and student approval. | ELQ-045 |
+| SDN-01 | Authentication approach | Decision recorded: keep authentication simple for Specification; do not add Google login. | ELQ-049, ELQ-050 |
+| SDN-02 | Role policy | Decision recorded: model roles simply for requirements, with no multi-level admin in initial scope. | ELQ-010, ELQ-021, ELQ-033, ELQ-041, ELQ-050 |
+| SDN-03 | Optional feature boundary | Decision recorded: optional features remain deferred/out of scope unless explicitly approved later. | ELQ-053 |
+| SDN-04 | Measurable quality targets | Decision recorded: do not invent precise NFR numbers without later evidence or approval. | ELQ-051 |
+| SDN-05 | Approved simulation use | Decision recorded: current closure uses student decision evidence, not simulated stakeholder interview evidence. | ELQ-045 |
 
 ## 9. Risks for Specification
 
 | ID | Risk | Impact on Skill 03 | Mitigation in Elicitation |
 |---|---|---|---|
-| RISK-EL-01 | Skill 01 human review is still recorded as pending. | Specification could inherit unapproved assumptions. | Keep `ASM-*` and pending review status visible; require student confirmation before turning answers into requirements. |
+| RISK-EL-01 | Skill 01 originally had pending review before student approval was recorded. | Specification could still overstate assumptions if later details are invented. | Use INT-001 as the approved baseline and keep any new unknown detail labeled as open, deferred, or assumption. |
 | RISK-EL-02 | Role and permission boundaries are not yet decided. | Specification could give actors too much or too little authority. | Ask ELQ-010, ELQ-021, ELQ-033, ELQ-041, and ELQ-050. |
 | RISK-EL-03 | Workflow edge cases are unclear. | Specification could miss duplicate, reopen, clarification, or rejected assignment paths. | Ask ELQ-007, ELQ-016, ELQ-017, ELQ-019, ELQ-029, and ELQ-030. |
 | RISK-EL-04 | Dashboard scope could grow beyond "simple dashboard." | Specification could become too broad for the assignment and stack. | Ask ELQ-035 to ELQ-043 and preserve ASM-04 until reviewed. |
@@ -264,14 +312,14 @@ Skill 03: Specification should not begin until these readiness checks are satisf
 
 | ID | Criterion | Status |
 |---|---|---|
-| RC-01 | Student reviews this elicitation guide and confirms the question set is usable. | Pending |
-| RC-02 | Skill 01 assumptions `ASM-01` to `ASM-04` are approved, revised, or rejected. | Pending |
-| RC-03 | Each `OQ-*` item is answered, partially answered, or explicitly deferred with a reason. | Pending |
-| RC-04 | Any `INT-*` answer used for specification is labeled as real interview, approved simulation, student decision, or assumption update. | Pending |
-| RC-05 | Authentication and role-policy decisions are either made or explicitly deferred with a specification-safe boundary. | Pending |
-| RC-06 | Dashboard scope is constrained enough to support a simple dashboard. | Pending |
-| RC-07 | Optional features remain out of scope unless the student explicitly approves adding one. | Pending |
-| RC-08 | Human review evidence format for requirements artifacts is agreed or a temporary format is approved. | Pending |
+| RC-01 | Student reviews this elicitation guide and confirms the question set is usable. | Complete - approved on 2026-06-30 |
+| RC-02 | Skill 01 assumptions `ASM-01` to `ASM-04` are approved, revised, or rejected. | Complete - approved as listed in section 7 |
+| RC-03 | Each `OQ-*` item is answered, partially answered, or explicitly deferred with a reason. | Complete - answered by INT-001 |
+| RC-04 | Any `INT-*` answer used for specification is labeled as real interview, approved simulation, student decision, or assumption update. | Complete - INT-001 is labeled student decision |
+| RC-05 | Authentication and role-policy decisions are either made or explicitly deferred with a specification-safe boundary. | Complete - simple role model, no Google login |
+| RC-06 | Dashboard scope is constrained enough to support a simple dashboard. | Complete - summary counts and recent reports only |
+| RC-07 | Optional features remain out of scope unless the student explicitly approves adding one. | Complete - no optional feature added |
+| RC-08 | Human review evidence format for requirements artifacts is agreed or a temporary format is approved. | Complete - use Human Review Notes and related evidence files |
 
 ## 11. Human Review Notes
 
@@ -291,8 +339,8 @@ The student should review:
 
 | Item | Status | Notes |
 |---|---|---|
-| AI draft for Skill 02 | Ready for student review | This document is a draft elicitation artifact. |
-| Human review by student | Pending | Required before answers are treated as approved. |
-| Stakeholder answers | Not captured | No `INT-*` answer has been approved yet. |
+| AI draft for Skill 02 | Reviewed | Student approved the decision set on 2026-06-30. |
+| Human review by student | Approved | Approval recorded as SRC-09 and INT-001. |
+| Stakeholder answers | Student decision captured | No real stakeholder interview was captured; INT-001 is student decision evidence for project scope. |
 | Scope change | None | No optional feature is added to project scope. |
-| Readiness for Skill 03 | Not ready | Open questions and student decisions remain pending. |
+| Readiness for Skill 03 | Ready | Skill 03 may begin from this reviewed baseline. |
