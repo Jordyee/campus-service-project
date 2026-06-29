@@ -219,7 +219,7 @@ The student should check:
 
 | Item | Status | Notes |
 |---|---|---|
-| AI draft for Skill 03 | Pending student review | Created from approved inception, elicitation, and `INT-001` decision evidence. |
-| Human review by student | Pending | Must be reviewed before merge to `development` and before Skill 04. |
+| AI draft for Skill 03 | Reviewed | Created from approved inception, elicitation, and `INT-001` decision evidence. |
+| Human review by student | Approved on 2026-06-30 | Student approved the Specification stage in chat and requested merge to `development`. |
 | Scope change | None | Optional features remain deferred. |
 | Traceability | Started | Initial requirement-to-story-to-AC traceability is documented here and in `docs/requirements/traceability.md`. |
