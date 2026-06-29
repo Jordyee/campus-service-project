@@ -78,9 +78,9 @@ Requirements below may use confirmed case facts, approved Skill 01 assumptions, 
 | FR-009 | The system shall allow an Administrator to assign a reviewed report to a Technician. | SRC-03, SRC-05 | Baseline requirement |
 | FR-010 | The system shall allow a Technician to view assigned work and accept a task before starting progress. | SRC-03, SRC-05 | Baseline requirement |
 | FR-011 | The system shall allow a Technician to update work status through the approved lifecycle and mark work as Resolved when the work is completed. | SRC-03, SRC-05, INT-001 | Baseline requirement |
-| FR-012 | The system shall allow authorized users to add comments or notes to a report for clarification, progress updates, duplicate handling, or review context. | SRC-03, SRC-05, INT-001 | Baseline requirement |
+| FR-012 | The system shall allow authorized users to add append-only comments or notes to a report for clarification, progress updates, duplicate handling, or review context. Comments/notes are visible to authorized users who can view the related report in the initial scope. | SRC-03, SRC-05, INT-001, CR-002 | Baseline requirement |
 | FR-013 | The system shall store status history for each report whenever status changes occur. | SRC-03, SRC-05 | Baseline requirement |
-| FR-014 | The system shall allow an Administrator to close a resolved report or reopen a resolved/closed report when the result is not suitable or a related follow-up problem exists. | SRC-03, SRC-05, INT-001 | Baseline requirement |
+| FR-014 | The system shall allow an Administrator to close a resolved report or reopen a resolved/closed report to Under Review when the result is not suitable or a related follow-up problem exists. | SRC-03, SRC-05, INT-001, CR-001 | Baseline requirement |
 | FR-015 | The system shall display a simple Facility Manager dashboard with summary counts by status, category, priority, and recent reports. | SRC-03, SRC-05, INT-001 | Baseline requirement |
 
 ## 5. Non-Functional Requirements
@@ -88,7 +88,7 @@ Requirements below may use confirmed case facts, approved Skill 01 assumptions, 
 | ID | Requirement | Evidence | Status |
 |---|---|---|---|
 | NFR-001 | The system shall be usable by non-technical campus users with clear labels, readable status names, and predictable role-specific actions. | SRC-03, SRC-07 | Baseline requirement |
-| NFR-002 | The system shall protect role-specific actions so users only perform actions appropriate to Reporter, Administrator, Technician, or Facility Manager responsibilities. | SRC-03, SRC-05, INT-001 | Baseline requirement, auth mechanism open |
+| NFR-002 | The system shall protect role-specific actions so users only perform actions appropriate to Reporter, Administrator, Technician, or Facility Manager responsibilities. The requirements baseline uses a simple educational role boundary and does not require Google login or a full identity-provider integration. | SRC-03, SRC-05, INT-001, CR-003 | Baseline requirement, exact mechanism open for design |
 | NFR-003 | The system shall preserve data integrity for reports, status history, comments/notes, assignment, category, and priority values. | SRC-03, SRC-05 | Baseline requirement |
 | NFR-004 | The system shall keep the request lifecycle reliable by preventing unsupported status changes and preserving an audit trail of status updates. | SRC-03, SRC-05 | Baseline requirement |
 | NFR-005 | The system shall remain maintainable for a student project by keeping requirements traceable to design, issues, code, and tests as those artifacts are created. | SRC-03, SRC-01, SRC-06 | Baseline requirement |
@@ -145,9 +145,9 @@ Requirements below may use confirmed case facts, approved Skill 01 assumptions, 
 | AC-015 | US-008 | Given a Technician starts work on an assigned task, when status is updated to In Progress, then the current report status changes and a history entry is stored. |
 | AC-016 | US-008 | Given work is completed, when the Technician marks it Resolved, then the report status becomes Resolved and the status history records the change. |
 | AC-017 | US-009 | Given an authorized user writes a comment or note on a report, when it is saved, then it remains linked to that report. |
-| AC-018 | US-009 | Given a report is used for clarification or duplicate handling, when notes are added, then the note content is visible to authorized users who need the context. |
+| AC-018 | US-009 | Given a report is used for clarification or duplicate handling, when notes are added, then the note content is stored as append-only context and is visible to authorized users who can view the related report. |
 | AC-019 | US-010 | Given a report is Resolved, when an Administrator closes it, then the report status becomes Closed and the change is recorded in history. |
-| AC-020 | US-010 | Given a report is Resolved or Closed and the result is unsuitable or a follow-up problem exists, when an Administrator reopens it, then the report leaves the closed/resolved end state and history records the reason/context. |
+| AC-020 | US-010 | Given a report is Resolved or Closed and the result is unsuitable or a follow-up problem exists, when an Administrator reopens it, then the report status becomes Under Review and history records the reason/context. |
 | AC-021 | US-011 | Given Facility Manager opens the dashboard, when summary data is available, then counts by status, category, priority, and recent reports are displayed. |
 | AC-022 | US-011 | Given there are no reports yet, when the dashboard is viewed, then the system shows zero/empty summaries without errors. |
 
@@ -169,9 +169,9 @@ No open question blocks this Specification stage because `INT-001` resolves the 
 
 | ID | Open Detail | Why It Remains Open | Later Stage |
 |---|---|---|---|
-| OQD-001 | Exact authentication and session mechanism | Specification uses simple roles, but does not choose login implementation. | Architecture / UI / Implementation |
-| OQD-002 | Exact role enforcement implementation | Role responsibilities are specified, but technical enforcement belongs to design. | Architecture / API Design |
-| OQD-003 | Exact comment/note visibility rules | Requirement supports comments/notes; visibility details need design and validation. | UI Design / Validation |
+| OQD-001 | Exact authentication and session mechanism | Validation approved a simple educational role boundary and confirmed Google login is not required, but exact login/session implementation still belongs to design. | Architecture / UI / Implementation |
+| OQD-002 | Exact role enforcement implementation | Role responsibilities and boundary are specified, but technical enforcement belongs to design. | Architecture / API Design |
+| OQD-003 | Exact comment/note visibility rules | Validation approved an initial append-only visibility rule for authorized report viewers; any internal-only note type would need a later change request. | UI Design / Validation |
 | OQD-004 | Exact dashboard layout and interaction | Dashboard metrics are specified; UI layout belongs to design. | UI Design |
 | OQD-005 | Exact measurable NFR targets | Student decision says not to invent precise numbers without later evidence. | Validation / Testing |
 | OQD-006 | Retention, deletion, or archival policy | Not covered by confirmed case facts or `INT-001`. | Validation / Change |
@@ -191,12 +191,12 @@ No open question blocks this Specification stage because `INT-001` resolves the 
 | FR-009 | US-006 | AC-011, AC-012 | BR-003 | SRC-03, SRC-05 | Pending | Pending | Pending | Pending | Specified |
 | FR-010 | US-007 | AC-013, AC-014 | BR-004 | SRC-03, SRC-05 | Pending | Pending | Pending | Pending | Specified |
 | FR-011 | US-008 | AC-015, AC-016 | BR-001, BR-004, BR-005 | SRC-03, SRC-05, INT-001 | Pending | Pending | Pending | Pending | Specified |
-| FR-012 | US-004, US-009 | AC-008, AC-017, AC-018 | BR-006 | SRC-03, SRC-05, INT-001 | Pending | Pending | Pending | Pending | Specified |
+| FR-012 | US-004, US-009 | AC-008, AC-017, AC-018 | BR-006 | SRC-03, SRC-05, INT-001, CR-002 | Pending | Pending | Pending | Pending | Specified |
 | FR-013 | US-008 | AC-015, AC-016 | BR-005 | SRC-03, SRC-05 | Pending | Pending | Pending | Pending | Specified |
-| FR-014 | US-010 | AC-019, AC-020 | BR-003, BR-007 | SRC-03, SRC-05, INT-001 | Pending | Pending | Pending | Pending | Specified |
+| FR-014 | US-010 | AC-019, AC-020 | BR-003, BR-007 | SRC-03, SRC-05, INT-001, CR-001 | Pending | Pending | Pending | Pending | Specified |
 | FR-015 | US-011 | AC-021, AC-022 | - | SRC-03, SRC-05, INT-001 | Pending | Pending | Pending | Pending | Specified |
 | NFR-001 | US-001 to US-011 | All relevant AC | - | SRC-03, SRC-07 | Pending | Pending | Pending | Pending | Specified |
-| NFR-002 | US-001 to US-011 | All role-sensitive AC | BR-003, BR-004 | SRC-03, SRC-05, INT-001 | Pending | Pending | Pending | Pending | Specified |
+| NFR-002 | US-001 to US-011 | All role-sensitive AC | BR-003, BR-004 | SRC-03, SRC-05, INT-001, CR-003 | Pending | Pending | Pending | Pending | Specified |
 | NFR-003 | US-001 to US-010 | AC-001, AC-015, AC-016, AC-019, AC-020 | BR-005 | SRC-03, SRC-05 | Pending | Pending | Pending | Pending | Specified |
 | NFR-004 | US-008, US-010 | AC-015, AC-016, AC-019, AC-020 | BR-001, BR-005, BR-007 | SRC-03, SRC-05 | Pending | Pending | Pending | Pending | Specified |
 | NFR-005 | US-001 to US-011 | All relevant AC | - | SRC-03, SRC-01, SRC-06 | Pending | Pending | Pending | Pending | Specified |
