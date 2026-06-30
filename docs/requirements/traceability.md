@@ -347,24 +347,25 @@ This section records GitHub Issues created during the Issue Planning stage. It d
 
 ### Issue Catalog
 
-| Issue | Title | Primary Coverage |
-|---|---|---|
-| #8 | Implement app data model, role boundary, and lifecycle foundation | Foundation for D1 data model, simple role boundary, lifecycle constants/history, shared API errors, and no optional services. |
-| #9 | Build reporter service request creation flow | `FR-001`, `FR-002`, `US-001`, `AC-001`, `AC-002`, `API-01`, `UI-02`. |
-| #10 | Build report list, search, and filters | `FR-003`, `FR-004`, `US-002`, `US-003`, `AC-003`, `AC-005`, `AC-006`, `API-02`, `UI-03`. |
-| #11 | Build report detail with status history display | `FR-005`, `FR-013`, `US-002`, `US-008`, `AC-003`, `AC-004`, `AC-015`, `AC-016`, `API-03`, `UI-04`. |
-| #12 | Add append-only comments and notes | `FR-012`, `US-004`, `US-009`, `AC-008`, `AC-017`, `AC-018`, `CR-002`, `API-12`, `UI-COMP-03`. |
-| #13 | Add admin review, category, and priority flow | `FR-006`, `FR-007`, `FR-008`, `US-004`, `US-005`, `AC-007` to `AC-010`, `API-04`, `API-05`, `UI-05`. |
-| #14 | Add technician assignment flow | `FR-009`, `US-006`, `AC-011`, `AC-012`, `API-06`, `API-14`, `UI-06`. |
-| #15 | Build technician task list and acceptance flow | `FR-010`, `US-007`, `AC-013`, `AC-014`, `API-07`, `API-08`, `UI-07`, `UI-08`. |
-| #16 | Add technician progress and resolved status flow | `FR-011`, `FR-013`, `US-008`, `AC-015`, `AC-016`, `API-09`, `UI-ACT-08`, `UI-ACT-09`. |
-| #17 | Add admin close and reopen flow | `FR-014`, `US-010`, `AC-019`, `AC-020`, `CR-001`, `API-10`, `API-11`, `UI-ACT-11`, `UI-ACT-12`. |
-| #18 | Build facility manager dashboard summary | `FR-015`, `US-011`, `AC-021`, `AC-022`, `API-13`, `UI-09`. |
-| #19 | Add automated test coverage and implementation traceability updates | `NFR-005`, all active FR/US/AC, at least 20 automated tests, and final code/test traceability after implementation. |
+| Issue | Execution Mode | Title | Primary Coverage |
+|---|---|---|---|
+| #8 | HITL | Implement app data model, role boundary, and lifecycle foundation | Foundation for D1 data model, simple role boundary, lifecycle constants/history, shared API errors, and no optional services. |
+| #9 | AFK | Build reporter service request creation flow | `FR-001`, `FR-002`, `US-001`, `AC-001`, `AC-002`, `API-01`, `UI-02`. |
+| #10 | AFK | Build report list, search, and filters | `FR-003`, `FR-004`, `US-002`, `US-003`, `AC-003`, `AC-005`, `AC-006`, `API-02`, `UI-03`. |
+| #11 | AFK | Build report detail with status history display | `FR-005`, `FR-013`, `US-002`, `US-008`, `AC-003`, `AC-004`, `AC-015`, `AC-016`, `API-03`, `UI-04`. |
+| #12 | AFK | Add append-only comments and notes | `FR-012`, `US-004`, `US-009`, `AC-008`, `AC-017`, `AC-018`, `CR-002`, `API-12`, `UI-COMP-03`. |
+| #13 | AFK | Add admin review, category, and priority flow | `FR-006`, `FR-007`, `FR-008`, `US-004`, `US-005`, `AC-007` to `AC-010`, `API-04`, `API-05`, `UI-05`. |
+| #14 | AFK | Add technician assignment flow | `FR-009`, `US-006`, `AC-011`, `AC-012`, `API-06`, `API-14`, `UI-06`. |
+| #15 | AFK | Build technician task list and acceptance flow | `FR-010`, `US-007`, `AC-013`, `AC-014`, `API-07`, `API-08`, `UI-07`, `UI-08`. |
+| #16 | AFK | Add technician progress and resolved status flow | `FR-011`, `FR-013`, `US-008`, `AC-015`, `AC-016`, `API-09`, `UI-ACT-08`, `UI-ACT-09`. |
+| #17 | AFK | Add admin close and reopen flow | `FR-014`, `US-010`, `AC-019`, `AC-020`, `CR-001`, `API-10`, `API-11`, `UI-ACT-11`, `UI-ACT-12`. |
+| #18 | AFK | Build facility manager dashboard summary | `FR-015`, `US-011`, `AC-021`, `AC-022`, `API-13`, `UI-09`. |
+| #19 | HITL | Add automated test coverage and implementation traceability updates | `NFR-005`, all active FR/US/AC, at least 20 automated tests, and final code/test traceability after implementation. |
 
 ### Issue Planning Update Status
 
 - GitHub Issues #8 to #19 were created directly in `Jordyee/campus-service-project`.
+- Execution mode was added to GitHub Issues #8 to #19.
 - Functional and non-functional requirement rows now include issue IDs.
 - Code and test columns remain `Pending` until implementation/testing stages produce real references.
 - No source code, tests, migrations, backend/API implementation, React/TypeScript implementation, or deployment artifacts were created during issue planning.

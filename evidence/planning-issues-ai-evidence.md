@@ -57,28 +57,29 @@ AI drafted a 12-issue sequence covering the approved scope from foundation to da
 
 AI then created the GitHub Issues directly in the repository:
 
-| Issue | Title | URL |
-|---|---|---|
-| #8 | Implement app data model, role boundary, and lifecycle foundation | https://github.com/Jordyee/campus-service-project/issues/8 |
-| #9 | Build reporter service request creation flow | https://github.com/Jordyee/campus-service-project/issues/9 |
-| #10 | Build report list, search, and filters | https://github.com/Jordyee/campus-service-project/issues/10 |
-| #11 | Build report detail with status history display | https://github.com/Jordyee/campus-service-project/issues/11 |
-| #12 | Add append-only comments and notes | https://github.com/Jordyee/campus-service-project/issues/12 |
-| #13 | Add admin review, category, and priority flow | https://github.com/Jordyee/campus-service-project/issues/13 |
-| #14 | Add technician assignment flow | https://github.com/Jordyee/campus-service-project/issues/14 |
-| #15 | Build technician task list and acceptance flow | https://github.com/Jordyee/campus-service-project/issues/15 |
-| #16 | Add technician progress and resolved status flow | https://github.com/Jordyee/campus-service-project/issues/16 |
-| #17 | Add admin close and reopen flow | https://github.com/Jordyee/campus-service-project/issues/17 |
-| #18 | Build facility manager dashboard summary | https://github.com/Jordyee/campus-service-project/issues/18 |
-| #19 | Add automated test coverage and implementation traceability updates | https://github.com/Jordyee/campus-service-project/issues/19 |
+| Issue | Execution Mode | Title | URL |
+|---|---|---|---|
+| #8 | HITL | Implement app data model, role boundary, and lifecycle foundation | https://github.com/Jordyee/campus-service-project/issues/8 |
+| #9 | AFK | Build reporter service request creation flow | https://github.com/Jordyee/campus-service-project/issues/9 |
+| #10 | AFK | Build report list, search, and filters | https://github.com/Jordyee/campus-service-project/issues/10 |
+| #11 | AFK | Build report detail with status history display | https://github.com/Jordyee/campus-service-project/issues/11 |
+| #12 | AFK | Add append-only comments and notes | https://github.com/Jordyee/campus-service-project/issues/12 |
+| #13 | AFK | Add admin review, category, and priority flow | https://github.com/Jordyee/campus-service-project/issues/13 |
+| #14 | AFK | Add technician assignment flow | https://github.com/Jordyee/campus-service-project/issues/14 |
+| #15 | AFK | Build technician task list and acceptance flow | https://github.com/Jordyee/campus-service-project/issues/15 |
+| #16 | AFK | Add technician progress and resolved status flow | https://github.com/Jordyee/campus-service-project/issues/16 |
+| #17 | AFK | Add admin close and reopen flow | https://github.com/Jordyee/campus-service-project/issues/17 |
+| #18 | AFK | Build facility manager dashboard summary | https://github.com/Jordyee/campus-service-project/issues/18 |
+| #19 | HITL | Add automated test coverage and implementation traceability updates | https://github.com/Jordyee/campus-service-project/issues/19 |
 
 ## 4. Human Review Status
 
-Status: Pending student review.
+Status: Reviewed by student in chat on 2026-07-01, with requested addition of execution mode to each issue.
 
 The student should review:
 
 - whether the issue sequence and dependencies are correct;
+- whether the AFK/HITL execution mode classification is acceptable;
 - whether issue scope is small enough for implementation branches;
 - whether every issue has acceptance checks and testing notes;
 - whether every required feature is covered;
@@ -94,6 +95,12 @@ AI used approved requirements and approved design as the baseline:
 - `CR-003`: simple educational role boundary is approved while Google login remains deferred.
 
 AI created 12 issues instead of the minimum 10 to avoid overly large tickets and to keep testing/traceability completion visible.
+
+AI added execution mode to every issue:
+
+- #8 is `HITL` because the simple role/session mechanism should be confirmed before foundation coding starts.
+- #9 to #18 are `AFK` because they can be implemented from approved requirements/design once dependencies are complete.
+- #19 is `HITL` because final test coverage, traceability completeness, and implementation readiness need human review before closing the loop.
 
 AI did not add optional features as mandatory scope. Deferred topics stayed deferred:
 
@@ -114,6 +121,7 @@ Status: Completed for Skill 09 and ready for student review.
 Final artifacts:
 
 - GitHub Issues #8 to #19 created in `Jordyee/campus-service-project`.
+- Execution mode added to GitHub Issues #8 to #19.
 - `docs/requirements/traceability.md` updated with issue IDs.
 - `docs/planning/issue-plan.md` created as a concise issue sequence and mapping summary.
 - `evidence/planning-issues-ai-evidence.md` created.

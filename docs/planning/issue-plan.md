@@ -35,20 +35,25 @@ This planning stage created GitHub Issues and updated planning traceability only
 
 ## 4. Issue Sequence
 
-| Order | Issue | Title | Main Coverage |
-|---:|---|---|---|
-| 1 | [#8](https://github.com/Jordyee/campus-service-project/issues/8) | Implement app data model, role boundary, and lifecycle foundation | Foundation, simple role boundary, lifecycle/status history, shared API errors. |
-| 2 | [#9](https://github.com/Jordyee/campus-service-project/issues/9) | Build reporter service request creation flow | Report creation and Submitted status. |
-| 3 | [#10](https://github.com/Jordyee/campus-service-project/issues/10) | Build report list, search, and filters | Report list, practical search/filter, empty results. |
-| 4 | [#11](https://github.com/Jordyee/campus-service-project/issues/11) | Build report detail with status history display | Detail view, lifecycle display, status history. |
-| 5 | [#12](https://github.com/Jordyee/campus-service-project/issues/12) | Add append-only comments and notes | Comments/notes, CR-002 append-only behavior. |
-| 6 | [#13](https://github.com/Jordyee/campus-service-project/issues/13) | Add admin review, category, and priority flow | Admin review, Under Review, category, priority. |
-| 7 | [#14](https://github.com/Jordyee/campus-service-project/issues/14) | Add technician assignment flow | Technician assignment and Assigned status. |
-| 8 | [#15](https://github.com/Jordyee/campus-service-project/issues/15) | Build technician task list and acceptance flow | Technician assigned task list and accept work. |
-| 9 | [#16](https://github.com/Jordyee/campus-service-project/issues/16) | Add technician progress and resolved status flow | In Progress and Resolved workflow. |
-| 10 | [#17](https://github.com/Jordyee/campus-service-project/issues/17) | Add admin close and reopen flow | Close, reopen to Under Review, CR-001. |
-| 11 | [#18](https://github.com/Jordyee/campus-service-project/issues/18) | Build facility manager dashboard summary | Dashboard counts and recent reports. |
-| 12 | [#19](https://github.com/Jordyee/campus-service-project/issues/19) | Add automated test coverage and implementation traceability updates | At least 20 automated tests and final code/test traceability after implementation. |
+| Order | Issue | Execution Mode | Title | Main Coverage |
+|---:|---|---|---|---|
+| 1 | [#8](https://github.com/Jordyee/campus-service-project/issues/8) | HITL | Implement app data model, role boundary, and lifecycle foundation | Foundation, simple role boundary, lifecycle/status history, shared API errors. |
+| 2 | [#9](https://github.com/Jordyee/campus-service-project/issues/9) | AFK | Build reporter service request creation flow | Report creation and Submitted status. |
+| 3 | [#10](https://github.com/Jordyee/campus-service-project/issues/10) | AFK | Build report list, search, and filters | Report list, practical search/filter, empty results. |
+| 4 | [#11](https://github.com/Jordyee/campus-service-project/issues/11) | AFK | Build report detail with status history display | Detail view, lifecycle display, status history. |
+| 5 | [#12](https://github.com/Jordyee/campus-service-project/issues/12) | AFK | Add append-only comments and notes | Comments/notes, CR-002 append-only behavior. |
+| 6 | [#13](https://github.com/Jordyee/campus-service-project/issues/13) | AFK | Add admin review, category, and priority flow | Admin review, Under Review, category, priority. |
+| 7 | [#14](https://github.com/Jordyee/campus-service-project/issues/14) | AFK | Add technician assignment flow | Technician assignment and Assigned status. |
+| 8 | [#15](https://github.com/Jordyee/campus-service-project/issues/15) | AFK | Build technician task list and acceptance flow | Technician assigned task list and accept work. |
+| 9 | [#16](https://github.com/Jordyee/campus-service-project/issues/16) | AFK | Add technician progress and resolved status flow | In Progress and Resolved workflow. |
+| 10 | [#17](https://github.com/Jordyee/campus-service-project/issues/17) | AFK | Add admin close and reopen flow | Close, reopen to Under Review, CR-001. |
+| 11 | [#18](https://github.com/Jordyee/campus-service-project/issues/18) | AFK | Build facility manager dashboard summary | Dashboard counts and recent reports. |
+| 12 | [#19](https://github.com/Jordyee/campus-service-project/issues/19) | HITL | Add automated test coverage and implementation traceability updates | At least 20 automated tests and final code/test traceability after implementation. |
+
+Execution mode meaning:
+
+- AFK: can be implemented by an AI agent from approved requirements/design after listed dependencies are complete.
+- HITL: requires human confirmation or review before the issue should be considered complete.
 
 ## 5. Dependency Notes
 
@@ -65,7 +70,15 @@ This planning stage created GitHub Issues and updated planning traceability only
 - #18 depends on #10 and #17.
 - #19 depends on the feature issues #9 through #18.
 
-## 6. Requirement-to-Issue Mapping
+## 6. Execution Mode Notes
+
+| Issue | Mode | Reason |
+|---|---|---|
+| #8 | HITL | The simple role/session mechanism should be confirmed before foundation coding starts. |
+| #9 to #18 | AFK | These can be implemented from approved requirements and design once dependencies are complete. |
+| #19 | HITL | Final test coverage, traceability completeness, and implementation readiness need human review before closing the loop. |
+
+## 7. Requirement-to-Issue Mapping
 
 | Requirement Area | Issues |
 |---|---|
@@ -81,7 +94,7 @@ This planning stage created GitHub Issues and updated planning traceability only
 | Simple role boundary | #8, #10, #13, #14, #15, #16, #17, #18, #19 |
 | Tests and traceability completion | #19 |
 
-## 7. Design-to-Issue Mapping
+## 8. Design-to-Issue Mapping
 
 | Design Area | Issues |
 |---|---|
@@ -91,13 +104,13 @@ This planning stage created GitHub Issues and updated planning traceability only
 | UI screens and actions `UI-01` to `UI-10`, `UI-ACT-*` | #9 to #18 |
 | Traceability/evidence artifacts | #19 |
 
-## 8. Traceability Update Notes
+## 9. Traceability Update Notes
 
 `docs/requirements/traceability.md` was updated with issue IDs in the Issue column for active functional and non-functional requirements.
 
 Code and Test columns remain `Pending` because implementation and testing have not started.
 
-## 9. Risks and Open Questions
+## 10. Risks and Open Questions
 
 | Risk / Question | Handling |
 |---|---|
@@ -106,14 +119,15 @@ Code and Test columns remain `Pending` because implementation and testing have n
 | Test count could drive fake scope. | #19 requires coverage without adding optional features. |
 | Deployment is not part of planning. | No issue performs Cloudflare deployment; deployment remains later approved stage. |
 
-## 10. Human Review Notes
+## 11. Human Review Notes
 
-Status: Pending student review.
+Status: Reviewed by student in chat on 2026-07-01, with requested addition of execution mode to each issue.
 
 Reviewer should confirm:
 
 - issue granularity is acceptable;
 - dependency order is workable;
+- execution mode classification is acceptable;
 - all required features are covered;
 - CR-001, CR-002, and CR-003 are represented correctly;
 - optional features remain out of scope;
