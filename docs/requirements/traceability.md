@@ -21,33 +21,33 @@ This file starts project traceability from requirements to later design, issues,
 
 | Requirement | User Story | Acceptance Criteria | Business Rules | Evidence | Design | Issue | Code | Test | Status |
 |---|---|---|---|---|---|---|---|---|---|
-| FR-001 | US-001 | AC-001, AC-002 | BR-002 | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-001, DB-02, DB-04, API-01, UI-02, UI-FORM-01, UI-ACT-01 | Pending | Pending | Pending | UI mapped |
-| FR-002 | US-001 | AC-001, AC-002 | BR-002 | INT-001 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-001, DB-01, DB-02, API-01, UI-02, UI-FORM-01 | Pending | Pending | Pending | UI mapped |
-| FR-003 | US-002, US-003 | AC-003, AC-005, AC-006 | - | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, DB-02, DB-05, API-02, UI-03, UI-07, UI-ACT-02 | Pending | Pending | Pending | UI mapped |
-| FR-004 | US-003 | AC-005, AC-006 | - | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, DB-02, DB-05, API-02, UI-03, UI-LIST-01, UI-STATE-02 | Pending | Pending | Pending | UI mapped |
-| FR-005 | US-002 | AC-003, AC-004 | BR-005 | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-004, DB-02, DB-03, DB-04, API-03, UI-04, UI-DETAIL-01 | Pending | Pending | Pending | UI mapped |
-| FR-006 | US-004 | AC-007, AC-008 | BR-003, BR-006 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002, DB-02, DB-04, API-04, API-12, UI-05, UI-FORM-02, UI-ACT-04 | Pending | Pending | Pending | UI mapped |
-| FR-007 | US-005 | AC-009 | BR-003 | INT-001 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002, DB-02, DB-05, API-05, UI-05, UI-FORM-02, UI-ACT-05 | Pending | Pending | Pending | UI mapped |
-| FR-008 | US-005 | AC-010 | BR-003 | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002, DB-02, DB-05, API-05, UI-05, UI-FORM-02, UI-ACT-05 | Pending | Pending | Pending | UI mapped |
-| FR-009 | US-006 | AC-011, AC-012 | BR-003 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002, DB-01, DB-02, DB-04, API-06, API-14, UI-06, UI-FORM-03, UI-ACT-06 | Pending | Pending | Pending | UI mapped |
-| FR-010 | US-007 | AC-013, AC-014 | BR-004 | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-003, DB-01, DB-02, API-07, API-08, UI-07, UI-08, UI-ACT-07 | Pending | Pending | Pending | UI mapped |
-| FR-011 | US-008 | AC-015, AC-016 | BR-001, BR-004, BR-005 | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-002, ARCH-COMP-005, ARCH-FLOW-003, DB-02, DB-04, API-09, UI-08, UI-FORM-05, UI-ACT-08, UI-ACT-09 | Pending | Pending | Pending | UI mapped |
-| FR-012 | US-004, US-009 | AC-008, AC-017, AC-018 | BR-006 | SPEC-04, SPEC-05, INT-001, CR-002 | ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-004, ARCH-DEC-005, DB-03, API-12, UI-04, UI-FORM-04, UI-COMP-03, UI-ACT-10 | Pending | Pending | Pending | UI mapped |
-| FR-013 | US-008 | AC-015, AC-016 | BR-005 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-003, ARCH-COMP-005, ARCH-FLOW-004, DB-04, API-03, API-09, API-10, API-11, UI-04, UI-COMP-01, UI-COMP-02 | Pending | Pending | Pending | UI mapped |
-| FR-014 | US-010 | AC-019, AC-020 | BR-003, BR-007 | SPEC-04, SPEC-05, INT-001, CR-001 | ARCH-COMP-002, ARCH-COMP-004, ARCH-COMP-005, ARCH-FLOW-005, ARCH-DEC-004, DB-02, DB-04, API-10, API-11, UI-06, UI-FORM-06, UI-ACT-11, UI-ACT-12 | Pending | Pending | Pending | UI mapped |
-| FR-015 | US-011 | AC-021, AC-022 | - | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-COMP-006, ARCH-FLOW-006, ARCH-DEC-006, DB-02, DB-05, API-13, UI-09, UI-STATE-03, UI-ACT-13 | Pending | Pending | Pending | UI mapped |
+| FR-001 | US-001 | AC-001, AC-002 | BR-002 | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-001, DB-02, DB-04, API-01, UI-02, UI-FORM-01, UI-ACT-01 | #8, #9, #19 | Pending | Pending | Issue planned |
+| FR-002 | US-001 | AC-001, AC-002 | BR-002 | INT-001 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-001, DB-01, DB-02, API-01, UI-02, UI-FORM-01 | #8, #9, #19 | Pending | Pending | Issue planned |
+| FR-003 | US-002, US-003 | AC-003, AC-005, AC-006 | - | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, DB-02, DB-05, API-02, UI-03, UI-07, UI-ACT-02 | #10, #19 | Pending | Pending | Issue planned |
+| FR-004 | US-003 | AC-005, AC-006 | - | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, DB-02, DB-05, API-02, UI-03, UI-LIST-01, UI-STATE-02 | #10, #19 | Pending | Pending | Issue planned |
+| FR-005 | US-002 | AC-003, AC-004 | BR-005 | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-004, DB-02, DB-03, DB-04, API-03, UI-04, UI-DETAIL-01 | #11, #19 | Pending | Pending | Issue planned |
+| FR-006 | US-004 | AC-007, AC-008 | BR-003, BR-006 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002, DB-02, DB-04, API-04, API-12, UI-05, UI-FORM-02, UI-ACT-04 | #12, #13, #19 | Pending | Pending | Issue planned |
+| FR-007 | US-005 | AC-009 | BR-003 | INT-001 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002, DB-02, DB-05, API-05, UI-05, UI-FORM-02, UI-ACT-05 | #13, #19 | Pending | Pending | Issue planned |
+| FR-008 | US-005 | AC-010 | BR-003 | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002, DB-02, DB-05, API-05, UI-05, UI-FORM-02, UI-ACT-05 | #13, #19 | Pending | Pending | Issue planned |
+| FR-009 | US-006 | AC-011, AC-012 | BR-003 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002, DB-01, DB-02, DB-04, API-06, API-14, UI-06, UI-FORM-03, UI-ACT-06 | #14, #19 | Pending | Pending | Issue planned |
+| FR-010 | US-007 | AC-013, AC-014 | BR-004 | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-003, DB-01, DB-02, API-07, API-08, UI-07, UI-08, UI-ACT-07 | #15, #19 | Pending | Pending | Issue planned |
+| FR-011 | US-008 | AC-015, AC-016 | BR-001, BR-004, BR-005 | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-002, ARCH-COMP-005, ARCH-FLOW-003, DB-02, DB-04, API-09, UI-08, UI-FORM-05, UI-ACT-08, UI-ACT-09 | #16, #19 | Pending | Pending | Issue planned |
+| FR-012 | US-004, US-009 | AC-008, AC-017, AC-018 | BR-006 | SPEC-04, SPEC-05, INT-001, CR-002 | ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-004, ARCH-DEC-005, DB-03, API-12, UI-04, UI-FORM-04, UI-COMP-03, UI-ACT-10 | #12, #13, #16, #19 | Pending | Pending | Issue planned |
+| FR-013 | US-008 | AC-015, AC-016 | BR-005 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-003, ARCH-COMP-005, ARCH-FLOW-004, DB-04, API-03, API-09, API-10, API-11, UI-04, UI-COMP-01, UI-COMP-02 | #8, #11, #16, #17, #19 | Pending | Pending | Issue planned |
+| FR-014 | US-010 | AC-019, AC-020 | BR-003, BR-007 | SPEC-04, SPEC-05, INT-001, CR-001 | ARCH-COMP-002, ARCH-COMP-004, ARCH-COMP-005, ARCH-FLOW-005, ARCH-DEC-004, DB-02, DB-04, API-10, API-11, UI-06, UI-FORM-06, UI-ACT-11, UI-ACT-12 | #17, #19 | Pending | Pending | Issue planned |
+| FR-015 | US-011 | AC-021, AC-022 | - | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-COMP-006, ARCH-FLOW-006, ARCH-DEC-006, DB-02, DB-05, API-13, UI-09, UI-STATE-03, UI-ACT-13 | #18, #19 | Pending | Pending | Issue planned |
 
 ## 4. Non-Functional Requirement Traceability
 
 | Requirement | Related User Stories | Related AC | Evidence | Design | Issue | Code | Test | Status |
 |---|---|---|---|---|---|---|---|---|
-| NFR-001 | US-001 to US-011 | All relevant AC | SPEC-04, SPEC-03 | ARCH-COMP-001, ARCH-COMP-004, API-01 to API-13, VAL-DBAPI-001 to VAL-DBAPI-011, UI-01 to UI-10 | Pending | Pending | Pending | UI mapped |
-| NFR-002 | US-001 to US-011 | Role-sensitive AC | SPEC-04, SPEC-05, INT-001, CR-003 | ARCH-COMP-004, ARCH-DEC-003, DB-01, API-04 to API-14, UI-01, UI-ACT-01 to UI-ACT-13 | Pending | Pending | Pending | UI mapped |
-| NFR-003 | US-001 to US-010 | AC-001, AC-015, AC-016, AC-019, AC-020 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-003, ARCH-COMP-005, DB-02, DB-03, DB-04, DB-05, VAL-DBAPI-001 to VAL-DBAPI-011, UI-FORM-01 to UI-FORM-06, UI-STATE-04, UI-STATE-06 | Pending | Pending | Pending | UI mapped |
-| NFR-004 | US-008, US-010 | AC-015, AC-016, AC-019, AC-020 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-005, ARCH-DEC-004, DB-04, API-04, API-06, API-09, API-10, API-11, ERR-004, UI-COMP-01, UI-COMP-02, UI-ACT-04, UI-ACT-06, UI-ACT-08, UI-ACT-09, UI-ACT-11, UI-ACT-12 | Pending | Pending | Pending | UI mapped |
-| NFR-005 | US-001 to US-011 | All relevant AC | SPEC-04, AGENTS.md, Skill 03 | ARCH-COMP-007, DB-01 to DB-05, API-01 to API-14, VAL-DBAPI-001 to VAL-DBAPI-011, UI-* traceability IDs | Pending | Pending | Pending | UI mapped |
-| NFR-006 | US-001 to US-011 | All relevant AC | SPEC-04, README.md, AGENTS.md | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-DEC-001, ARCH-DEC-002, D1 migration draft, API Worker boundary, UI React TypeScript design assumption | Pending | Pending | Pending | UI mapped |
-| NFR-007 | US-001 to US-011 | All relevant AC | SPEC-04, AGENTS.md, INT-001 | ARCH-DEC-007, DBAPI-CON-005, UI-CON-004, no optional-feature UI screens | Pending | Pending | Pending | UI mapped |
+| NFR-001 | US-001 to US-011 | All relevant AC | SPEC-04, SPEC-03 | ARCH-COMP-001, ARCH-COMP-004, API-01 to API-13, VAL-DBAPI-001 to VAL-DBAPI-011, UI-01 to UI-10 | #9, #10, #11, #12, #13, #14, #15, #16, #17, #18, #19 | Pending | Pending | Issue planned |
+| NFR-002 | US-001 to US-011 | Role-sensitive AC | SPEC-04, SPEC-05, INT-001, CR-003 | ARCH-COMP-004, ARCH-DEC-003, DB-01, API-04 to API-14, UI-01, UI-ACT-01 to UI-ACT-13 | #8, #10, #13, #14, #15, #16, #17, #18, #19 | Pending | Pending | Issue planned |
+| NFR-003 | US-001 to US-010 | AC-001, AC-015, AC-016, AC-019, AC-020 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-003, ARCH-COMP-005, DB-02, DB-03, DB-04, DB-05, VAL-DBAPI-001 to VAL-DBAPI-011, UI-FORM-01 to UI-FORM-06, UI-STATE-04, UI-STATE-06 | #8, #9, #10, #11, #12, #13, #14, #15, #16, #17, #18, #19 | Pending | Pending | Issue planned |
+| NFR-004 | US-008, US-010 | AC-015, AC-016, AC-019, AC-020 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-005, ARCH-DEC-004, DB-04, API-04, API-06, API-09, API-10, API-11, ERR-004, UI-COMP-01, UI-COMP-02, UI-ACT-04, UI-ACT-06, UI-ACT-08, UI-ACT-09, UI-ACT-11, UI-ACT-12 | #8, #11, #13, #14, #16, #17, #19 | Pending | Pending | Issue planned |
+| NFR-005 | US-001 to US-011 | All relevant AC | SPEC-04, AGENTS.md, Skill 03 | ARCH-COMP-007, DB-01 to DB-05, API-01 to API-14, VAL-DBAPI-001 to VAL-DBAPI-011, UI-* traceability IDs | #8, #9, #10, #11, #12, #13, #14, #15, #16, #17, #18, #19 | Pending | Pending | Issue planned |
+| NFR-006 | US-001 to US-011 | All relevant AC | SPEC-04, README.md, AGENTS.md | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-DEC-001, ARCH-DEC-002, D1 migration draft, API Worker boundary, UI React TypeScript design assumption | #8, #9, #19 | Pending | Pending | Issue planned |
+| NFR-007 | US-001 to US-011 | All relevant AC | SPEC-04, AGENTS.md, INT-001 | ARCH-DEC-007, DBAPI-CON-005, UI-CON-004, no optional-feature UI screens | #8, #9, #10, #11, #12, #13, #14, #15, #16, #17, #18, #19 | Pending | Pending | Issue planned |
 
 ## 5. Deferred Topic Traceability
 
@@ -177,7 +177,7 @@ Status: Prioritization update approved by student on 2026-06-30.
 Review outcome:
 
 - every `FR-*` in `03-specification.md` appears in this traceability file;
-- design, issue, code, and test columns stay `Pending` until those stages exist;
+- design and issue columns now include created IDs where available; code and test columns remain `Pending`;
 - deferred topics remain out of required scope;
 - `INT-001` is used only as student decision evidence, not as a real stakeholder interview;
 - prioritization status has been added without creating design, issue, code, test, or deployment artifacts.
@@ -188,7 +188,7 @@ Validation/change update status:
 - `CR-001`, `CR-002`, and `CR-003` are approved clarifications;
 - affected specification rows have been updated before moving to design;
 - no optional feature has been added as required scope;
-- design, issue, code, and test columns remain `Pending`.
+- design and issue columns now include created IDs where available; code and test columns remain `Pending`.
 
 Student approved the Specification stage in chat on 2026-06-30 and requested merge to `development`. Student approved the Prioritization stage in chat on 2026-06-30 and allowed merge to `development`.
 
@@ -204,7 +204,7 @@ Database/API design update status:
 - `docs/design/02-database-api.md` is approved and merged to `development` according to the latest student status;
 - database/API design IDs have been added to active FR and NFR rows;
 - human review for database/API design is complete according to the latest student status;
-- issue, code, and test columns remain `Pending`;
+- issue IDs have since been added by the Issue Planning stage; code and test columns remain `Pending`;
 - no UI design, issue planning, tests, implementation code, migration execution, or deployment artifacts were created during this update.
 
 ## 10. Architecture Design Traceability
@@ -250,7 +250,7 @@ Architecture update status:
 
 - `docs/design/01-architecture.md` is approved by student review.
 - Functional and non-functional requirement rows now include architecture-level design IDs.
-- Issue, code, and test columns remain `Pending`.
+- Issue IDs have since been added by the Issue Planning stage; code and test columns remain `Pending`.
 - No database/API detail, UI design, issue planning, tests, code, or deployment artifacts were created during this update.
 
 ## 11. Database and API Design Traceability
@@ -298,7 +298,7 @@ Database/API update status:
 
 - `docs/design/02-database-api.md` is approved and merged to `development` according to the latest student status.
 - Functional and non-functional requirement rows now include database/API design IDs.
-- Issue, code, and test columns remain `Pending`.
+- Issue IDs have since been added by the Issue Planning stage; code and test columns remain `Pending`.
 - No UI design, issue planning, tests, code, migration execution, or deployment artifacts were created during this update.
 
 ## 12. UI Design Traceability
@@ -337,5 +337,35 @@ UI design update status:
 
 - `docs/design/03-ui.md` is drafted on branch `design/ui`.
 - Functional and non-functional requirement rows now include UI design IDs.
-- Issue, code, and test columns remain `Pending`.
+- Issue IDs have been added by the Issue Planning stage.
+- Code and test columns remain `Pending`.
 - No GitHub issues, tests, React/TypeScript implementation, backend/API implementation, migration execution, or deployment artifacts were created during this update.
+
+## 13. Issue Planning Traceability
+
+This section records GitHub Issues created during the Issue Planning stage. It does not create code, tests, migrations, backend/API implementation, React/TypeScript implementation, or deployment artifacts.
+
+### Issue Catalog
+
+| Issue | Execution Mode | Title | Primary Coverage |
+|---|---|---|---|
+| #8 | HITL | Implement app data model, role boundary, and lifecycle foundation | Foundation for D1 data model, simple role boundary, lifecycle constants/history, shared API errors, and no optional services. |
+| #9 | AFK | Build reporter service request creation flow | `FR-001`, `FR-002`, `US-001`, `AC-001`, `AC-002`, `API-01`, `UI-02`. |
+| #10 | AFK | Build report list, search, and filters | `FR-003`, `FR-004`, `US-002`, `US-003`, `AC-003`, `AC-005`, `AC-006`, `API-02`, `UI-03`. |
+| #11 | AFK | Build report detail with status history display | `FR-005`, `FR-013`, `US-002`, `US-008`, `AC-003`, `AC-004`, `AC-015`, `AC-016`, `API-03`, `UI-04`. |
+| #12 | AFK | Add append-only comments and notes | `FR-012`, `US-004`, `US-009`, `AC-008`, `AC-017`, `AC-018`, `CR-002`, `API-12`, `UI-COMP-03`. |
+| #13 | AFK | Add admin review, category, and priority flow | `FR-006`, `FR-007`, `FR-008`, `US-004`, `US-005`, `AC-007` to `AC-010`, `API-04`, `API-05`, `UI-05`. |
+| #14 | AFK | Add technician assignment flow | `FR-009`, `US-006`, `AC-011`, `AC-012`, `API-06`, `API-14`, `UI-06`. |
+| #15 | AFK | Build technician task list and acceptance flow | `FR-010`, `US-007`, `AC-013`, `AC-014`, `API-07`, `API-08`, `UI-07`, `UI-08`. |
+| #16 | AFK | Add technician progress and resolved status flow | `FR-011`, `FR-013`, `US-008`, `AC-015`, `AC-016`, `API-09`, `UI-ACT-08`, `UI-ACT-09`. |
+| #17 | AFK | Add admin close and reopen flow | `FR-014`, `US-010`, `AC-019`, `AC-020`, `CR-001`, `API-10`, `API-11`, `UI-ACT-11`, `UI-ACT-12`. |
+| #18 | AFK | Build facility manager dashboard summary | `FR-015`, `US-011`, `AC-021`, `AC-022`, `API-13`, `UI-09`. |
+| #19 | HITL | Add automated test coverage and implementation traceability updates | `NFR-005`, all active FR/US/AC, at least 20 automated tests, and final code/test traceability after implementation. |
+
+### Issue Planning Update Status
+
+- GitHub Issues #8 to #19 were created directly in `Jordyee/campus-service-project`.
+- Execution mode was added to GitHub Issues #8 to #19.
+- Functional and non-functional requirement rows now include issue IDs.
+- Code and test columns remain `Pending` until implementation/testing stages produce real references.
+- No source code, tests, migrations, backend/API implementation, React/TypeScript implementation, or deployment artifacts were created during issue planning.
