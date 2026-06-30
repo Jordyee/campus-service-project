@@ -14,38 +14,39 @@ This file starts project traceability from requirements to later design, issues,
 | SPEC-04 | `AI_Assisted_Campus_Service_Project.md` |
 | SPEC-05 | `CASE.md` |
 | ARCH-01 | `docs/design/01-architecture.md` |
+| DBAPI-01 | `docs/design/02-database-api.md` |
 
 ## 3. Functional Requirement Traceability
 
 | Requirement | User Story | Acceptance Criteria | Business Rules | Evidence | Design | Issue | Code | Test | Status |
 |---|---|---|---|---|---|---|---|---|---|
-| FR-001 | US-001 | AC-001, AC-002 | BR-002 | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-001 | Pending | Pending | Pending | Architecture mapped |
-| FR-002 | US-001 | AC-001, AC-002 | BR-002 | INT-001 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-001 | Pending | Pending | Pending | Architecture mapped |
-| FR-003 | US-002, US-003 | AC-003, AC-005, AC-006 | - | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003 | Pending | Pending | Pending | Architecture mapped |
-| FR-004 | US-003 | AC-005, AC-006 | - | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003 | Pending | Pending | Pending | Architecture mapped |
-| FR-005 | US-002 | AC-003, AC-004 | BR-005 | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-004 | Pending | Pending | Pending | Architecture mapped |
-| FR-006 | US-004 | AC-007, AC-008 | BR-003, BR-006 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002 | Pending | Pending | Pending | Architecture mapped |
-| FR-007 | US-005 | AC-009 | BR-003 | INT-001 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002 | Pending | Pending | Pending | Architecture mapped |
-| FR-008 | US-005 | AC-010 | BR-003 | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002 | Pending | Pending | Pending | Architecture mapped |
-| FR-009 | US-006 | AC-011, AC-012 | BR-003 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002 | Pending | Pending | Pending | Architecture mapped |
-| FR-010 | US-007 | AC-013, AC-014 | BR-004 | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-003 | Pending | Pending | Pending | Architecture mapped |
-| FR-011 | US-008 | AC-015, AC-016 | BR-001, BR-004, BR-005 | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-002, ARCH-COMP-005, ARCH-FLOW-003 | Pending | Pending | Pending | Architecture mapped |
-| FR-012 | US-004, US-009 | AC-008, AC-017, AC-018 | BR-006 | SPEC-04, SPEC-05, INT-001, CR-002 | ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-004, ARCH-DEC-005 | Pending | Pending | Pending | Architecture mapped |
-| FR-013 | US-008 | AC-015, AC-016 | BR-005 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-003, ARCH-COMP-005, ARCH-FLOW-004 | Pending | Pending | Pending | Architecture mapped |
-| FR-014 | US-010 | AC-019, AC-020 | BR-003, BR-007 | SPEC-04, SPEC-05, INT-001, CR-001 | ARCH-COMP-002, ARCH-COMP-004, ARCH-COMP-005, ARCH-FLOW-005, ARCH-DEC-004 | Pending | Pending | Pending | Architecture mapped |
-| FR-015 | US-011 | AC-021, AC-022 | - | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-COMP-006, ARCH-FLOW-006, ARCH-DEC-006 | Pending | Pending | Pending | Architecture mapped |
+| FR-001 | US-001 | AC-001, AC-002 | BR-002 | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-001, DB-02, DB-04, API-01 | Pending | Pending | Pending | Database/API mapped |
+| FR-002 | US-001 | AC-001, AC-002 | BR-002 | INT-001 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-001, DB-01, DB-02, API-01 | Pending | Pending | Pending | Database/API mapped |
+| FR-003 | US-002, US-003 | AC-003, AC-005, AC-006 | - | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, DB-02, DB-05, API-02 | Pending | Pending | Pending | Database/API mapped |
+| FR-004 | US-003 | AC-005, AC-006 | - | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, DB-02, DB-05, API-02 | Pending | Pending | Pending | Database/API mapped |
+| FR-005 | US-002 | AC-003, AC-004 | BR-005 | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-004, DB-02, DB-03, DB-04, API-03 | Pending | Pending | Pending | Database/API mapped |
+| FR-006 | US-004 | AC-007, AC-008 | BR-003, BR-006 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002, DB-02, DB-04, API-04, API-12 | Pending | Pending | Pending | Database/API mapped |
+| FR-007 | US-005 | AC-009 | BR-003 | INT-001 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002, DB-02, DB-05, API-05 | Pending | Pending | Pending | Database/API mapped |
+| FR-008 | US-005 | AC-010 | BR-003 | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002, DB-02, DB-05, API-05 | Pending | Pending | Pending | Database/API mapped |
+| FR-009 | US-006 | AC-011, AC-012 | BR-003 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002, DB-01, DB-02, DB-04, API-06, API-14 | Pending | Pending | Pending | Database/API mapped |
+| FR-010 | US-007 | AC-013, AC-014 | BR-004 | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-003, DB-01, DB-02, API-07, API-08 | Pending | Pending | Pending | Database/API mapped |
+| FR-011 | US-008 | AC-015, AC-016 | BR-001, BR-004, BR-005 | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-002, ARCH-COMP-005, ARCH-FLOW-003, DB-02, DB-04, API-09 | Pending | Pending | Pending | Database/API mapped |
+| FR-012 | US-004, US-009 | AC-008, AC-017, AC-018 | BR-006 | SPEC-04, SPEC-05, INT-001, CR-002 | ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-004, ARCH-DEC-005, DB-03, API-12 | Pending | Pending | Pending | Database/API mapped |
+| FR-013 | US-008 | AC-015, AC-016 | BR-005 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-003, ARCH-COMP-005, ARCH-FLOW-004, DB-04, API-03, API-09, API-10, API-11 | Pending | Pending | Pending | Database/API mapped |
+| FR-014 | US-010 | AC-019, AC-020 | BR-003, BR-007 | SPEC-04, SPEC-05, INT-001, CR-001 | ARCH-COMP-002, ARCH-COMP-004, ARCH-COMP-005, ARCH-FLOW-005, ARCH-DEC-004, DB-02, DB-04, API-10, API-11 | Pending | Pending | Pending | Database/API mapped |
+| FR-015 | US-011 | AC-021, AC-022 | - | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-COMP-006, ARCH-FLOW-006, ARCH-DEC-006, DB-02, DB-05, API-13 | Pending | Pending | Pending | Database/API mapped |
 
 ## 4. Non-Functional Requirement Traceability
 
 | Requirement | Related User Stories | Related AC | Evidence | Design | Issue | Code | Test | Status |
 |---|---|---|---|---|---|---|---|---|
-| NFR-001 | US-001 to US-011 | All relevant AC | SPEC-04, SPEC-03 | ARCH-COMP-001, ARCH-COMP-004 | Pending | Pending | Pending | Architecture mapped |
-| NFR-002 | US-001 to US-011 | Role-sensitive AC | SPEC-04, SPEC-05, INT-001, CR-003 | ARCH-COMP-004, ARCH-DEC-003 | Pending | Pending | Pending | Architecture mapped |
-| NFR-003 | US-001 to US-010 | AC-001, AC-015, AC-016, AC-019, AC-020 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-003, ARCH-COMP-005 | Pending | Pending | Pending | Architecture mapped |
-| NFR-004 | US-008, US-010 | AC-015, AC-016, AC-019, AC-020 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-005, ARCH-DEC-004 | Pending | Pending | Pending | Architecture mapped |
-| NFR-005 | US-001 to US-011 | All relevant AC | SPEC-04, AGENTS.md, Skill 03 | ARCH-COMP-007 | Pending | Pending | Pending | Architecture mapped |
-| NFR-006 | US-001 to US-011 | All relevant AC | SPEC-04, README.md, AGENTS.md | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-DEC-001, ARCH-DEC-002 | Pending | Pending | Pending | Architecture mapped |
-| NFR-007 | US-001 to US-011 | All relevant AC | SPEC-04, AGENTS.md, INT-001 | ARCH-DEC-007 | Pending | Pending | Pending | Architecture mapped |
+| NFR-001 | US-001 to US-011 | All relevant AC | SPEC-04, SPEC-03 | ARCH-COMP-001, ARCH-COMP-004, API-01 to API-13, VAL-DBAPI-001 to VAL-DBAPI-011 | Pending | Pending | Pending | Database/API mapped |
+| NFR-002 | US-001 to US-011 | Role-sensitive AC | SPEC-04, SPEC-05, INT-001, CR-003 | ARCH-COMP-004, ARCH-DEC-003, DB-01, API-04 to API-14 | Pending | Pending | Pending | Database/API mapped |
+| NFR-003 | US-001 to US-010 | AC-001, AC-015, AC-016, AC-019, AC-020 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-003, ARCH-COMP-005, DB-02, DB-03, DB-04, DB-05, VAL-DBAPI-001 to VAL-DBAPI-011 | Pending | Pending | Pending | Database/API mapped |
+| NFR-004 | US-008, US-010 | AC-015, AC-016, AC-019, AC-020 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-005, ARCH-DEC-004, DB-04, API-04, API-06, API-09, API-10, API-11, ERR-004 | Pending | Pending | Pending | Database/API mapped |
+| NFR-005 | US-001 to US-011 | All relevant AC | SPEC-04, AGENTS.md, Skill 03 | ARCH-COMP-007, DB-01 to DB-05, API-01 to API-14, VAL-DBAPI-001 to VAL-DBAPI-011 | Pending | Pending | Pending | Database/API mapped |
+| NFR-006 | US-001 to US-011 | All relevant AC | SPEC-04, README.md, AGENTS.md | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-DEC-001, ARCH-DEC-002, D1 migration draft, API Worker boundary | Pending | Pending | Pending | Database/API mapped |
+| NFR-007 | US-001 to US-011 | All relevant AC | SPEC-04, AGENTS.md, INT-001 | ARCH-DEC-007, DBAPI-CON-005 | Pending | Pending | Pending | Database/API mapped |
 
 ## 5. Deferred Topic Traceability
 
@@ -197,6 +198,14 @@ Architecture design update status:
 - human review for architecture is approved by the student in chat;
 - merge to `development` should happen only through the approved GitHub workflow.
 
+Database/API design update status:
+
+- `docs/design/02-database-api.md` is drafted on branch `design/database-api`;
+- database/API design IDs have been added to active FR and NFR rows;
+- human review for database/API design is pending;
+- issue, code, and test columns remain `Pending`;
+- no UI design, issue planning, tests, implementation code, migration execution, or deployment artifacts were created during this update.
+
 ## 10. Architecture Design Traceability
 
 This section records architecture-level mapping from `docs/design/01-architecture.md`. It does not create database/API design, UI design, issue, code, test, or deployment references.
@@ -242,3 +251,51 @@ Architecture update status:
 - Functional and non-functional requirement rows now include architecture-level design IDs.
 - Issue, code, and test columns remain `Pending`.
 - No database/API detail, UI design, issue planning, tests, code, or deployment artifacts were created during this update.
+
+## 11. Database and API Design Traceability
+
+This section records database/API-level mapping from `docs/design/02-database-api.md`. It does not create UI design, issue, code, test, migration execution, or deployment references.
+
+### Database Design IDs
+
+| Database ID | Description |
+|---|---|
+| DB-01 | `app_users` simple actor records for role-aware design. |
+| DB-02 | `service_requests` main request record and current lifecycle state. |
+| DB-03 | `request_comments` append-only comments/notes. |
+| DB-04 | `request_status_history` append-only status history. |
+| DB-05 | Query indexes and constraints for list, filter, detail, and dashboard support. |
+
+### API Design IDs
+
+| API ID | Description |
+|---|---|
+| API-01 | `POST /api/requests` create a submitted request. |
+| API-02 | `GET /api/requests` list, search, and filter requests. |
+| API-03 | `GET /api/requests/{id}` view request detail with comments and history. |
+| API-04 | `POST /api/requests/{id}/review` move submitted request to review. |
+| API-05 | `PATCH /api/requests/{id}/classification` set category and priority. |
+| API-06 | `POST /api/requests/{id}/assignment` assign technician and move to assigned. |
+| API-07 | `GET /api/technician/tasks` list assigned technician work. |
+| API-08 | `POST /api/requests/{id}/accept` record technician acceptance. |
+| API-09 | `PATCH /api/requests/{id}/work-status` update technician work status. |
+| API-10 | `POST /api/requests/{id}/close` close a resolved request. |
+| API-11 | `POST /api/requests/{id}/reopen` reopen resolved/closed request to under review. |
+| API-12 | `POST /api/requests/{id}/comments` add append-only comment/note. |
+| API-13 | `GET /api/dashboard/summary` return dashboard summaries. |
+| API-14 | `GET /api/users?role=TECHNICIAN` return active technicians for assignment. |
+
+### Database/API Constraints and Validation IDs
+
+| ID | Description |
+|---|---|
+| VAL-DBAPI-001 to VAL-DBAPI-011 | Validation rules for required fields, enums, role-sensitive actions, lifecycle transitions, comments, and dashboard empty state. |
+| ERR-001 to ERR-007 | Shared API error catalog for request format, forbidden action, not found, invalid transition, assignment conflict, validation, and internal failure. |
+| DBAPI-CON-001 to DBAPI-CON-005 | D1/SQLite compatibility, Worker API boundary, no migration execution, no code/tests, and no optional paid services. |
+
+Database/API update status:
+
+- `docs/design/02-database-api.md` is drafted for student review.
+- Functional and non-functional requirement rows now include database/API design IDs.
+- Issue, code, and test columns remain `Pending`.
+- No UI design, issue planning, tests, code, migration execution, or deployment artifacts were created during this update.
