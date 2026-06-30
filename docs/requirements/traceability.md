@@ -13,38 +13,39 @@ This file starts project traceability from requirements to later design, issues,
 | SPEC-03 | `docs/requirements/01-inception-stakeholder.md` |
 | SPEC-04 | `AI_Assisted_Campus_Service_Project.md` |
 | SPEC-05 | `CASE.md` |
+| ARCH-01 | `docs/design/01-architecture.md` |
 
 ## 3. Functional Requirement Traceability
 
 | Requirement | User Story | Acceptance Criteria | Business Rules | Evidence | Design | Issue | Code | Test | Status |
 |---|---|---|---|---|---|---|---|---|---|
-| FR-001 | US-001 | AC-001, AC-002 | BR-002 | SPEC-04, SPEC-05 | Pending | Pending | Pending | Pending | Specified |
-| FR-002 | US-001 | AC-001, AC-002 | BR-002 | INT-001 | Pending | Pending | Pending | Pending | Specified |
-| FR-003 | US-002, US-003 | AC-003, AC-005, AC-006 | - | SPEC-04, SPEC-05 | Pending | Pending | Pending | Pending | Specified |
-| FR-004 | US-003 | AC-005, AC-006 | - | SPEC-04, SPEC-05, INT-001 | Pending | Pending | Pending | Pending | Specified |
-| FR-005 | US-002 | AC-003, AC-004 | BR-005 | SPEC-04, SPEC-05 | Pending | Pending | Pending | Pending | Specified |
-| FR-006 | US-004 | AC-007, AC-008 | BR-003, BR-006 | SPEC-04, SPEC-05 | Pending | Pending | Pending | Pending | Specified |
-| FR-007 | US-005 | AC-009 | BR-003 | INT-001 | Pending | Pending | Pending | Pending | Specified |
-| FR-008 | US-005 | AC-010 | BR-003 | SPEC-04, SPEC-05, INT-001 | Pending | Pending | Pending | Pending | Specified |
-| FR-009 | US-006 | AC-011, AC-012 | BR-003 | SPEC-04, SPEC-05 | Pending | Pending | Pending | Pending | Specified |
-| FR-010 | US-007 | AC-013, AC-014 | BR-004 | SPEC-04, SPEC-05 | Pending | Pending | Pending | Pending | Specified |
-| FR-011 | US-008 | AC-015, AC-016 | BR-001, BR-004, BR-005 | SPEC-04, SPEC-05, INT-001 | Pending | Pending | Pending | Pending | Specified |
-| FR-012 | US-004, US-009 | AC-008, AC-017, AC-018 | BR-006 | SPEC-04, SPEC-05, INT-001, CR-002 | Pending | Pending | Pending | Pending | Specified |
-| FR-013 | US-008 | AC-015, AC-016 | BR-005 | SPEC-04, SPEC-05 | Pending | Pending | Pending | Pending | Specified |
-| FR-014 | US-010 | AC-019, AC-020 | BR-003, BR-007 | SPEC-04, SPEC-05, INT-001, CR-001 | Pending | Pending | Pending | Pending | Specified |
-| FR-015 | US-011 | AC-021, AC-022 | - | SPEC-04, SPEC-05, INT-001 | Pending | Pending | Pending | Pending | Specified |
+| FR-001 | US-001 | AC-001, AC-002 | BR-002 | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-001 | Pending | Pending | Pending | Architecture mapped |
+| FR-002 | US-001 | AC-001, AC-002 | BR-002 | INT-001 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-001 | Pending | Pending | Pending | Architecture mapped |
+| FR-003 | US-002, US-003 | AC-003, AC-005, AC-006 | - | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003 | Pending | Pending | Pending | Architecture mapped |
+| FR-004 | US-003 | AC-005, AC-006 | - | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003 | Pending | Pending | Pending | Architecture mapped |
+| FR-005 | US-002 | AC-003, AC-004 | BR-005 | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-004 | Pending | Pending | Pending | Architecture mapped |
+| FR-006 | US-004 | AC-007, AC-008 | BR-003, BR-006 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002 | Pending | Pending | Pending | Architecture mapped |
+| FR-007 | US-005 | AC-009 | BR-003 | INT-001 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002 | Pending | Pending | Pending | Architecture mapped |
+| FR-008 | US-005 | AC-010 | BR-003 | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002 | Pending | Pending | Pending | Architecture mapped |
+| FR-009 | US-006 | AC-011, AC-012 | BR-003 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-002 | Pending | Pending | Pending | Architecture mapped |
+| FR-010 | US-007 | AC-013, AC-014 | BR-004 | SPEC-04, SPEC-05 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-004, ARCH-FLOW-003 | Pending | Pending | Pending | Architecture mapped |
+| FR-011 | US-008 | AC-015, AC-016 | BR-001, BR-004, BR-005 | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-002, ARCH-COMP-005, ARCH-FLOW-003 | Pending | Pending | Pending | Architecture mapped |
+| FR-012 | US-004, US-009 | AC-008, AC-017, AC-018 | BR-006 | SPEC-04, SPEC-05, INT-001, CR-002 | ARCH-COMP-002, ARCH-COMP-003, ARCH-FLOW-004, ARCH-DEC-005 | Pending | Pending | Pending | Architecture mapped |
+| FR-013 | US-008 | AC-015, AC-016 | BR-005 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-003, ARCH-COMP-005, ARCH-FLOW-004 | Pending | Pending | Pending | Architecture mapped |
+| FR-014 | US-010 | AC-019, AC-020 | BR-003, BR-007 | SPEC-04, SPEC-05, INT-001, CR-001 | ARCH-COMP-002, ARCH-COMP-004, ARCH-COMP-005, ARCH-FLOW-005, ARCH-DEC-004 | Pending | Pending | Pending | Architecture mapped |
+| FR-015 | US-011 | AC-021, AC-022 | - | SPEC-04, SPEC-05, INT-001 | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-COMP-006, ARCH-FLOW-006, ARCH-DEC-006 | Pending | Pending | Pending | Architecture mapped |
 
 ## 4. Non-Functional Requirement Traceability
 
 | Requirement | Related User Stories | Related AC | Evidence | Design | Issue | Code | Test | Status |
 |---|---|---|---|---|---|---|---|---|
-| NFR-001 | US-001 to US-011 | All relevant AC | SPEC-04, SPEC-03 | Pending | Pending | Pending | Pending | Specified |
-| NFR-002 | US-001 to US-011 | Role-sensitive AC | SPEC-04, SPEC-05, INT-001, CR-003 | Pending | Pending | Pending | Pending | Specified |
-| NFR-003 | US-001 to US-010 | AC-001, AC-015, AC-016, AC-019, AC-020 | SPEC-04, SPEC-05 | Pending | Pending | Pending | Pending | Specified |
-| NFR-004 | US-008, US-010 | AC-015, AC-016, AC-019, AC-020 | SPEC-04, SPEC-05 | Pending | Pending | Pending | Pending | Specified |
-| NFR-005 | US-001 to US-011 | All relevant AC | SPEC-04, AGENTS.md, Skill 03 | Pending | Pending | Pending | Pending | Specified |
-| NFR-006 | US-001 to US-011 | All relevant AC | SPEC-04, README.md, AGENTS.md | Pending | Pending | Pending | Pending | Specified |
-| NFR-007 | US-001 to US-011 | All relevant AC | SPEC-04, AGENTS.md, INT-001 | Pending | Pending | Pending | Pending | Specified |
+| NFR-001 | US-001 to US-011 | All relevant AC | SPEC-04, SPEC-03 | ARCH-COMP-001, ARCH-COMP-004 | Pending | Pending | Pending | Architecture mapped |
+| NFR-002 | US-001 to US-011 | Role-sensitive AC | SPEC-04, SPEC-05, INT-001, CR-003 | ARCH-COMP-004, ARCH-DEC-003 | Pending | Pending | Pending | Architecture mapped |
+| NFR-003 | US-001 to US-010 | AC-001, AC-015, AC-016, AC-019, AC-020 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-003, ARCH-COMP-005 | Pending | Pending | Pending | Architecture mapped |
+| NFR-004 | US-008, US-010 | AC-015, AC-016, AC-019, AC-020 | SPEC-04, SPEC-05 | ARCH-COMP-002, ARCH-COMP-005, ARCH-DEC-004 | Pending | Pending | Pending | Architecture mapped |
+| NFR-005 | US-001 to US-011 | All relevant AC | SPEC-04, AGENTS.md, Skill 03 | ARCH-COMP-007 | Pending | Pending | Pending | Architecture mapped |
+| NFR-006 | US-001 to US-011 | All relevant AC | SPEC-04, README.md, AGENTS.md | ARCH-COMP-001, ARCH-COMP-002, ARCH-COMP-003, ARCH-DEC-001, ARCH-DEC-002 | Pending | Pending | Pending | Architecture mapped |
+| NFR-007 | US-001 to US-011 | All relevant AC | SPEC-04, AGENTS.md, INT-001 | ARCH-DEC-007 | Pending | Pending | Pending | Architecture mapped |
 
 ## 5. Deferred Topic Traceability
 
@@ -188,3 +189,56 @@ Validation/change update status:
 - design, issue, code, and test columns remain `Pending`.
 
 Student approved the Specification stage in chat on 2026-06-30 and requested merge to `development`. Student approved the Prioritization stage in chat on 2026-06-30 and allowed merge to `development`.
+
+Architecture design update status:
+
+- `docs/design/01-architecture.md` is drafted on branch `design/architecture`;
+- architecture-level design IDs have been added to active FR and NFR rows;
+- human review for architecture is approved by the student in chat;
+- merge to `development` should happen only through the approved GitHub workflow.
+
+## 10. Architecture Design Traceability
+
+This section records architecture-level mapping from `docs/design/01-architecture.md`. It does not create database/API design, UI design, issue, code, test, or deployment references.
+
+### Architecture Components
+
+| Architecture ID | Description |
+|---|---|
+| ARCH-COMP-001 | React TypeScript Frontend |
+| ARCH-COMP-002 | Cloudflare Worker Backend Boundary |
+| ARCH-COMP-003 | Cloudflare D1 Persistence Layer |
+| ARCH-COMP-004 | Role and Action Boundary |
+| ARCH-COMP-005 | Lifecycle and Audit Concern |
+| ARCH-COMP-006 | Dashboard Summary Concern |
+| ARCH-COMP-007 | Traceability and Evidence Artifacts |
+
+### Architecture Flows
+
+| Architecture ID | Description |
+|---|---|
+| ARCH-FLOW-001 | Create Report |
+| ARCH-FLOW-002 | Review, Category, Priority, and Assignment |
+| ARCH-FLOW-003 | Technician Progress and Resolution |
+| ARCH-FLOW-004 | Comments, Notes, and Status History |
+| ARCH-FLOW-005 | Close and Reopen |
+| ARCH-FLOW-006 | Dashboard Summary |
+
+### Architecture Decisions
+
+| Architecture ID | Description |
+|---|---|
+| ARCH-DEC-001 | Use React with TypeScript, Cloudflare Worker, and Cloudflare D1 as the baseline architecture. |
+| ARCH-DEC-002 | Use one Cloudflare Worker as the backend application boundary for the initial project. |
+| ARCH-DEC-003 | Keep role handling as a simple educational role boundary and defer exact auth/session mechanism. |
+| ARCH-DEC-004 | Treat lifecycle transitions and status history as backend-controlled concerns. |
+| ARCH-DEC-005 | Treat comments/notes as append-only report context visible to authorized users who can view the report. |
+| ARCH-DEC-006 | Keep dashboard architecture limited to simple summaries and recent reports. |
+| ARCH-DEC-007 | Exclude deferred optional features from mandatory architecture dependencies. |
+
+Architecture update status:
+
+- `docs/design/01-architecture.md` is approved by student review.
+- Functional and non-functional requirement rows now include architecture-level design IDs.
+- Issue, code, and test columns remain `Pending`.
+- No database/API detail, UI design, issue planning, tests, code, or deployment artifacts were created during this update.
