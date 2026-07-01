@@ -93,8 +93,8 @@ Optional skill creation:
 | 8 | #15 Technician task list and acceptance | AFK | Merged to `development` | #14 complete | Main agent | `implementation/issue-15-technician-tasks-acceptance` | [PR #28](https://github.com/Jordyee/campus-service-project/pull/28) | Pass / merged |
 | 9 | #16 Technician progress and resolved | AFK | Merged to `development` | #15 complete | Main agent | `implementation/issue-16-technician-progress-resolved` | [PR #29](https://github.com/Jordyee/campus-service-project/pull/29) | Pass / merged |
 | 10 | #17 Admin close and reopen | AFK | Merged to `development` | #16 complete | Main agent | `implementation/issue-17-close-reopen` | [PR #30](https://github.com/Jordyee/campus-service-project/pull/30) | Pass / merged |
-| 11 | #18 Facility manager dashboard | AFK | Draft PR open; tests pass; review pass | #10 and #17 complete | Main agent | `implementation/issue-18-dashboard-summary` | [PR #31](https://github.com/Jordyee/campus-service-project/pull/31) | Pass / ready to merge to `development` |
-| 12 | #19 Tests and implementation traceability | HITL | Blocked | #9, #10, #11, #12, #13, #14, #15, #16, #17, #18 | Unassigned | `implementation/issue-19-tests-traceability` | Pending | Pending |
+| 11 | #18 Facility manager dashboard | AFK | Merged to `development` | #10 and #17 complete | Main agent | `implementation/issue-18-dashboard-summary` | [PR #31](https://github.com/Jordyee/campus-service-project/pull/31) | Pass / merged |
+| 12 | #19 Tests and implementation traceability | HITL | PR #32 created; tests pass; review pass | #9 through #18 complete | Main agent | `implementation/issue-19-tests-traceability` | [PR #32](https://github.com/Jordyee/campus-service-project/pull/32) | Pass / ready for merge to `development` |
 
 ## 7. Parallelization Policy
 
