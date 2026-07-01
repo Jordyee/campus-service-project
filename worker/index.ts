@@ -1,17 +1,13 @@
-interface Env {}
-
-function json(data: unknown, status = 200): Response {
-  return Response.json(data, { status });
-}
+import { apiError, apiSuccess } from "./foundation";
 
 export default {
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
 
     if (url.pathname === "/api/health" && request.method === "GET") {
-      return json({ status: "ok" });
+      return apiSuccess({ status: "ok" });
     }
 
-    return new Response("Not Found", { status: 404 });
+    return apiError("NOT_FOUND", "Route not found.");
   },
-} satisfies ExportedHandler<Env>;
+} satisfies ExportedHandler;
