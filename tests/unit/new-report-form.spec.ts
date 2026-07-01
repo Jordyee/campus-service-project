@@ -48,6 +48,12 @@ describe("new report form", () => {
     expect(html).toContain("data-assignment-error-for=\"technicianId\"");
     expect(html).toContain("/api/users?role=TECHNICIAN");
     expect(html).toContain("/assignment");
+    expect(html).toContain("id=\"admin-close-form\"");
+    expect(html).toContain("id=\"admin-close-button\"");
+    expect(html).toContain("id=\"admin-reopen-button\"");
+    expect(html).toContain("data-close-error-for=\"reason\"");
+    expect(html).toContain("/close");
+    expect(html).toContain("/reopen");
     expect(html).toContain("No comments or notes yet.");
     expect(html).toContain("id=\"comment-form\"");
     expect(html).toContain("name=\"commentType\"");

@@ -3,12 +3,14 @@ import {
   handleAcceptTask,
   handleAssignTechnician,
   handleClassifyRequest,
+  handleCloseRequest,
   handleAddRequestComment,
   handleCreateRequest,
   handleGetRequestDetail,
   handleListTechnicianTasks,
   handleListUsers,
   handleListRequests,
+  handleReopenRequest,
   handleReviewRequest,
   handleUpdateWorkStatus,
 } from "./requests";
@@ -100,6 +102,26 @@ export default {
         request,
         env.DB,
         decodeURIComponent(workStatusMatch[1]),
+      );
+    }
+
+    const closeMatch = url.pathname.match(/^\/api\/requests\/([^/]+)\/close$/);
+    if (closeMatch && request.method === "POST") {
+      return handleCloseRequest(
+        request,
+        env.DB,
+        decodeURIComponent(closeMatch[1]),
+      );
+    }
+
+    const reopenMatch = url.pathname.match(
+      /^\/api\/requests\/([^/]+)\/reopen$/,
+    );
+    if (reopenMatch && request.method === "POST") {
+      return handleReopenRequest(
+        request,
+        env.DB,
+        decodeURIComponent(reopenMatch[1]),
       );
     }
 
