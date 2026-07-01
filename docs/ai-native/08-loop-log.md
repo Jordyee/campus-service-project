@@ -41,7 +41,7 @@ An issue loop can stop only when:
 
 ### Issue #8 - Implement app data model, role boundary, and lifecycle foundation
 
-**Status:** Draft PR opened; tests pass
+**Status:** Merged to `development`
 
 **Branch:** `implementation/issue-8-foundation`
 
@@ -98,13 +98,34 @@ An issue loop can stop only when:
 
 ### Issue #9 - Build reporter service request creation flow
 
-**Status:** Blocked by #8
+**Status:** Implemented; tests pass; draft PR pending
 
 **Branch:** `implementation/issue-9-create-report`
 
 **PR:** Pending
 
-**Owner:** Unassigned
+**Owner:** Main agent
+
+**Blockers:** #8 completed and merged through PR #21.
+
+**Source of Truth:**
+
+- GitHub Issue #9
+- `docs/planning/implementation-queue.md`
+- `docs/requirements/traceability.md`
+- `docs/design/02-database-api.md`
+- `docs/design/03-ui.md`
+
+**Cycle 1:**
+
+- Build attempt: Added Reporter create-request validation, `POST /api/requests`, D1 persistence with `SUBMITTED` status and initial status history, D1 binding config, and a static Reporter form that posts with the approved header-based actor context.
+- Files changed: `worker/requests.ts`, `worker/index.ts`, `wrangler.jsonc`, `public/index.html`, `tests/unit/create-request.spec.ts`, `tests/integration/create-request-api.spec.ts`, `tests/unit/new-report-form.spec.ts`, `docs/ai-native/08-loop-log.md`, `docs/planning/implementation-queue.md`, `docs/requirements/traceability.md`, `evidence/implementation-issue-9-ai-evidence.md`, `evidence/human-review-issue-9.md`.
+- AI assumptions: The existing repo has no React/Vite frontend build, so Issue #9 uses the current Cloudflare static asset path for the Reporter form instead of adding frontend dependencies. The API requires `x-actor-role: REPORTER`.
+- Review result: Pass after focused fix. Review kept admin review, lists, detail, assignment, technician flow, dashboard, deployment, and optional-feature fields out of scope.
+- Tests/checks run: `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
+- Evidence: First test run failed because the form test read `public/index.html` from the Worker bundle path; fixed by fetching the app page through `SELF`. Final run passed 6 files and 22 tests.
+- Failures: None remaining.
+- Decision: Accept Cycle 1 for draft PR creation and main-agent review.
 
 ### Issue #10 - Build report list, search, and filters
 

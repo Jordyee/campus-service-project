@@ -10,6 +10,13 @@
   "assets": {
     "directory": "./public"
   },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "campus-service-project",
+      "migrations_dir": "migrations"
+    }
+  ],
   "observability": {
     "enabled": true
   },
