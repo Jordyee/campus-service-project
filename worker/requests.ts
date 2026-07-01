@@ -2,10 +2,12 @@ import {
   apiError,
   apiSuccess,
   canRolePerform,
+  CATEGORIES,
   isCategory,
   isCommentType,
   isPriority,
   isRequestStatus,
+  PRIORITIES,
   readActorContext,
   REQUEST_STATUSES,
   type ActorContext,
@@ -54,6 +56,22 @@ export interface TechnicianTaskItem {
   accepted: boolean;
   acceptedAt: string | null;
   updatedAt: string;
+}
+
+export interface DashboardRecentReport {
+  id: string;
+  requestNumber: string;
+  title: string;
+  status: RequestStatus;
+  priority: Priority;
+  createdAt: string;
+}
+
+export interface DashboardSummary {
+  countsByStatus: Record<RequestStatus, number>;
+  countsByCategory: Record<Category, number>;
+  countsByPriority: Record<Priority, number>;
+  recentReports: DashboardRecentReport[];
 }
 
 export interface RequestDetail {
@@ -772,6 +790,81 @@ export async function listTechnicianTasks(
   }));
 }
 
+function zeroCounts<T extends string>(values: readonly T[]): Record<T, number> {
+  return Object.fromEntries(values.map((value) => [value, 0])) as Record<
+    T,
+    number
+  >;
+}
+
+function fillCounts<T extends string>(
+  counts: Record<T, number>,
+  rows: { value: T; count: number }[],
+): Record<T, number> {
+  rows.forEach((row) => {
+    counts[row.value] = row.count;
+  });
+  return counts;
+}
+
+export async function getDashboardSummary(
+  db: D1Database,
+): Promise<DashboardSummary> {
+  const [statusRows, categoryRows, priorityRows, recentRows] =
+    await Promise.all([
+      db
+        .prepare(
+          `SELECT status AS value, COUNT(*) AS count
+           FROM service_requests
+           GROUP BY status`,
+        )
+        .all<{ value: RequestStatus; count: number }>(),
+      db
+        .prepare(
+          `SELECT category AS value, COUNT(*) AS count
+           FROM service_requests
+           GROUP BY category`,
+        )
+        .all<{ value: Category; count: number }>(),
+      db
+        .prepare(
+          `SELECT priority AS value, COUNT(*) AS count
+           FROM service_requests
+           GROUP BY priority`,
+        )
+        .all<{ value: Priority; count: number }>(),
+      db
+        .prepare(
+          `SELECT id, request_number, title, status, priority, created_at
+           FROM service_requests
+           ORDER BY created_at DESC, request_number DESC
+           LIMIT 5`,
+        )
+        .all<{
+          id: string;
+          request_number: string;
+          title: string;
+          status: RequestStatus;
+          priority: Priority;
+          created_at: string;
+        }>(),
+    ]);
+
+  return {
+    countsByStatus: fillCounts(zeroCounts(REQUEST_STATUSES), statusRows.results),
+    countsByCategory: fillCounts(zeroCounts(CATEGORIES), categoryRows.results),
+    countsByPriority: fillCounts(zeroCounts(PRIORITIES), priorityRows.results),
+    recentReports: recentRows.results.map((report) => ({
+      id: report.id,
+      requestNumber: report.request_number,
+      title: report.title,
+      status: report.status,
+      priority: report.priority,
+      createdAt: report.created_at,
+    })),
+  };
+}
+
 function canActorViewRequest(
   actor: ActorContext,
   request: {
@@ -1430,6 +1523,26 @@ export async function handleListRequests(
     return apiSuccess(await listServiceRequests(db, actor, validation.data));
   } catch {
     return apiError("INTERNAL_ERROR", "Could not load reports.");
+  }
+}
+
+export async function handleGetDashboardSummary(
+  request: Request,
+  db: D1Database,
+): Promise<Response> {
+  const actor = readActorContext(request);
+
+  if (!actor || !canRolePerform(actor.role, "VIEW_DASHBOARD")) {
+    return apiError(
+      "FORBIDDEN_ACTION",
+      "Only a Facility Manager can view the dashboard.",
+    );
+  }
+
+  try {
+    return apiSuccess(await getDashboardSummary(db));
+  } catch {
+    return apiError("INTERNAL_ERROR", "Could not load dashboard.");
   }
 }
 

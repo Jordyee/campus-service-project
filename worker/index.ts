@@ -6,6 +6,7 @@ import {
   handleCloseRequest,
   handleAddRequestComment,
   handleCreateRequest,
+  handleGetDashboardSummary,
   handleGetRequestDetail,
   handleListTechnicianTasks,
   handleListUsers,
@@ -41,6 +42,10 @@ export default {
 
     if (url.pathname === "/api/technician/tasks" && request.method === "GET") {
       return handleListTechnicianTasks(request, env.DB);
+    }
+
+    if (url.pathname === "/api/dashboard/summary" && request.method === "GET") {
+      return handleGetDashboardSummary(request, env.DB);
     }
 
     const commentMatch = url.pathname.match(

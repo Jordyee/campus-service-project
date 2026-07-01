@@ -349,7 +349,7 @@ An issue loop can stop only when:
 
 ### Issue #17 - Add admin close and reopen flow
 
-**Status:** Draft PR open; tests pass; review pass
+**Status:** Merged to `development`
 
 **Branch:** `implementation/issue-17-close-reopen`
 
@@ -381,13 +381,35 @@ An issue loop can stop only when:
 
 ### Issue #18 - Build facility manager dashboard summary
 
-**Status:** Blocked by #10 and #17
+**Status:** Draft PR open; tests pass; review pass
 
 **Branch:** `implementation/issue-18-dashboard-summary`
 
-**PR:** Pending
+**PR:** https://github.com/Jordyee/campus-service-project/pull/31
 
-**Owner:** Unassigned
+**Owner:** Main agent
+
+**Blockers:** #10 completed through PR #23; #17 completed and merged through PR #30.
+
+**Source of Truth:**
+
+- GitHub Issue #18
+- `docs/planning/implementation-queue.md`
+- `docs/requirements/traceability.md`
+- `docs/design/01-architecture.md`
+- `docs/design/02-database-api.md`
+- `docs/design/03-ui.md`
+
+**Cycle 1:**
+
+- Build attempt: Added Facility Manager-only `GET /api/dashboard/summary`, zero-filled counts by status/category/priority derived from `service_requests`, recent reports ordered by newest first, manager dashboard UI section, empty dashboard state, and static UI smoke coverage.
+- Files changed: `worker/requests.ts`, `worker/index.ts`, `public/index.html`, `tests/integration/dashboard-summary-api.spec.ts`, `tests/unit/new-report-form.spec.ts`, `docs/ai-native/08-loop-log.md`, `docs/planning/implementation-queue.md`, `docs/requirements/traceability.md`, `evidence/implementation-issue-18-ai-evidence.md`, `evidence/human-review-issue-18.md`.
+- AI assumptions: Recent reports are limited to the newest five reports because the design asks for simple recent activity and no analytics/export scope. Counts are derived live from `service_requests`; no dashboard table or cached summary rows were added.
+- Review result: Pass. Review kept the slice to simple summary counts and recent reports and did not add charts, exports, analytics, inventory, vendor reports, notifications, or deployment.
+- Tests/checks run: `npx.cmd vitest tests/integration/dashboard-summary-api.spec.ts --run`; `npx.cmd vitest tests/integration/dashboard-summary-api.spec.ts tests/unit/new-report-form.spec.ts --run`; `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
+- Evidence: Focused dashboard test failed before implementation with route-level 404, then passed after adding API/UI support. One test assertion was corrected to check recent report ordering without requiring the response to contain only two reports. Final run passed typecheck and 15 files / 62 tests.
+- Failures: None remaining.
+- Decision: Accept Cycle 1 for PR #31 review and merge to `development`.
 
 ### Issue #19 - Add automated test coverage and implementation traceability updates
 
