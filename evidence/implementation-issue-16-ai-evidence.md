@@ -4,7 +4,7 @@
 
 - GitHub Issue: #16 - Add technician progress and resolved status flow
 - Branch: `implementation/issue-16-technician-progress-resolved`
-- Pull Request: Pending
+- Pull Request: https://github.com/Jordyee/campus-service-project/pull/29
 - Date: 2026-07-02
 
 ## Sources Read
