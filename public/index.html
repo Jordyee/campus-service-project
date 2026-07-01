@@ -3,21 +3,273 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Campus Service Project</title>
+    <title>Campus Service Request</title>
+    <style>
+      :root {
+        color: #1e293b;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        background: #f8fafc;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      main {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 32px 20px 48px;
+      }
+
+      header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 24px;
+      }
+
+      h1,
+      h2,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        color: #0f172a;
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      .role-badge {
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        background: #ffffff;
+        padding: 8px 12px;
+        color: #334155;
+        font-size: 0.9rem;
+      }
+
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+        gap: 20px;
+        align-items: start;
+      }
+
+      section {
+        background: #ffffff;
+        border: 1px solid #dbe3ee;
+        border-radius: 8px;
+        padding: 20px;
+      }
+
+      form {
+        display: grid;
+        gap: 16px;
+      }
+
+      label {
+        display: grid;
+        gap: 6px;
+        color: #334155;
+        font-weight: 600;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        padding: 10px 12px;
+        color: #0f172a;
+        font: inherit;
+        background: #ffffff;
+      }
+
+      textarea {
+        min-height: 128px;
+        resize: vertical;
+      }
+
+      button {
+        width: fit-content;
+        border: 0;
+        border-radius: 6px;
+        background: #2563eb;
+        color: #ffffff;
+        padding: 10px 16px;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      button:disabled {
+        cursor: wait;
+        opacity: 0.7;
+      }
+
+      output {
+        display: block;
+        min-height: 24px;
+        color: #166534;
+        font-weight: 600;
+      }
+
+      .error {
+        min-height: 18px;
+        color: #b91c1c;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .summary {
+        display: grid;
+        gap: 12px;
+      }
+
+      .summary p {
+        color: #475569;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 760px) {
+        header,
+        .workspace {
+          grid-template-columns: 1fr;
+          display: grid;
+        }
+      }
+    </style>
   </head>
   <body>
     <main>
-      <h1>Campus Service Request and Maintenance System</h1>
-      <p>Initial Cloudflare setup is ready.</p>
-      <button id="button" type="button">Check API</button>
-      <output id="status" for="button"></output>
+      <header>
+        <h1>Campus Service Request</h1>
+        <div class="role-badge">Reporter workspace</div>
+      </header>
+
+      <div class="workspace">
+        <section aria-labelledby="new-report-title">
+          <h2 id="new-report-title">New Service Request</h2>
+          <form id="request-form" novalidate>
+            <label>
+              Title
+              <input name="title" autocomplete="off" />
+              <span class="error" data-error-for="title"></span>
+            </label>
+
+            <label>
+              Location
+              <input name="location" autocomplete="off" />
+              <span class="error" data-error-for="location"></span>
+            </label>
+
+            <label>
+              Category
+              <select name="category">
+                <option value="">Select category</option>
+                <option value="INTERNET">Internet</option>
+                <option value="AC">AC</option>
+                <option value="PERALATAN_KELAS">Peralatan Kelas</option>
+                <option value="KEBERSIHAN">Kebersihan</option>
+                <option value="LABORATORIUM">Laboratorium</option>
+                <option value="LAINNYA">Lainnya</option>
+              </select>
+              <span class="error" data-error-for="category"></span>
+            </label>
+
+            <label>
+              Reporter Name
+              <input name="reporterName" autocomplete="name" />
+              <span class="error" data-error-for="reporterName"></span>
+            </label>
+
+            <label>
+              Reporter Contact
+              <input name="reporterContact" autocomplete="email" />
+              <span class="error" data-error-for="reporterContact"></span>
+            </label>
+
+            <label>
+              Description
+              <textarea name="description"></textarea>
+              <span class="error" data-error-for="description"></span>
+            </label>
+
+            <button type="submit">Submit Report</button>
+            <output id="form-status"></output>
+          </form>
+        </section>
+
+        <section class="summary" aria-labelledby="summary-title">
+          <h2 id="summary-title">Submitted Request</h2>
+          <p id="created-request">No request submitted in this session.</p>
+        </section>
+      </div>
     </main>
     <script>
-      const button = document.getElementById("button");
-      button.addEventListener("click", async () => {
-        const response = await fetch("/api/health");
-        const result = await response.json();
-        document.getElementById("status").textContent = result.status;
+      const form = document.getElementById("request-form");
+      const statusOutput = document.getElementById("form-status");
+      const createdRequest = document.getElementById("created-request");
+      const submitButton = form.querySelector("button");
+
+      function clearErrors() {
+        form.querySelectorAll("[data-error-for]").forEach((element) => {
+          element.textContent = "";
+        });
+      }
+
+      function showFieldErrors(details = []) {
+        details.forEach((detail) => {
+          const element = form.querySelector(
+            `[data-error-for="${detail.field}"]`,
+          );
+          if (element) {
+            element.textContent = detail.message;
+          }
+        });
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        clearErrors();
+        statusOutput.textContent = "";
+        submitButton.disabled = true;
+
+        const payload = Object.fromEntries(new FormData(form).entries());
+
+        try {
+          const response = await fetch("/api/requests", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              "x-actor-role": "REPORTER",
+            },
+            body: JSON.stringify(payload),
+          });
+          const result = await response.json();
+
+          if (!response.ok) {
+            showFieldErrors(result.error?.details);
+            statusOutput.textContent =
+              result.error?.message || "Request could not be submitted.";
+            return;
+          }
+
+          const request = result.data;
+          statusOutput.textContent = "Report submitted.";
+          createdRequest.textContent = `${request.requestNumber} - ${request.status}`;
+        } catch {
+          statusOutput.textContent = "Request could not be submitted.";
+        } finally {
+          submitButton.disabled = false;
+        }
       });
     </script>
   </body>
