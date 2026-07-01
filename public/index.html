@@ -334,6 +334,28 @@
           <p id="created-request">No request submitted in this session.</p>
         </section>
 
+        <section id="technician-tasks-section" class="reports" aria-labelledby="tasks-title" hidden>
+          <h2 id="tasks-title">My Tasks</h2>
+          <output id="tasks-status"></output>
+          <div class="table-wrap">
+            <table id="tasks-table" hidden>
+              <thead>
+                <tr>
+                  <th>Number</th>
+                  <th>Title</th>
+                  <th>Location</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Accepted</th>
+                  <th>Updated</th>
+                </tr>
+              </thead>
+              <tbody id="tasks-body"></tbody>
+            </table>
+          </div>
+          <p id="tasks-empty" class="empty-state"></p>
+        </section>
+
         <section class="reports" aria-labelledby="reports-title">
           <h2 id="reports-title">Reports</h2>
           <form id="report-filters" class="filters">
@@ -433,6 +455,10 @@
                 <dd id="detail-technician"></dd>
               </div>
               <div>
+                <dt>Accepted</dt>
+                <dd id="detail-accepted"></dd>
+              </div>
+              <div>
                 <dt>Created</dt>
                 <dd id="detail-created"></dd>
               </div>
@@ -492,6 +518,11 @@
               <button type="submit">Assign Technician</button>
               <output id="assignment-status"></output>
             </form>
+            <form id="technician-task-form" class="comment-form" hidden>
+              <h3>Technician Task</h3>
+              <button id="accept-task-button" type="button">Accept Work</button>
+              <output id="technician-task-status"></output>
+            </form>
             <h3>Lifecycle</h3>
             <ol id="detail-lifecycle" class="lifecycle"></ol>
             <h3>Comments / Notes</h3>
@@ -531,6 +562,13 @@
       const reportsTable = document.getElementById("reports-table");
       const reportsBody = document.getElementById("reports-body");
       const reportsEmpty = document.getElementById("reports-empty");
+      const technicianTasksSection = document.getElementById(
+        "technician-tasks-section",
+      );
+      const tasksStatus = document.getElementById("tasks-status");
+      const tasksTable = document.getElementById("tasks-table");
+      const tasksBody = document.getElementById("tasks-body");
+      const tasksEmpty = document.getElementById("tasks-empty");
       const detailStatus = document.getElementById("detail-status");
       const detailCard = document.getElementById("detail-card");
       const detailHeading = document.getElementById("detail-heading");
@@ -540,6 +578,7 @@
       const detailLocation = document.getElementById("detail-location");
       const detailReporter = document.getElementById("detail-reporter");
       const detailTechnician = document.getElementById("detail-technician");
+      const detailAccepted = document.getElementById("detail-accepted");
       const detailCreated = document.getElementById("detail-created");
       const detailUpdated = document.getElementById("detail-updated");
       const detailDescription = document.getElementById("detail-description");
@@ -558,6 +597,11 @@
       const assignmentReason = document.getElementById("assignment-reason");
       const assignmentStatus = document.getElementById("assignment-status");
       const assignmentSubmitButton = assignmentForm.querySelector("button");
+      const technicianTaskForm = document.getElementById("technician-task-form");
+      const acceptTaskButton = document.getElementById("accept-task-button");
+      const technicianTaskStatus = document.getElementById(
+        "technician-task-status",
+      );
       const commentForm = document.getElementById("comment-form");
       const commentStatus = document.getElementById("comment-status");
       const commentSubmitButton = commentForm.querySelector("button");
@@ -721,6 +765,43 @@
         });
       }
 
+      function renderTechnicianTasks(tasks) {
+        tasksBody.textContent = "";
+        tasksTable.hidden = tasks.length === 0;
+        tasksEmpty.textContent = "";
+
+        if (tasks.length === 0) {
+          tasksEmpty.textContent = "No assigned tasks.";
+          return;
+        }
+
+        tasks.forEach((task) => {
+          const row = document.createElement("tr");
+          const numberCell = document.createElement("td");
+          const detailButton = document.createElement("button");
+          detailButton.type = "button";
+          detailButton.className = "link-button";
+          detailButton.textContent = task.requestNumber;
+          detailButton.addEventListener("click", () => loadReportDetail(task.id));
+          numberCell.append(detailButton);
+          row.append(numberCell);
+
+          [
+            task.title,
+            task.location,
+            task.priority,
+            task.status,
+            task.accepted ? "Yes" : "No",
+            task.updatedAt,
+          ].forEach((value) => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.append(cell);
+          });
+          tasksBody.append(row);
+        });
+      }
+
       function renderTimeline(list, items, emptyText, renderItem) {
         list.textContent = "";
         if (items.length === 0) {
@@ -754,6 +835,7 @@
         detailTechnician.textContent = report.assignedTechnician
           ? report.assignedTechnician.displayName
           : "Unassigned";
+        detailAccepted.textContent = report.acceptedAt || "Not accepted";
         detailCreated.textContent = report.createdAt;
         detailUpdated.textContent = report.updatedAt;
         detailDescription.textContent = report.description;
@@ -771,6 +853,10 @@
         if (actorRole.value === "ADMINISTRATOR") {
           loadTechnicianChoices(report.assignedTechnician?.id || "");
         }
+        technicianTaskForm.hidden = actorRole.value !== "TECHNICIAN";
+        acceptTaskButton.disabled =
+          report.status !== "ASSIGNED" || Boolean(report.acceptedAt);
+        technicianTaskStatus.textContent = report.acceptedAt ? "Task accepted." : "";
 
         detailLifecycle.textContent = "";
         report.lifecycle.forEach((status) => {
@@ -952,6 +1038,41 @@
         }
       });
 
+      acceptTaskButton.addEventListener("click", async () => {
+        if (!currentDetailId) return;
+
+        technicianTaskStatus.textContent = "";
+        acceptTaskButton.disabled = true;
+        let saved = false;
+
+        try {
+          const response = await fetch(
+            `/api/requests/${encodeURIComponent(currentDetailId)}/accept`,
+            {
+              method: "POST",
+              headers: { "x-actor-role": actorRole.value },
+            },
+          );
+          const result = await response.json();
+
+          if (!response.ok) {
+            technicianTaskStatus.textContent =
+              result.error?.message || "Task could not be accepted.";
+            return;
+          }
+
+          const detailId = currentDetailId;
+          saved = true;
+          await loadReportDetail(detailId);
+          await loadTechnicianTasks();
+          technicianTaskStatus.textContent = "Task accepted.";
+        } catch {
+          technicianTaskStatus.textContent = "Task could not be accepted.";
+        } finally {
+          if (!saved) acceptTaskButton.disabled = false;
+        }
+      });
+
       commentForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         if (!currentDetailId) return;
@@ -1019,6 +1140,40 @@
         }
       }
 
+      async function loadTechnicianTasks() {
+        technicianTasksSection.hidden = actorRole.value !== "TECHNICIAN";
+
+        if (actorRole.value !== "TECHNICIAN") {
+          tasksStatus.textContent = "";
+          tasksBody.textContent = "";
+          tasksEmpty.textContent = "";
+          return;
+        }
+
+        tasksStatus.textContent = "Loading tasks...";
+
+        try {
+          const response = await fetch("/api/technician/tasks", {
+            headers: { "x-actor-role": actorRole.value },
+          });
+          const result = await response.json();
+
+          if (!response.ok) {
+            tasksTable.hidden = true;
+            tasksBody.textContent = "";
+            tasksEmpty.textContent =
+              result.error?.message || "Tasks could not be loaded.";
+            return;
+          }
+
+          renderTechnicianTasks(result.data);
+          tasksStatus.textContent = "";
+        } catch {
+          tasksTable.hidden = true;
+          tasksEmpty.textContent = "Tasks could not be loaded.";
+        }
+      }
+
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         clearErrors();
@@ -1069,8 +1224,10 @@
       actorRole.addEventListener("change", () => {
         resetDetail();
         loadReports();
+        loadTechnicianTasks();
       });
       loadReports();
+      loadTechnicianTasks();
     </script>
   </body>
 </html>

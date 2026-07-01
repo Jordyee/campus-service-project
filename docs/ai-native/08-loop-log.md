@@ -253,7 +253,7 @@ An issue loop can stop only when:
 
 ### Issue #14 - Add technician assignment flow
 
-**Status:** Draft PR open; tests pass; review pass
+**Status:** Merged to `development`
 
 **Branch:** `implementation/issue-14-technician-assignment`
 
@@ -285,13 +285,35 @@ An issue loop can stop only when:
 
 ### Issue #15 - Build technician task list and acceptance flow
 
-**Status:** Blocked by #14
+**Status:** Implementation complete; tests pass; PR pending
 
 **Branch:** `implementation/issue-15-technician-tasks-acceptance`
 
 **PR:** Pending
 
-**Owner:** Unassigned
+**Owner:** Main agent
+
+**Blockers:** #14 completed and merged through PR #27.
+
+**Source of Truth:**
+
+- GitHub Issue #15
+- `docs/planning/implementation-queue.md`
+- `docs/requirements/traceability.md`
+- `docs/design/01-architecture.md`
+- `docs/design/02-database-api.md`
+- `docs/design/03-ui.md`
+
+**Cycle 1:**
+
+- Build attempt: Added Technician-only `GET /api/technician/tasks`, `POST /api/requests/{id}/accept`, assigned-technician conflict handling, `accepted_at` detail/list exposure, Technician task list UI, task detail opening, and Accept Work detail action.
+- Files changed: `worker/requests.ts`, `worker/index.ts`, `public/index.html`, `tests/integration/technician-tasks-api.spec.ts`, `tests/unit/new-report-form.spec.ts`, `docs/ai-native/08-loop-log.md`, `docs/planning/implementation-queue.md`, `docs/requirements/traceability.md`, `evidence/implementation-issue-15-ai-evidence.md`, `evidence/human-review-issue-15.md`.
+- AI assumptions: Acceptance records `accepted_at` and keeps status `ASSIGNED` so progress to `IN_PROGRESS` remains #16. Technician reject/reassign, progress/resolved updates, and deployment remain out of scope.
+- Review result: Pass. Review kept the slice to task visibility and acceptance only, with `ASSIGNMENT_CONFLICT` for a different technician.
+- Tests/checks run: `npx.cmd vitest tests/integration/technician-tasks-api.spec.ts --run`; `npx.cmd vitest tests/integration/technician-tasks-api.spec.ts tests/unit/new-report-form.spec.ts --run`; `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
+- Evidence: Focused task/acceptance tests failed before implementation with route-level 404 and missing `acceptedAt`, then passed after adding API/UI support. Final run passed typecheck and 12 files / 49 tests.
+- Failures: None remaining.
+- Decision: Accept Cycle 1 for draft PR creation and main-agent review.
 
 ### Issue #16 - Add technician progress and resolved status flow
 

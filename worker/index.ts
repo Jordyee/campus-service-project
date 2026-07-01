@@ -1,10 +1,12 @@
 import { apiError, apiSuccess } from "./foundation";
 import {
+  handleAcceptTask,
   handleAssignTechnician,
   handleClassifyRequest,
   handleAddRequestComment,
   handleCreateRequest,
   handleGetRequestDetail,
+  handleListTechnicianTasks,
   handleListUsers,
   handleListRequests,
   handleReviewRequest,
@@ -32,6 +34,10 @@ export default {
 
     if (url.pathname === "/api/users" && request.method === "GET") {
       return handleListUsers(request, env.DB);
+    }
+
+    if (url.pathname === "/api/technician/tasks" && request.method === "GET") {
+      return handleListTechnicianTasks(request, env.DB);
     }
 
     const commentMatch = url.pathname.match(
@@ -73,6 +79,15 @@ export default {
         request,
         env.DB,
         decodeURIComponent(assignmentMatch[1]),
+      );
+    }
+
+    const acceptMatch = url.pathname.match(/^\/api\/requests\/([^/]+)\/accept$/);
+    if (acceptMatch && request.method === "POST") {
+      return handleAcceptTask(
+        request,
+        env.DB,
+        decodeURIComponent(acceptMatch[1]),
       );
     }
 
