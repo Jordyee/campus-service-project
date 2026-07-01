@@ -27,6 +27,13 @@ describe("new report form", () => {
     expect(html).toContain("id=\"technician-tasks-section\"");
     expect(html).toContain("No assigned tasks.");
     expect(html).toContain("/api/technician/tasks");
+    expect(html).toContain("id=\"manager-dashboard-section\"");
+    expect(html).toContain("id=\"dashboard-status-counts\"");
+    expect(html).toContain("id=\"dashboard-category-counts\"");
+    expect(html).toContain("id=\"dashboard-priority-counts\"");
+    expect(html).toContain("id=\"dashboard-recent-table\"");
+    expect(html).toContain("No recent reports yet.");
+    expect(html).toContain("/api/dashboard/summary");
     expect(html).toContain("id=\"detail-card\"");
     expect(html).toContain("id=\"detail-lifecycle\"");
     expect(html).toContain("id=\"detail-accepted\"");
