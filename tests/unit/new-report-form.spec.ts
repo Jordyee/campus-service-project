@@ -7,6 +7,12 @@ describe("new report form", () => {
     const html = await response.text();
 
     expect(response.status).toBe(200);
+    expect(html).toContain('id="backend-banner"');
+    expect(html).toContain('id="backend-title"');
+    expect(html).toContain('id="backend-message"');
+    expect(html).toContain("Backend not connected. Run npm.cmd run dev");
+    expect(html).toContain('id="reporter-section"');
+    expect(html).toContain('id="role-summary"');
     for (const field of [
       "title",
       "description",
@@ -20,6 +26,7 @@ describe("new report form", () => {
     }
 
     expect(html).toContain('fetch("/api/requests"');
+    expect(html).toContain('fetch("/api/health"');
     expect(html).toContain("id=\"report-filters\"");
     expect(html).toContain("No reports match the current filters.");
     expect(html).toContain("No reports yet.");

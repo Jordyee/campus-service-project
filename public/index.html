@@ -64,6 +64,35 @@
         padding: 6px 28px 6px 8px;
       }
 
+      .backend-banner {
+        margin-bottom: 20px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #ffffff;
+        padding: 14px 16px;
+      }
+
+      .backend-banner strong {
+        display: block;
+        margin-bottom: 4px;
+        color: #0f172a;
+      }
+
+      .backend-banner p {
+        color: #475569;
+        line-height: 1.5;
+      }
+
+      .backend-banner[data-state="offline"] {
+        border-color: #fca5a5;
+        background: #fef2f2;
+      }
+
+      .backend-banner[data-state="offline"] strong,
+      .backend-banner[data-state="offline"] p {
+        color: #991b1b;
+      }
+
       .workspace {
         display: grid;
         grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
@@ -306,8 +335,18 @@
         </div>
       </header>
 
+      <section
+        id="backend-banner"
+        class="backend-banner"
+        aria-live="polite"
+        data-state="checking"
+      >
+        <strong id="backend-title">Checking backend connection...</strong>
+        <p id="backend-message">The page is verifying whether the Worker API is reachable.</p>
+      </section>
+
       <div class="workspace">
-        <section aria-labelledby="new-report-title">
+        <section id="reporter-section" aria-labelledby="new-report-title">
           <h2 id="new-report-title">New Service Request</h2>
           <form id="request-form" novalidate>
             <label>
@@ -360,7 +399,11 @@
         </section>
 
         <section class="summary" aria-labelledby="summary-title">
-          <h2 id="summary-title">Submitted Request</h2>
+          <h2 id="summary-title">Current Role</h2>
+          <p id="role-summary">
+            Reporter can submit new facility issues and follow their report progress.
+          </p>
+          <h3 id="active-role-title">Submitted Request</h3>
           <p id="created-request">No request submitted in this session.</p>
         </section>
 
@@ -634,8 +677,14 @@
     </main>
     <script>
       const actorRole = document.getElementById("actor-role");
+      const reporterSection = document.getElementById("reporter-section");
       const form = document.getElementById("request-form");
       const statusOutput = document.getElementById("form-status");
+      const backendBanner = document.getElementById("backend-banner");
+      const backendTitle = document.getElementById("backend-title");
+      const backendMessage = document.getElementById("backend-message");
+      const roleSummary = document.getElementById("role-summary");
+      const activeRoleTitle = document.getElementById("active-role-title");
       const createdRequest = document.getElementById("created-request");
       const submitButton = form.querySelector("button");
       const filterForm = document.getElementById("report-filters");
@@ -716,6 +765,73 @@
       const commentStatus = document.getElementById("comment-status");
       const commentSubmitButton = commentForm.querySelector("button");
       let currentDetailId = null;
+      let reporterLastSubmittedSummary = "No request submitted in this session.";
+      let backendReady = false;
+      const backendUnavailableMessage =
+        "Backend not connected. Run npm.cmd run dev and open the Wrangler local URL instead of opening the HTML file directly.";
+
+      const roleDescriptions = {
+        REPORTER:
+          "Reporter can submit new facility issues, view their own reports, and add comments.",
+        ADMINISTRATOR:
+          "Administrator reviews submitted reports, sets category and priority, assigns technicians, and closes or reopens reports.",
+        TECHNICIAN:
+          "Technician sees assigned tasks, accepts work, updates progress, resolves tasks, and adds work notes.",
+        FACILITY_MANAGER:
+          "Facility Manager sees the dashboard and report details, but cannot submit, assign, or update work.",
+      };
+
+      function applyRoleView() {
+        const role = actorRole.value;
+        const isReporter = role === "REPORTER";
+        reporterSection.hidden = !isReporter;
+        roleSummary.textContent = roleDescriptions[role];
+        activeRoleTitle.textContent = isReporter
+          ? "Submitted Request"
+          : "Role-Specific Notes";
+
+        if (isReporter) {
+          createdRequest.textContent = reporterLastSubmittedSummary;
+          return;
+        }
+
+        createdRequest.textContent =
+          role === "ADMINISTRATOR"
+            ? "Administrator can review, classify, assign, close, and reopen reports from the detail panel."
+            : role === "TECHNICIAN"
+              ? "Technician can accept assigned tasks and update work status from the detail panel."
+              : "Facility Manager has read-only access to the dashboard and report details.";
+      }
+
+      function setBackendState(ready, message = "") {
+        backendReady = ready;
+        backendBanner.dataset.state = ready ? "online" : "offline";
+        backendTitle.textContent = ready
+          ? "Backend connected."
+          : "Backend is not reachable.";
+        backendMessage.textContent = ready
+          ? "The Worker API is available. Role-based actions should load normally."
+          : message || backendUnavailableMessage;
+        submitButton.disabled = !ready || actorRole.value !== "REPORTER";
+      }
+
+      async function ensureBackendReady() {
+        if (window.location.protocol === "file:") {
+          setBackendState(false, backendUnavailableMessage);
+          return false;
+        }
+
+        try {
+          const response = await fetch("/api/health");
+          const result = await response.json();
+          const ok = response.ok && result?.data?.status === "ok";
+          setBackendState(ok, backendUnavailableMessage);
+          return ok;
+        } catch {
+          setBackendState(false, backendUnavailableMessage);
+          return false;
+        }
+      }
 
       function clearErrors() {
         form.querySelectorAll("[data-error-for]").forEach((element) => {
@@ -1471,6 +1587,14 @@
         const params = activeFilters();
         listStatus.textContent = "Loading reports...";
 
+        if (!(await ensureBackendReady())) {
+          reportsTable.hidden = true;
+          reportsBody.textContent = "";
+          reportsEmpty.textContent = backendUnavailableMessage;
+          listStatus.textContent = "";
+          return;
+        }
+
         try {
           const response = await fetch(`/api/requests?${params}`, {
             headers: { "x-actor-role": actorRole.value },
@@ -1508,6 +1632,14 @@
 
         dashboardStatus.textContent = "Loading dashboard...";
 
+        if (!(await ensureBackendReady())) {
+          dashboardRecentTable.hidden = true;
+          dashboardRecentBody.textContent = "";
+          dashboardEmpty.textContent = backendUnavailableMessage;
+          dashboardStatus.textContent = "";
+          return;
+        }
+
         try {
           const response = await fetch("/api/dashboard/summary", {
             headers: { "x-actor-role": actorRole.value },
@@ -1542,6 +1674,14 @@
 
         tasksStatus.textContent = "Loading tasks...";
 
+        if (!(await ensureBackendReady())) {
+          tasksTable.hidden = true;
+          tasksBody.textContent = "";
+          tasksEmpty.textContent = backendUnavailableMessage;
+          tasksStatus.textContent = "";
+          return;
+        }
+
         try {
           const response = await fetch("/api/technician/tasks", {
             headers: { "x-actor-role": actorRole.value },
@@ -1570,6 +1710,12 @@
         statusOutput.textContent = "";
         submitButton.disabled = true;
 
+        if (!(await ensureBackendReady())) {
+          statusOutput.textContent = backendUnavailableMessage;
+          submitButton.disabled = actorRole.value !== "REPORTER";
+          return;
+        }
+
         const payload = Object.fromEntries(new FormData(form).entries());
 
         try {
@@ -1592,7 +1738,8 @@
 
           const request = result.data;
           statusOutput.textContent = "Report submitted.";
-          createdRequest.textContent = `${request.requestNumber} - ${request.status}`;
+          reporterLastSubmittedSummary = `${request.requestNumber} - ${request.status}`;
+          createdRequest.textContent = reporterLastSubmittedSummary;
           await loadReports();
         } catch {
           statusOutput.textContent = "Request could not be submitted.";
@@ -1612,11 +1759,13 @@
       });
 
       actorRole.addEventListener("change", () => {
+        applyRoleView();
         resetDetail();
         loadReports();
         loadDashboard();
         loadTechnicianTasks();
       });
+      applyRoleView();
       loadReports();
       loadDashboard();
       loadTechnicianTasks();
