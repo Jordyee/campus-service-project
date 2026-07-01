@@ -17,6 +17,9 @@ This file starts project traceability from requirements to later design, issues,
 | DBAPI-01 | `docs/design/02-database-api.md` |
 | UIDES-01 | `docs/design/03-ui.md` |
 | TEST-01 | `docs/testing/implementation-test-coverage.md` |
+| TEST-02 | `docs/testing/01-test-plan.md` |
+| TEST-03 | `docs/testing/02-acceptance-test-results.md` |
+| TEST-04 | `docs/testing/test-execution-report-2026-07-02.md` |
 
 ## 3. Functional Requirement Traceability
 
@@ -215,6 +218,12 @@ Implementation/testing update status:
 - Active FR/NFR rows now include issue IDs, code references, and test references where implemented.
 - `docs/testing/implementation-test-coverage.md` records the coverage inventory and known limitations.
 - No optional features were added during the coverage audit.
+
+Acceptance testing update status:
+
+- Acceptance tests were planned in `docs/testing/01-test-plan.md` with 5 main flows (Flow A-E).
+- Results recorded in `docs/testing/02-acceptance-test-results.md` confirm passes for core workflows.
+- Visual screenshot evidence is deferred to the student's manual final packaging.
 
 ## 10. Architecture Design Traceability
 

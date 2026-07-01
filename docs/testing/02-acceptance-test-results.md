@@ -129,12 +129,8 @@ It is intended to capture:
 
 ## 8. Evidence Still Useful To Add
 
-- screenshot of Reporter successful submission
-- screenshot of Reporter validation error
-- screenshot of Administrator review/classification/assignment panel
-- screenshot of Technician task accept/progress/resolved panel
-- screenshot of Administrator close/reopen panel
-- screenshot of Facility Manager dashboard
+- visual screenshots for each flow (optional for automated verification, required only if rubric mandates it)
+- Screenshot evidence is decided to be left for the student to capture during final project packaging if required by the rubric, as the agent operates in a headless/terminal context.
 
 ## 9. Current Problems / Limitations
 
