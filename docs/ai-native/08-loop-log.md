@@ -98,7 +98,7 @@ An issue loop can stop only when:
 
 ### Issue #9 - Build reporter service request creation flow
 
-**Status:** Draft PR opened; tests pass
+**Status:** Merged to `development`
 
 **Branch:** `implementation/issue-9-create-report`
 
@@ -129,13 +129,34 @@ An issue loop can stop only when:
 
 ### Issue #10 - Build report list, search, and filters
 
-**Status:** Blocked by #8 and #9
+**Status:** Checkpoint commit pending; tests pass; PR not opened yet
 
 **Branch:** `implementation/issue-10-report-list-filters`
 
 **PR:** Pending
 
-**Owner:** Unassigned
+**Owner:** Main agent
+
+**Blockers:** #8 and #9 completed and merged through PR #21 and PR #22.
+
+**Source of Truth:**
+
+- GitHub Issue #10
+- `docs/planning/implementation-queue.md`
+- `docs/requirements/traceability.md`
+- `docs/design/02-database-api.md`
+- `docs/design/03-ui.md`
+
+**Cycle 1:**
+
+- Build attempt: Added `GET /api/requests`, role-scoped list reads, status/category/priority/location/keyword filters, practical keyword matching, assigned technician display, role selector, list/filter UI, clear filters action, and no-results empty states.
+- Files changed: `worker/requests.ts`, `worker/index.ts`, `public/index.html`, `tests/unit/create-request.spec.ts`, `tests/unit/new-report-form.spec.ts`, `tests/integration/list-requests-api.spec.ts`, `docs/ai-native/08-loop-log.md`, `docs/planning/implementation-queue.md`, `docs/requirements/traceability.md`, `evidence/implementation-issue-10-ai-evidence.md`, `evidence/human-review-issue-10.md`.
+- AI assumptions: Reporter list is scoped to `reporter_user_id`, Technician list to `assigned_technician_id`, and Administrator/Facility Manager see all reports. Detail navigation remains out of scope until #11.
+- Review result: Pass after focused test fix. Review kept report detail, comments, dashboard analytics, and deployment out of scope.
+- Tests/checks run: `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
+- Evidence: First test run failed because the invalid-filter expectation omitted the standard API error `message`; fixed the test expectation. Final run passed 7 files and 28 tests.
+- Failures: None remaining.
+- Decision: Pause at student-requested checkpoint after coherent implementation and passing checks. Commit/push branch checkpoint; do not open PR or start #11 yet.
 
 ### Issue #11 - Build report detail with status history display
 

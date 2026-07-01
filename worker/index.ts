@@ -1,5 +1,5 @@
 import { apiError, apiSuccess } from "./foundation";
-import { handleCreateRequest } from "./requests";
+import { handleCreateRequest, handleListRequests } from "./requests";
 
 interface Env {
   DB: D1Database;
@@ -15,6 +15,10 @@ export default {
 
     if (url.pathname === "/api/requests" && request.method === "POST") {
       return handleCreateRequest(request, env.DB);
+    }
+
+    if (url.pathname === "/api/requests" && request.method === "GET") {
+      return handleListRequests(request, env.DB);
     }
 
     return apiError("NOT_FOUND", "Route not found.");

@@ -53,6 +53,17 @@
         font-size: 0.9rem;
       }
 
+      .role-badge label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .role-badge select {
+        width: auto;
+        padding: 6px 28px 6px 8px;
+      }
+
       .workspace {
         display: grid;
         grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
@@ -70,6 +81,11 @@
       form {
         display: grid;
         gap: 16px;
+      }
+
+      .filters {
+        grid-template-columns: repeat(5, minmax(120px, 1fr)) auto auto;
+        align-items: end;
       }
 
       label {
@@ -138,11 +154,48 @@
         line-height: 1.5;
       }
 
+      .reports {
+        grid-column: 1 / -1;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid #e2e8f0;
+        padding: 10px;
+        text-align: left;
+        white-space: nowrap;
+      }
+
+      th {
+        color: #475569;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+      }
+
+      .empty-state {
+        margin-top: 12px;
+        color: #64748b;
+      }
+
       @media (max-width: 760px) {
         header,
         .workspace {
           grid-template-columns: 1fr;
           display: grid;
+        }
+
+        .filters {
+          grid-template-columns: 1fr;
         }
       }
     </style>
@@ -151,7 +204,17 @@
     <main>
       <header>
         <h1>Campus Service Request</h1>
-        <div class="role-badge">Reporter workspace</div>
+        <div class="role-badge">
+          <label>
+            Role
+            <select id="actor-role">
+              <option value="REPORTER">Reporter</option>
+              <option value="ADMINISTRATOR">Administrator</option>
+              <option value="TECHNICIAN">Technician</option>
+              <option value="FACILITY_MANAGER">Facility Manager</option>
+            </select>
+          </label>
+        </div>
       </header>
 
       <div class="workspace">
@@ -211,13 +274,88 @@
           <h2 id="summary-title">Submitted Request</h2>
           <p id="created-request">No request submitted in this session.</p>
         </section>
+
+        <section class="reports" aria-labelledby="reports-title">
+          <h2 id="reports-title">Reports</h2>
+          <form id="report-filters" class="filters">
+            <label>
+              Keyword
+              <input name="keyword" autocomplete="off" />
+            </label>
+            <label>
+              Status
+              <select name="status">
+                <option value="">All</option>
+                <option value="SUBMITTED">Submitted</option>
+                <option value="UNDER_REVIEW">Under Review</option>
+                <option value="ASSIGNED">Assigned</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="RESOLVED">Resolved</option>
+                <option value="CLOSED">Closed</option>
+              </select>
+            </label>
+            <label>
+              Category
+              <select name="category">
+                <option value="">All</option>
+                <option value="INTERNET">Internet</option>
+                <option value="AC">AC</option>
+                <option value="PERALATAN_KELAS">Peralatan Kelas</option>
+                <option value="KEBERSIHAN">Kebersihan</option>
+                <option value="LABORATORIUM">Laboratorium</option>
+                <option value="LAINNYA">Lainnya</option>
+              </select>
+            </label>
+            <label>
+              Priority
+              <select name="priority">
+                <option value="">All</option>
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+              </select>
+            </label>
+            <label>
+              Location
+              <input name="location" autocomplete="off" />
+            </label>
+            <button type="submit">Apply</button>
+            <button id="clear-filters" type="button">Clear</button>
+          </form>
+          <output id="list-status"></output>
+          <div class="table-wrap">
+            <table id="reports-table" hidden>
+              <thead>
+                <tr>
+                  <th>Number</th>
+                  <th>Title</th>
+                  <th>Location</th>
+                  <th>Category</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Technician</th>
+                  <th>Created</th>
+                </tr>
+              </thead>
+              <tbody id="reports-body"></tbody>
+            </table>
+          </div>
+          <p id="reports-empty" class="empty-state"></p>
+        </section>
       </div>
     </main>
     <script>
+      const actorRole = document.getElementById("actor-role");
       const form = document.getElementById("request-form");
       const statusOutput = document.getElementById("form-status");
       const createdRequest = document.getElementById("created-request");
       const submitButton = form.querySelector("button");
+      const filterForm = document.getElementById("report-filters");
+      const clearFilters = document.getElementById("clear-filters");
+      const listStatus = document.getElementById("list-status");
+      const reportsTable = document.getElementById("reports-table");
+      const reportsBody = document.getElementById("reports-body");
+      const reportsEmpty = document.getElementById("reports-empty");
 
       function clearErrors() {
         form.querySelectorAll("[data-error-for]").forEach((element) => {
@@ -236,6 +374,74 @@
         });
       }
 
+      function activeFilters() {
+        const params = new URLSearchParams();
+        new FormData(filterForm).forEach((value, key) => {
+          if (String(value).trim()) {
+            params.set(key, String(value).trim());
+          }
+        });
+        return params;
+      }
+
+      function renderReports(reports, filtered) {
+        reportsBody.textContent = "";
+        reportsTable.hidden = reports.length === 0;
+        reportsEmpty.textContent = "";
+
+        if (reports.length === 0) {
+          reportsEmpty.textContent = filtered
+            ? "No reports match the current filters."
+            : "No reports yet.";
+          return;
+        }
+
+        reports.forEach((report) => {
+          const row = document.createElement("tr");
+          for (const value of [
+            report.requestNumber,
+            report.title,
+            report.location,
+            report.category,
+            report.priority,
+            report.status,
+            report.assignedTechnicianName || "-",
+            report.createdAt,
+          ]) {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.append(cell);
+          }
+          reportsBody.append(row);
+        });
+      }
+
+      async function loadReports() {
+        const params = activeFilters();
+        listStatus.textContent = "Loading reports...";
+
+        try {
+          const response = await fetch(`/api/requests?${params}`, {
+            headers: { "x-actor-role": actorRole.value },
+          });
+          const result = await response.json();
+
+          if (!response.ok) {
+            reportsTable.hidden = true;
+            reportsBody.textContent = "";
+            reportsEmpty.textContent =
+              result.error?.message || "Reports could not be loaded.";
+            return;
+          }
+
+          renderReports(result.data, params.size > 0);
+          listStatus.textContent = "";
+        } catch {
+          reportsTable.hidden = true;
+          reportsEmpty.textContent = "Reports could not be loaded.";
+        }
+      }
+
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         clearErrors();
@@ -249,7 +455,7 @@
             method: "POST",
             headers: {
               "content-type": "application/json",
-              "x-actor-role": "REPORTER",
+              "x-actor-role": actorRole.value,
             },
             body: JSON.stringify(payload),
           });
@@ -265,12 +471,26 @@
           const request = result.data;
           statusOutput.textContent = "Report submitted.";
           createdRequest.textContent = `${request.requestNumber} - ${request.status}`;
+          await loadReports();
         } catch {
           statusOutput.textContent = "Request could not be submitted.";
         } finally {
           submitButton.disabled = false;
         }
       });
+
+      filterForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        loadReports();
+      });
+
+      clearFilters.addEventListener("click", () => {
+        filterForm.reset();
+        loadReports();
+      });
+
+      actorRole.addEventListener("change", loadReports);
+      loadReports();
     </script>
   </body>
 </html>
