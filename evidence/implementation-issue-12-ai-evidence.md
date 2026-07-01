@@ -4,6 +4,7 @@
 
 - GitHub Issue: #12 - Add append-only comments and notes
 - Branch: `implementation/issue-12-comments-notes`
+- PR: https://github.com/Jordyee/campus-service-project/pull/25
 - Date: 2026-07-02
 
 ## Sources Read

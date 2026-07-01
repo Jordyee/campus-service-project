@@ -191,11 +191,11 @@ An issue loop can stop only when:
 
 ### Issue #12 - Add append-only comments and notes
 
-**Status:** Implementation complete; tests pass; PR pending
+**Status:** Draft PR open; review/testing pass
 
 **Branch:** `implementation/issue-12-comments-notes`
 
-**PR:** Pending
+**PR:** https://github.com/Jordyee/campus-service-project/pull/25
 
 **Owner:** Main agent
 
@@ -218,7 +218,7 @@ An issue loop can stop only when:
 - Tests/checks run: `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
 - Evidence: Focused comments test failed before implementation with route-level 404, then passed after adding API/UI support. Final run passed typecheck and 9 files / 35 tests.
 - Failures: None remaining.
-- Decision: Accept Cycle 1 for draft PR creation and main-agent review.
+- Decision: Accept Cycle 1 for PR #25 review and merge to `development`.
 
 ### Issue #13 - Add admin review, category, and priority flow
 
