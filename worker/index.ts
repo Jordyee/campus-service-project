@@ -10,6 +10,7 @@ import {
   handleListUsers,
   handleListRequests,
   handleReviewRequest,
+  handleUpdateWorkStatus,
 } from "./requests";
 
 interface Env {
@@ -88,6 +89,17 @@ export default {
         request,
         env.DB,
         decodeURIComponent(acceptMatch[1]),
+      );
+    }
+
+    const workStatusMatch = url.pathname.match(
+      /^\/api\/requests\/([^/]+)\/work-status$/,
+    );
+    if (workStatusMatch && request.method === "PATCH") {
+      return handleUpdateWorkStatus(
+        request,
+        env.DB,
+        decodeURIComponent(workStatusMatch[1]),
       );
     }
 

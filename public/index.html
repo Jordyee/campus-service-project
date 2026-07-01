@@ -520,7 +520,13 @@
             </form>
             <form id="technician-task-form" class="comment-form" hidden>
               <h3>Technician Task</h3>
+              <label>
+                Progress Note
+                <textarea id="technician-note" name="note"></textarea>
+              </label>
               <button id="accept-task-button" type="button">Accept Work</button>
+              <button id="mark-progress-button" type="button">Mark In Progress</button>
+              <button id="mark-resolved-button" type="button">Mark Resolved</button>
               <output id="technician-task-status"></output>
             </form>
             <h3>Lifecycle</h3>
@@ -598,7 +604,10 @@
       const assignmentStatus = document.getElementById("assignment-status");
       const assignmentSubmitButton = assignmentForm.querySelector("button");
       const technicianTaskForm = document.getElementById("technician-task-form");
+      const technicianNote = document.getElementById("technician-note");
       const acceptTaskButton = document.getElementById("accept-task-button");
+      const markProgressButton = document.getElementById("mark-progress-button");
+      const markResolvedButton = document.getElementById("mark-resolved-button");
       const technicianTaskStatus = document.getElementById(
         "technician-task-status",
       );
@@ -856,6 +865,10 @@
         technicianTaskForm.hidden = actorRole.value !== "TECHNICIAN";
         acceptTaskButton.disabled =
           report.status !== "ASSIGNED" || Boolean(report.acceptedAt);
+        markProgressButton.disabled =
+          report.status !== "ASSIGNED" || !report.acceptedAt;
+        markResolvedButton.disabled = report.status !== "IN_PROGRESS";
+        technicianNote.value = "";
         technicianTaskStatus.textContent = report.acceptedAt ? "Task accepted." : "";
 
         detailLifecycle.textContent = "";
@@ -1071,6 +1084,60 @@
         } finally {
           if (!saved) acceptTaskButton.disabled = false;
         }
+      });
+
+      async function updateWorkStatus(status) {
+        if (!currentDetailId) return;
+
+        const progressWasDisabled = markProgressButton.disabled;
+        const resolvedWasDisabled = markResolvedButton.disabled;
+        technicianTaskStatus.textContent = "";
+        markProgressButton.disabled = true;
+        markResolvedButton.disabled = true;
+        let saved = false;
+
+        try {
+          const response = await fetch(
+            `/api/requests/${encodeURIComponent(currentDetailId)}/work-status`,
+            {
+              method: "PATCH",
+              headers: {
+                "content-type": "application/json",
+                "x-actor-role": actorRole.value,
+              },
+              body: JSON.stringify({ status, note: technicianNote.value }),
+            },
+          );
+          const result = await response.json();
+
+          if (!response.ok) {
+            technicianTaskStatus.textContent =
+              result.error?.message || "Work status could not be updated.";
+            return;
+          }
+
+          const detailId = currentDetailId;
+          technicianNote.value = "";
+          saved = true;
+          await loadReportDetail(detailId);
+          await loadTechnicianTasks();
+          technicianTaskStatus.textContent = "Work status updated.";
+        } catch {
+          technicianTaskStatus.textContent = "Work status could not be updated.";
+        } finally {
+          if (!saved) {
+            markProgressButton.disabled = progressWasDisabled;
+            markResolvedButton.disabled = resolvedWasDisabled;
+          }
+        }
+      }
+
+      markProgressButton.addEventListener("click", () => {
+        updateWorkStatus("IN_PROGRESS");
+      });
+
+      markResolvedButton.addEventListener("click", () => {
+        updateWorkStatus("RESOLVED");
       });
 
       commentForm.addEventListener("submit", async (event) => {
