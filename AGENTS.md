@@ -215,20 +215,53 @@ Ask the student before:
 - Choosing authentication, role policy, retention policy, notification behavior, or measurable NFR targets.
 - Rewriting large parts of the architecture or repo structure.
 
+## Engineering Loop Rules
+
+Use these files before implementation:
+
+- `docs/planning/issue-plan.md`
+- `docs/planning/implementation-queue.md`
+- `docs/planning/sub-agent-protocol.md`
+- `docs/ai-native/05-issues.md`
+- `docs/ai-native/07-issue-prompt.md`
+- `docs/ai-native/08-loop-log.md`
+
+Loop rule:
+
+```text
+one issue -> one owner -> one branch -> one PR -> main-agent review
+```
+
+Sub-agent rules:
+
+- One sub-agent may work on only one issue at a time.
+- One issue may have only one owner at a time.
+- Every implementation issue uses a unique `implementation/<issue-id-or-feature>` branch.
+- Sub-agents must not work on blocked issues.
+- Sub-agents must not implement another issue's blocker without explicit approval.
+- Sub-agents must push their branch and open a draft PR when done.
+- Main agent reviews PRs against requirements, design, tests, scope, and traceability.
+- Use `ponytail` for minimal implementation, `run-the-loop` for the issue loop, `tdd` or `rtk-tdd` for test-heavy logic, and `caveman` only for concise internal status reports.
+
 ## Current Status
 
 - GitHub repo exists: `Jordyee/campus-service-project`.
 - `main` contains finalized setup up to initial Cloudflare worker app and adapted first 5 requirement skills.
 - `development` is the branch for ongoing work.
+- Requirements documents exist in `docs/requirements/`.
+- Design documents exist in `docs/design/`.
+- Issue planning exists in `docs/planning/issue-plan.md`.
+- Engineering loop preparation exists in `docs/planning/implementation-queue.md`, `docs/planning/sub-agent-protocol.md`, and `docs/ai-native/`.
+- GitHub Issues #8 to #19 are open for implementation planning.
 - Cloudflare login has succeeded previously.
 - Cloudflare setup exists but final deployment should happen later.
-- Requirements documents have not been authored yet.
 
 ## Next Recommended Work
 
-Start with Skill 01 and create:
+Review and confirm the Issue #8 HITL decision:
 
-- `docs/requirements/01-inception-stakeholder.md`
+```text
+Use seeded/simple app_users records and a development-friendly role selector/header-based actor context. No Google login, no paid identity service.
+```
 
-Then review it with the student before continuing to elicitation.
-
+After confirmation, start the first engineering loop on GitHub Issue #8 using branch `implementation/issue-8-foundation`.
