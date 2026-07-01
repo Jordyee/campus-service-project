@@ -71,15 +71,12 @@ export default function TechnicianDashboard({
     <div style={{ display: "grid", gap: "var(--space-5)" }}>
       {/* ─── Greeting + Summary ──────────────────── */}
       <div
+        className="dashboard-header-grid--tech"
         style={{
           background: "linear-gradient(135deg, #14b8a6 0%, #0f766e 100%)", // Teal for technician
           borderRadius: "var(--radius-xl)",
           padding: "var(--space-6)",
           color: "#fff",
-          display: "grid",
-          gridTemplateColumns: "1fr auto auto",
-          gap: "var(--space-4)",
-          alignItems: "center",
         }}
       >
         <div>
@@ -127,13 +124,7 @@ export default function TechnicianDashboard({
       </div>
 
       {/* ─── Status Grid ─────────────────────────── */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: "var(--space-3)",
-        }}
-      >
+      <div className="dashboard-status-grid">
         {STATUS_ORDER.map((s) => (
           <button
             key={s}
@@ -193,12 +184,9 @@ export default function TechnicianDashboard({
             {needsAttention.map((r) => (
               <button
                 key={r.id}
+                className="dashboard-report-item"
                 onClick={() => onSelectReport(r.id)}
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr auto",
-                  gap: "var(--space-3)",
-                  alignItems: "center",
                   background: "var(--color-background)",
                   border: "1px solid var(--color-border)",
                   borderLeft: `4px solid ${r.status === "ASSIGNED" ? "var(--color-danger)" : "var(--color-warning)"}`,

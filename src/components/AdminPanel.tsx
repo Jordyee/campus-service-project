@@ -143,7 +143,7 @@ export default function AdminPanel({ role, detail, onUpdated }: AdminPanelProps)
         <>
           <form id="admin-review-form" className="subpanel" onSubmit={handleClassify}>
             <h4 className="subpanel-title">Klasifikasi</h4>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-3)", marginBottom: "var(--space-3)" }}>
+            <div className="grid-half">
               <div className="form-field">
                 <label className="form-label" htmlFor="admin-category">Kategori</label>
                 <select id="admin-category" name="category" className="form-select" value={category} onChange={(e) => setCategory(e.target.value as ClassificationInput["category"])}>

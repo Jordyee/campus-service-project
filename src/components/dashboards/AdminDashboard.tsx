@@ -72,15 +72,12 @@ export default function AdminDashboard({
     <div style={{ display: "grid", gap: "var(--space-5)" }}>
       {/* ─── Greeting + Summary ──────────────────── */}
       <div
+        className="dashboard-header-grid"
         style={{
           background: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)", // Darker premium look for admin
           borderRadius: "var(--radius-xl)",
           padding: "var(--space-6)",
           color: "#fff",
-          display: "grid",
-          gridTemplateColumns: "1fr auto",
-          gap: "var(--space-4)",
-          alignItems: "center",
         }}
       >
         <div>
@@ -110,13 +107,7 @@ export default function AdminDashboard({
       </div>
 
       {/* ─── Status Grid ─────────────────────────── */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: "var(--space-3)",
-        }}
-      >
+      <div className="dashboard-status-grid">
         {STATUS_ORDER.map((s) => (
           <button
             key={s}
@@ -176,12 +167,9 @@ export default function AdminDashboard({
             {needsAttention.map((r) => (
               <button
                 key={r.id}
+                className="dashboard-report-item"
                 onClick={() => onSelectReport(r.id)}
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr auto",
-                  gap: "var(--space-3)",
-                  alignItems: "center",
                   background: "var(--color-background)",
                   border: "1px solid var(--color-border)",
                   borderLeft: `4px solid ${r.status === "SUBMITTED" ? "var(--color-danger)" : "var(--color-warning)"}`,

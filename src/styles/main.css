@@ -621,6 +621,41 @@ p { margin: 0; }
   font-size: var(--text-sm);
 }
 
+/* ─── Role Dashboards ──────────────────────────────────────────────────────── */
+.dashboard-header-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.dashboard-header-grid--tech {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.dashboard-status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+.dashboard-report-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.grid-half {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
 /* ─── Responsive ────────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
   .workspace {
@@ -648,5 +683,31 @@ p { margin: 0; }
 
   .detail-grid {
     grid-template-columns: 1fr;
+  }
+
+  .dashboard-header-grid,
+  .dashboard-header-grid--tech {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .dashboard-status-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .grid-half {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-status-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard-report-item {
+    grid-template-columns: 1fr;
+    justify-items: start;
   }
 }
