@@ -51,9 +51,16 @@ Status: Pending student review.
 
 Student should confirm:
 
-- The Issue #8 simple role/session mechanism.
 - Whether branch creation for `implementation/issue-8-foundation` may begin.
 - Whether sub-agents may be used after #8 and #9 stabilize.
+
+Confirmed after initial preparation:
+
+- Student approved the Issue #8 simple role/session mechanism on 2026-07-01.
+- Student approved main-agent merge to `development` after review and testing pass.
+- Student prohibited merge to `main`.
+- Student requested continuous queue mode.
+- Student requested a hard cutoff after more than 3 loop cycles for one issue, with student notification and full queue stop for fatal blockers.
 
 ## 6. Final Output
 

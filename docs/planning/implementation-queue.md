@@ -34,6 +34,10 @@ One issue -> one owner -> one branch -> one PR -> one engineering loop
 - A sub-agent must not silently implement another issue's blocker.
 - Every implementation branch must end in a PR for main-agent review.
 - Every PR must document issue, scope, files changed, tests run, AI skills used, AI mistakes found, human review status, and evidence.
+- Main agent may merge a PR into `development` after review and testing pass.
+- Main agent must not merge into `main`.
+- Each issue loop is limited to 3 cycles. If an issue is still failing after 3 cycles, stop that issue loop and escalate instead of spending more tokens.
+- If the blocker/failure is fatal to the full implementation queue, stop the continuous queue and report to the student.
 - Deployment remains out of scope until the student explicitly approves deployment work.
 
 ## 4. Skill Policy
@@ -79,7 +83,7 @@ Optional skill creation:
 
 | Order | Issue | Mode | Status | Blocked By | Owner | Branch | PR | Main-Agent Decision |
 |---:|---|---|---|---|---|---|---|---|
-| 1 | #8 Foundation data model, role boundary, lifecycle | HITL | Waiting for student confirmation on simple role/session mechanism | None | Unassigned | `implementation/issue-8-foundation` | Pending | Pending |
+| 1 | #8 Foundation data model, role boundary, lifecycle | HITL | Ready to start when student explicitly starts the loop | None | Unassigned | `implementation/issue-8-foundation` | Pending | Pending |
 | 2 | #9 Reporter request creation | AFK | Blocked | #8 | Unassigned | `implementation/issue-9-create-report` | Pending | Pending |
 | 3 | #10 Report list, search, filters | AFK | Blocked | #8, #9 | Unassigned | `implementation/issue-10-report-list-filters` | Pending | Pending |
 | 4 | #11 Report detail and status history | AFK | Blocked | #8, #9 | Unassigned | `implementation/issue-11-report-detail-history` | Pending | Pending |
@@ -140,12 +144,24 @@ Main agent must pause parallel assignment when two issues are likely to edit the
 
 ## 10. Confirmation Needed Before First Loop
 
-Issue #8 is HITL. Before implementation starts, the student should confirm the simple role/session mechanism to use for the educational app.
+Issue #8 is HITL. The student approved the simple role/session mechanism on 2026-07-01.
 
-Recommended minimal option:
+Approved minimal option:
 
 ```text
 Use seeded/simple app_users records and a development-friendly role selector/header-based actor context. No Google login, no paid identity service.
 ```
 
 This keeps `CR-003` satisfied without adding production authentication scope.
+
+## 11. Continuous Queue Stop Policy
+
+The student approved continuous queue mode on 2026-07-01 with these limits:
+
+- Continue from one completed issue to the next unblocked issue without requiring a new prompt.
+- A completed issue means: implementation done, tests/checks pass, draft PR created, main-agent review passes, and PR may be merged to `development`.
+- Do not continue an issue beyond 3 engineering loop cycles.
+- After 3 failed cycles, stop that issue loop, preserve evidence, and notify the student.
+- If the issue failure blocks later issues but is not fatal, pause the queue at that blocker.
+- If the issue failure is fatal to the architecture, data model, branch history, or project scope, stop the continuous queue entirely and notify the student.
+- Never deploy or merge to `main` during continuous queue mode.

@@ -18,6 +18,8 @@ This file records engineering loop evidence for implementation issues. It is int
 - One loop entry per issue.
 - One issue per sub-agent.
 - Maximum 3 cycles per issue before diagnosis or human help.
+- After 3 failed cycles, cut the issue loop and notify the student instead of retrying.
+- If the failure is fatal to later issues, stop the continuous queue.
 - Every cycle must record build, review, test, and decision evidence.
 - Passing tests alone is not enough; acceptance checks and scope boundaries must pass.
 - Student/main-agent decision is required before a loop is accepted.
@@ -39,7 +41,7 @@ An issue loop can stop only when:
 
 ### Issue #8 - Implement app data model, role boundary, and lifecycle foundation
 
-**Status:** Not started
+**Status:** Ready to start when student explicitly starts the loop
 
 **Branch:** `implementation/issue-8-foundation`
 
@@ -47,7 +49,7 @@ An issue loop can stop only when:
 
 **Owner:** Unassigned
 
-**Blockers:** Student confirmation required for simple role/session mechanism.
+**Blockers:** None. Student approved simple role/session mechanism on 2026-07-01.
 
 **Source of Truth:**
 
@@ -65,6 +67,34 @@ An issue loop can stop only when:
 - Evidence:
 - Failures:
 - Decision:
+
+**Cycle 2:**
+
+- Build attempt:
+- Files changed:
+- AI assumptions:
+- Review result:
+- Tests/checks run:
+- Evidence:
+- Failures:
+- Decision:
+
+**Cycle 3:**
+
+- Build attempt:
+- Files changed:
+- AI assumptions:
+- Review result:
+- Tests/checks run:
+- Evidence:
+- Failures:
+- Decision:
+
+**After Cycle 3 if still failing:**
+
+- Stop issue loop.
+- Report blocker and evidence to student.
+- Do not continue to #9 unless main agent determines #8 passed review/testing.
 
 ### Issue #9 - Build reporter service request creation flow
 

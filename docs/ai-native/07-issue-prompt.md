@@ -55,6 +55,7 @@ Rules:
 - Do not touch main.
 - Do not create/delete worktrees unless explicitly approved.
 - Stop and report if a blocker is incomplete or a scope/auth/policy decision is needed.
+- Stop after 3 failed loop cycles for this issue. Preserve evidence and report instead of retrying again.
 
 Build:
 - Inspect the existing code before editing.
@@ -73,6 +74,7 @@ Deliver:
 - Code/tests/docs for this issue only.
 - Updated loop log entry in `docs/ai-native/08-loop-log.md`.
 - Commit, push, and draft PR.
+- Main agent may merge passing PRs into `development`; never merge into `main`.
 - Final report:
   - branch
   - PR URL
@@ -98,6 +100,7 @@ Assigned issue:
 - Branch: implementation/issue-8-foundation
 - PR target: development
 - Blocked by: none, but HITL confirmation is required for simple role/session mechanism
+- Student decision: simple role/session mechanism approved on 2026-07-01
 
 Read first:
 - AGENTS.md
@@ -124,6 +127,6 @@ Testing:
 - Do not deploy.
 
 Stop if:
-- The simple role/session mechanism is not confirmed.
 - The implementation would require production auth, Google login, paid service, optional features, or deployment.
+- The issue fails after 3 loop cycles.
 ```

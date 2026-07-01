@@ -241,6 +241,11 @@ Sub-agent rules:
 - Sub-agents must not implement another issue's blocker without explicit approval.
 - Sub-agents must push their branch and open a draft PR when done.
 - Main agent reviews PRs against requirements, design, tests, scope, and traceability.
+- Main agent may merge PRs to `development` after review and testing pass.
+- Main agent must not merge to `main`.
+- Continuous queue may continue from one accepted issue to the next unblocked issue.
+- Cut any issue loop after 3 failed cycles; notify the student and stop or diagnose instead of spending more tokens.
+- If a failure is fatal to later issues, stop the continuous queue and report the blocker.
 - Use `ponytail` for minimal implementation, `run-the-loop` for the issue loop, `tdd` or `rtk-tdd` for test-heavy logic, and `caveman` only for concise internal status reports.
 
 ## Current Status
@@ -258,10 +263,10 @@ Sub-agent rules:
 
 ## Next Recommended Work
 
-Review and confirm the Issue #8 HITL decision:
+Issue #8 HITL decision is approved:
 
 ```text
 Use seeded/simple app_users records and a development-friendly role selector/header-based actor context. No Google login, no paid identity service.
 ```
 
-After confirmation, start the first engineering loop on GitHub Issue #8 using branch `implementation/issue-8-foundation`.
+When the student explicitly starts the loop, start GitHub Issue #8 using branch `implementation/issue-8-foundation`.

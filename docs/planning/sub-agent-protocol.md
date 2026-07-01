@@ -15,6 +15,7 @@ Main agent:
 - Reviews PRs before any merge decision.
 - Updates queue, loop log, evidence, and traceability status.
 - Takes over only when a sub-agent is blocked, off-scope, or repeatedly failing the loop.
+- Cuts off any sub-agent issue loop after 3 cycles and escalates instead of allowing token-heavy retries.
 
 Sub-agent:
 
@@ -25,6 +26,7 @@ Sub-agent:
 - Reports evidence and blockers.
 - Does not merge PRs.
 - Does not touch `main`.
+- Does not run more than 3 loop cycles for one issue.
 
 ## 3. Required Sub-Agent Start Prompt
 
@@ -58,6 +60,7 @@ Rules:
 - Do not deploy.
 - Do not touch main.
 - If blocked, report blocker instead of guessing.
+- Stop after 3 failed loop cycles and report evidence, root cause hypothesis, and next recommended action.
 
 Deliver:
 - Code/tests/docs needed for this issue only.
@@ -131,6 +134,7 @@ Skills used:
 
 Sub-agent stops and reports if:
 
+- The issue has reached 3 loop cycles without passing review and testing.
 - Acceptance criteria are unclear.
 - Required blocker issue is incomplete.
 - Branch already exists with unrelated work.
@@ -145,10 +149,18 @@ Main agent may then:
 - split the issue;
 - take over diagnosis;
 - reject the PR and request a smaller fix.
+- stop the continuous queue if the blocker is fatal to later implementation.
 
 ## 9. Merge Policy
 
 - Sub-agents do not merge.
 - Main agent does not merge to `main`.
-- Merge to `development` happens only after review, passing checks, and student-approved workflow.
+- Main agent may merge to `development` after review and passing tests/checks.
 - Final merge to `main` requires explicit student finalization approval.
+
+## 10. Continuous Queue Policy
+
+- Main agent may continue from one accepted issue to the next unblocked issue.
+- Main agent must not continue past a failed, blocked, or fatal issue.
+- Main agent must not spend more than 3 cycles on one issue before cutting the loop and reporting.
+- Main agent should prefer diagnosis over repeated prompting after the third failed cycle.
