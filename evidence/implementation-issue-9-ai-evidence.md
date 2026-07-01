@@ -3,6 +3,7 @@
 ## Issue
 
 - GitHub Issue: #9 - Build reporter service request creation flow
+- Draft PR: https://github.com/Jordyee/campus-service-project/pull/22
 - Branch: `implementation/issue-9-create-report`
 - Date: 2026-07-01
 

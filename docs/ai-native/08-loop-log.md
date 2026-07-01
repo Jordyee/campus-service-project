@@ -98,11 +98,11 @@ An issue loop can stop only when:
 
 ### Issue #9 - Build reporter service request creation flow
 
-**Status:** Implemented; tests pass; draft PR pending
+**Status:** Draft PR opened; tests pass
 
 **Branch:** `implementation/issue-9-create-report`
 
-**PR:** Pending
+**PR:** https://github.com/Jordyee/campus-service-project/pull/22
 
 **Owner:** Main agent
 

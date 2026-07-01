@@ -3,6 +3,7 @@
 ## Review Scope
 
 - GitHub Issue #9 acceptance checks.
+- Draft PR #22: https://github.com/Jordyee/campus-service-project/pull/22
 - Reporter create-request API and form changes on branch `implementation/issue-9-create-report`.
 - Requirement/design references: FR-001, FR-002, US-001, AC-001, AC-002, API-01, UI-02, UI-FORM-01.
 
