@@ -253,11 +253,11 @@ An issue loop can stop only when:
 
 ### Issue #14 - Add technician assignment flow
 
-**Status:** Implementation complete; tests pass; PR pending
+**Status:** Draft PR open; tests pass; review pass
 
 **Branch:** `implementation/issue-14-technician-assignment`
 
-**PR:** Pending
+**PR:** https://github.com/Jordyee/campus-service-project/pull/27
 
 **Owner:** Main agent
 
@@ -281,7 +281,7 @@ An issue loop can stop only when:
 - Tests/checks run: `npx.cmd vitest tests/integration/technician-assignment-api.spec.ts --run`; `npx.cmd vitest tests/integration/technician-assignment-api.spec.ts tests/unit/new-report-form.spec.ts --run`; `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
 - Evidence: Focused assignment test failed before implementation with route-level 404, then passed after adding API/UI support. Final run passed typecheck and 11 files / 44 tests.
 - Failures: None remaining.
-- Decision: Accept Cycle 1 for draft PR creation and main-agent review.
+- Decision: Accept Cycle 1 for PR #27 review and merge to `development`.
 
 ### Issue #15 - Build technician task list and acceptance flow
 

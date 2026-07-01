@@ -4,7 +4,7 @@
 
 - GitHub Issue: #14 - Add technician assignment flow
 - Branch: `implementation/issue-14-technician-assignment`
-- Pull Request: Pending
+- Pull Request: https://github.com/Jordyee/campus-service-project/pull/27
 - Date: 2026-07-02
 
 ## Sources Read
