@@ -8,6 +8,9 @@ import ReportList from "./components/ReportList";
 import ReportDetail from "./components/ReportDetail";
 import TechnicianTaskList from "./components/TechnicianTaskList";
 import Dashboard from "./components/Dashboard";
+import ReporterDashboard from "./components/dashboards/ReporterDashboard";
+import AdminDashboard from "./components/dashboards/AdminDashboard";
+import TechnicianDashboard from "./components/dashboards/TechnicianDashboard";
 
 const ROLE_DESCRIPTIONS: Record<Role, string> = {
   REPORTER: "Reporter dapat mengirim laporan masalah fasilitas baru, melihat laporan mereka, dan menambahkan komentar.",
@@ -59,12 +62,15 @@ export default function App() {
         {/* ─── Backend Banner ──────────────────────── */}
         <BackendBanner />
 
-        {/* ─── Dashboard (Facility Manager) ────────── */}
-        {isManager && (
-          <Dashboard role={role} refreshTrigger={refreshTrigger} />
-        )}
+        {/* ─── Role-specific Dashboards ────────────── */}
+        <div style={{ marginBottom: "var(--space-5)" }}>
+          {isManager && <Dashboard role={role} refreshTrigger={refreshTrigger} />}
+          {isAdmin && <AdminDashboard role={role} refreshTrigger={refreshTrigger} onSelectReport={setSelectedId} />}
+          {isTech && <TechnicianDashboard role={role} refreshTrigger={refreshTrigger} onSelectReport={setSelectedId} />}
+          {isReporter && <ReporterDashboard role={role} refreshTrigger={refreshTrigger} lastCreated={lastCreated} onSelectReport={setSelectedId} />}
+        </div>
 
-        {/* ─── Technician Task List ─────────────────── */}
+        {/* ─── Technician Task List (Detailed View) ── */}
         {isTech && (
           <TechnicianTaskList
             role={role}
