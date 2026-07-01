@@ -129,11 +129,11 @@ An issue loop can stop only when:
 
 ### Issue #10 - Build report list, search, and filters
 
-**Status:** Checkpoint commit pending; tests pass; PR not opened yet
+**Status:** Draft PR open; review/testing pass
 
 **Branch:** `implementation/issue-10-report-list-filters`
 
-**PR:** Pending
+**PR:** https://github.com/Jordyee/campus-service-project/pull/23
 
 **Owner:** Main agent
 
@@ -154,9 +154,9 @@ An issue loop can stop only when:
 - AI assumptions: Reporter list is scoped to `reporter_user_id`, Technician list to `assigned_technician_id`, and Administrator/Facility Manager see all reports. Detail navigation remains out of scope until #11.
 - Review result: Pass after focused test fix. Review kept report detail, comments, dashboard analytics, and deployment out of scope.
 - Tests/checks run: `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
-- Evidence: First test run failed because the invalid-filter expectation omitted the standard API error `message`; fixed the test expectation. Final run passed 7 files and 28 tests.
+- Evidence: First test run failed because the invalid-filter expectation omitted the standard API error `message`; fixed the test expectation. Final rerun after checkpoint passed typecheck and 7 files / 28 tests.
 - Failures: None remaining.
-- Decision: Pause at student-requested checkpoint after coherent implementation and passing checks. Commit/push branch checkpoint; do not open PR or start #11 yet.
+- Decision: Accept Cycle 1 for PR #23 review and merge to `development`.
 
 ### Issue #11 - Build report detail with status history display
 

@@ -8,7 +8,7 @@
 
 ## Review Decision
 
-Main-agent review: Pass for checkpoint commit.
+Main-agent review: Pass for draft PR #23 and merge to `development`.
 
 Student review: Pending.
 
@@ -38,3 +38,7 @@ npm.cmd test -- --run
 ```
 
 Result: TypeScript check passed; 7 test files passed, 28 tests passed.
+
+## PR
+
+https://github.com/Jordyee/campus-service-project/pull/23
