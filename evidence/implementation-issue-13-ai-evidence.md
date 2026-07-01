@@ -4,6 +4,7 @@
 
 - GitHub Issue: #13 - Add admin review, category, and priority flow
 - Branch: `implementation/issue-13-admin-review-classification`
+- Pull Request: https://github.com/Jordyee/campus-service-project/pull/26
 - Date: 2026-07-02
 
 ## Sources Read

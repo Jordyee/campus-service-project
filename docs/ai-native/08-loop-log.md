@@ -222,11 +222,11 @@ An issue loop can stop only when:
 
 ### Issue #13 - Add admin review, category, and priority flow
 
-**Status:** Implementation complete; tests pass; PR pending
+**Status:** Draft PR open; tests pass; review pass
 
 **Branch:** `implementation/issue-13-admin-review-classification`
 
-**PR:** Pending
+**PR:** https://github.com/Jordyee/campus-service-project/pull/26
 
 **Owner:** Main agent
 
@@ -249,7 +249,7 @@ An issue loop can stop only when:
 - Tests/checks run: `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
 - Evidence: Focused admin test failed before implementation with route-level 404, then passed after adding API/UI support. Final run passed typecheck and 10 files / 39 tests.
 - Failures: None remaining.
-- Decision: Accept Cycle 1 for draft PR creation and main-agent review.
+- Decision: Accept Cycle 1 for PR #26 review and merge to `development`.
 
 ### Issue #14 - Add technician assignment flow
 
