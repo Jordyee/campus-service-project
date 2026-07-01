@@ -4,7 +4,7 @@
 
 - GitHub Issue: #17 - Add admin close and reopen flow
 - Branch: `implementation/issue-17-close-reopen`
-- Pull Request: Pending
+- Pull Request: https://github.com/Jordyee/campus-service-project/pull/30
 - Date: 2026-07-02
 
 ## Sources Read

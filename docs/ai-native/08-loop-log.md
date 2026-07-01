@@ -349,11 +349,11 @@ An issue loop can stop only when:
 
 ### Issue #17 - Add admin close and reopen flow
 
-**Status:** Implementation complete; tests pass; PR pending
+**Status:** Draft PR open; tests pass; review pass
 
 **Branch:** `implementation/issue-17-close-reopen`
 
-**PR:** Pending
+**PR:** https://github.com/Jordyee/campus-service-project/pull/30
 
 **Owner:** Main agent
 
@@ -377,7 +377,7 @@ An issue loop can stop only when:
 - Tests/checks run: `npx.cmd vitest tests/integration/admin-close-reopen-api.spec.ts --run`; `npx.cmd vitest tests/integration/admin-close-reopen-api.spec.ts tests/unit/new-report-form.spec.ts --run`; `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
 - Evidence: Focused close/reopen tests failed before implementation with route-level 404, then passed after adding API/UI support. The first full-suite attempt failed before Vitest started because npm could not write cache/logs on a full C: drive (`ENOSPC`); local npm cache was cleaned after verifying `%LOCALAPPDATA%\npm-cache`, and the same required command then passed. Final run passed typecheck and 14 files / 59 tests.
 - Failures: None remaining.
-- Decision: Accept Cycle 1 for PR review and creation.
+- Decision: Accept Cycle 1 for PR #30 review and merge to `development`.
 
 ### Issue #18 - Build facility manager dashboard summary
 
