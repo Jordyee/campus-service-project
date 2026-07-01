@@ -161,6 +161,24 @@ export interface UpdatedWorkStatus {
   status: WorkStatusTarget;
 }
 
+export interface CloseRequestInput {
+  reason?: string;
+}
+
+export interface ClosedRequest {
+  id: string;
+  status: "CLOSED";
+}
+
+export interface ReopenRequestInput {
+  reason: string;
+}
+
+export interface ReopenedRequest {
+  id: string;
+  status: "UNDER_REVIEW";
+}
+
 export type RequestDetailResult =
   | { ok: true; data: RequestDetail }
   | { ok: false; reason: "not_found" | "forbidden" };
@@ -189,6 +207,14 @@ export type WorkStatusResult =
       ok: false;
       reason: "not_found" | "assignment_conflict" | "invalid_transition";
     };
+
+export type CloseRequestResult =
+  | { ok: true; data: ClosedRequest }
+  | { ok: false; reason: "not_found" | "invalid_transition" };
+
+export type ReopenRequestResult =
+  | { ok: true; data: ReopenedRequest }
+  | { ok: false; reason: "not_found" | "invalid_transition" };
 
 export interface ListRequestFilters {
   status?: RequestStatus;
@@ -224,6 +250,14 @@ export type AssignmentValidationResult =
 
 export type WorkStatusValidationResult =
   | { ok: true; data: WorkStatusInput }
+  | { ok: false; errors: ApiErrorDetail[] };
+
+export type CloseRequestValidationResult =
+  | { ok: true; data: CloseRequestInput }
+  | { ok: false; errors: ApiErrorDetail[] };
+
+export type ReopenRequestValidationResult =
+  | { ok: true; data: ReopenRequestInput }
   | { ok: false; errors: ApiErrorDetail[] };
 
 const REQUIRED_FIELDS = [
@@ -275,6 +309,11 @@ function readOptionalText(
 
   const trimmed = value.trim();
   return trimmed === "" ? undefined : trimmed;
+}
+
+async function readJsonPayloadOrEmpty(request: Request): Promise<unknown> {
+  const body = await request.text();
+  return body.trim() === "" ? {} : JSON.parse(body);
 }
 
 export function validateCreateRequestInput(payload: unknown): ValidationResult {
@@ -470,6 +509,40 @@ export function validateWorkStatusInput(
   }
 
   return { ok: true, data: { status: rawStatus as WorkStatusTarget, note } };
+}
+
+export function validateCloseRequestInput(
+  payload: unknown,
+): CloseRequestValidationResult {
+  const input = asRecord(payload);
+  const errors: ApiErrorDetail[] = [];
+  const reason = readOptionalText(
+    input,
+    "reason",
+    "Close reason must be text.",
+    errors,
+  );
+
+  return errors.length > 0
+    ? { ok: false, errors }
+    : { ok: true, data: { reason } };
+}
+
+export function validateReopenRequestInput(
+  payload: unknown,
+): ReopenRequestValidationResult {
+  const input = asRecord(payload);
+  const errors: ApiErrorDetail[] = [];
+  const reason = readRequiredText(
+    input,
+    "reason",
+    "Reopen reason is required.",
+    errors,
+  );
+
+  return errors.length > 0
+    ? { ok: false, errors }
+    : { ok: true, data: { reason } };
 }
 
 async function nextRequestNumber(db: D1Database, now: string): Promise<string> {
@@ -1183,6 +1256,72 @@ export async function updateTechnicianWorkStatus(
   return { ok: true, data: { id: requestId, status: input.status } };
 }
 
+export async function closeServiceRequest(
+  db: D1Database,
+  requestId: string,
+  actor: ActorContext,
+  input: CloseRequestInput,
+  now = new Date().toISOString(),
+): Promise<CloseRequestResult> {
+  const request = await db
+    .prepare("SELECT status FROM service_requests WHERE id = ?")
+    .bind(requestId)
+    .first<{ status: RequestStatus }>();
+
+  if (!request) {
+    return { ok: false, reason: "not_found" };
+  }
+
+  if (request.status !== "RESOLVED") {
+    return { ok: false, reason: "invalid_transition" };
+  }
+
+  await transitionRequestStatus({
+    db,
+    requestId,
+    fromStatus: "RESOLVED",
+    toStatus: "CLOSED",
+    actor,
+    reason: input.reason ?? "Report closed.",
+    now,
+  });
+
+  return { ok: true, data: { id: requestId, status: "CLOSED" } };
+}
+
+export async function reopenServiceRequest(
+  db: D1Database,
+  requestId: string,
+  actor: ActorContext,
+  input: ReopenRequestInput,
+  now = new Date().toISOString(),
+): Promise<ReopenRequestResult> {
+  const request = await db
+    .prepare("SELECT status FROM service_requests WHERE id = ?")
+    .bind(requestId)
+    .first<{ status: RequestStatus }>();
+
+  if (!request) {
+    return { ok: false, reason: "not_found" };
+  }
+
+  if (request.status !== "RESOLVED" && request.status !== "CLOSED") {
+    return { ok: false, reason: "invalid_transition" };
+  }
+
+  await transitionRequestStatus({
+    db,
+    requestId,
+    fromStatus: request.status,
+    toStatus: "UNDER_REVIEW",
+    actor,
+    reason: input.reason,
+    now,
+  });
+
+  return { ok: true, data: { id: requestId, status: "UNDER_REVIEW" } };
+}
+
 export async function handleCreateRequest(
   request: Request,
   db: D1Database,
@@ -1617,5 +1756,111 @@ export async function handleUpdateWorkStatus(
     );
   } catch {
     return apiError("INTERNAL_ERROR", "Could not update work status.");
+  }
+}
+
+export async function handleCloseRequest(
+  request: Request,
+  db: D1Database,
+  requestId: string,
+): Promise<Response> {
+  const actor = readActorContext(request);
+
+  if (!actor || !canRolePerform(actor.role, "CLOSE_REQUEST")) {
+    return apiError(
+      "FORBIDDEN_ACTION",
+      "Only an Administrator can close reports.",
+    );
+  }
+
+  let payload: unknown;
+
+  try {
+    payload = await readJsonPayloadOrEmpty(request);
+  } catch {
+    return apiError("BAD_REQUEST", "Request body must be valid JSON.");
+  }
+
+  const validation = validateCloseRequestInput(payload);
+
+  if (!validation.ok) {
+    return apiError("VALIDATION_ERROR", "Validation failed.", validation.errors);
+  }
+
+  try {
+    const result = await closeServiceRequest(
+      db,
+      requestId,
+      actor,
+      validation.data,
+    );
+
+    if (result.ok) {
+      return apiSuccess(result.data);
+    }
+
+    if (result.reason === "not_found") {
+      return apiError("NOT_FOUND", "Report not found.");
+    }
+
+    return apiError(
+      "INVALID_STATUS_TRANSITION",
+      "Only resolved reports can be closed.",
+    );
+  } catch {
+    return apiError("INTERNAL_ERROR", "Could not close report.");
+  }
+}
+
+export async function handleReopenRequest(
+  request: Request,
+  db: D1Database,
+  requestId: string,
+): Promise<Response> {
+  const actor = readActorContext(request);
+
+  if (!actor || !canRolePerform(actor.role, "REOPEN_REQUEST")) {
+    return apiError(
+      "FORBIDDEN_ACTION",
+      "Only an Administrator can reopen reports.",
+    );
+  }
+
+  let payload: unknown;
+
+  try {
+    payload = await readJsonPayloadOrEmpty(request);
+  } catch {
+    return apiError("BAD_REQUEST", "Request body must be valid JSON.");
+  }
+
+  const validation = validateReopenRequestInput(payload);
+
+  if (!validation.ok) {
+    return apiError("VALIDATION_ERROR", "Validation failed.", validation.errors);
+  }
+
+  try {
+    const result = await reopenServiceRequest(
+      db,
+      requestId,
+      actor,
+      validation.data,
+    );
+
+    if (result.ok) {
+      return apiSuccess(result.data);
+    }
+
+    if (result.reason === "not_found") {
+      return apiError("NOT_FOUND", "Report not found.");
+    }
+
+    return apiError(
+      "INVALID_STATUS_TRANSITION",
+      "Only resolved or closed reports can be reopened.",
+    );
+  } catch {
+    return apiError("INTERNAL_ERROR", "Could not reopen report.");
   }
 }

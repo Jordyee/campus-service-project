@@ -91,8 +91,8 @@ Optional skill creation:
 | 6 | #13 Admin review, category, priority | AFK | Merged to `development` | #12 complete | Main agent | `implementation/issue-13-admin-review-classification` | [PR #26](https://github.com/Jordyee/campus-service-project/pull/26) | Pass / merged |
 | 7 | #14 Technician assignment | AFK | Merged to `development` | #13 complete | Main agent | `implementation/issue-14-technician-assignment` | [PR #27](https://github.com/Jordyee/campus-service-project/pull/27) | Pass / merged |
 | 8 | #15 Technician task list and acceptance | AFK | Merged to `development` | #14 complete | Main agent | `implementation/issue-15-technician-tasks-acceptance` | [PR #28](https://github.com/Jordyee/campus-service-project/pull/28) | Pass / merged |
-| 9 | #16 Technician progress and resolved | AFK | Draft PR open; tests pass; review pass | #15 complete | Main agent | `implementation/issue-16-technician-progress-resolved` | [PR #29](https://github.com/Jordyee/campus-service-project/pull/29) | Pass / ready to merge to `development` |
-| 10 | #17 Admin close and reopen | AFK | Blocked | #16 | Unassigned | `implementation/issue-17-close-reopen` | Pending | Pending |
+| 9 | #16 Technician progress and resolved | AFK | Merged to `development` | #15 complete | Main agent | `implementation/issue-16-technician-progress-resolved` | [PR #29](https://github.com/Jordyee/campus-service-project/pull/29) | Pass / merged |
+| 10 | #17 Admin close and reopen | AFK | Implementation complete; tests pass; PR pending | #16 complete | Main agent | `implementation/issue-17-close-reopen` | Pending | Pass / pending PR |
 | 11 | #18 Facility manager dashboard | AFK | Blocked | #10, #17 | Unassigned | `implementation/issue-18-dashboard-summary` | Pending | Pending |
 | 12 | #19 Tests and implementation traceability | HITL | Blocked | #9, #10, #11, #12, #13, #14, #15, #16, #17, #18 | Unassigned | `implementation/issue-19-tests-traceability` | Pending | Pending |
 

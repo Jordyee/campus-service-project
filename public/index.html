@@ -518,6 +518,17 @@
               <button type="submit">Assign Technician</button>
               <output id="assignment-status"></output>
             </form>
+            <form id="admin-close-form" class="admin-form" hidden>
+              <h3>Close / Reopen</h3>
+              <label>
+                Reopen Reason
+                <textarea id="admin-close-reason" name="reason"></textarea>
+                <span class="error" data-close-error-for="reason"></span>
+              </label>
+              <button id="admin-close-button" type="button">Close Report</button>
+              <button id="admin-reopen-button" type="submit">Reopen Report</button>
+              <output id="admin-close-status"></output>
+            </form>
             <form id="technician-task-form" class="comment-form" hidden>
               <h3>Technician Task</h3>
               <label>
@@ -603,6 +614,11 @@
       const assignmentReason = document.getElementById("assignment-reason");
       const assignmentStatus = document.getElementById("assignment-status");
       const assignmentSubmitButton = assignmentForm.querySelector("button");
+      const adminCloseForm = document.getElementById("admin-close-form");
+      const adminCloseReason = document.getElementById("admin-close-reason");
+      const adminCloseButton = document.getElementById("admin-close-button");
+      const adminReopenButton = document.getElementById("admin-reopen-button");
+      const adminCloseStatus = document.getElementById("admin-close-status");
       const technicianTaskForm = document.getElementById("technician-task-form");
       const technicianNote = document.getElementById("technician-note");
       const acceptTaskButton = document.getElementById("accept-task-button");
@@ -681,6 +697,25 @@
         details.forEach((detail) => {
           const element = assignmentForm.querySelector(
             `[data-assignment-error-for="${detail.field}"]`,
+          );
+          if (element) {
+            element.textContent = detail.message;
+          }
+        });
+      }
+
+      function clearCloseErrors() {
+        adminCloseForm
+          .querySelectorAll("[data-close-error-for]")
+          .forEach((element) => {
+            element.textContent = "";
+          });
+      }
+
+      function showCloseErrors(details = []) {
+        details.forEach((detail) => {
+          const element = adminCloseForm.querySelector(
+            `[data-close-error-for="${detail.field}"]`,
           );
           if (element) {
             element.textContent = detail.message;
@@ -862,6 +897,13 @@
         if (actorRole.value === "ADMINISTRATOR") {
           loadTechnicianChoices(report.assignedTechnician?.id || "");
         }
+        adminCloseForm.hidden = actorRole.value !== "ADMINISTRATOR";
+        adminCloseReason.value = "";
+        adminCloseButton.disabled = report.status !== "RESOLVED";
+        adminReopenButton.disabled =
+          report.status !== "RESOLVED" && report.status !== "CLOSED";
+        clearCloseErrors();
+        adminCloseStatus.textContent = "";
         technicianTaskForm.hidden = actorRole.value !== "TECHNICIAN";
         acceptTaskButton.disabled =
           report.status !== "ASSIGNED" || Boolean(report.acceptedAt);
@@ -1048,6 +1090,119 @@
           assignmentStatus.textContent = "Technician could not be assigned.";
         } finally {
           if (!saved) assignmentSubmitButton.disabled = false;
+        }
+      });
+
+      adminCloseButton.addEventListener("click", async () => {
+        if (!currentDetailId || !confirm("Close this resolved report?")) return;
+
+        clearCloseErrors();
+        adminCloseStatus.textContent = "";
+        const closeWasDisabled = adminCloseButton.disabled;
+        const reopenWasDisabled = adminReopenButton.disabled;
+        adminCloseButton.disabled = true;
+        adminReopenButton.disabled = true;
+        let saved = false;
+        let refreshed = false;
+
+        try {
+          const detailId = currentDetailId;
+          const response = await fetch(
+            `/api/requests/${encodeURIComponent(detailId)}/close`,
+            {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                "x-actor-role": actorRole.value,
+              },
+              body: JSON.stringify({ reason: adminCloseReason.value }),
+            },
+          );
+          const result = await response.json();
+
+          if (!response.ok) {
+            showCloseErrors(result.error?.details);
+            adminCloseStatus.textContent =
+              result.error?.message || "Report could not be closed.";
+            if (result.error?.code === "INVALID_STATUS_TRANSITION") {
+              await loadReportDetail(detailId);
+              refreshed = true;
+              adminCloseStatus.textContent =
+                result.error?.message || "Report could not be closed.";
+            }
+            return;
+          }
+
+          adminCloseReason.value = "";
+          saved = true;
+          await loadReportDetail(detailId);
+          await loadReports();
+          adminCloseStatus.textContent = "Report closed.";
+        } catch {
+          adminCloseStatus.textContent = "Report could not be closed.";
+        } finally {
+          if (!saved && !refreshed) {
+            adminCloseButton.disabled = closeWasDisabled;
+            adminReopenButton.disabled = reopenWasDisabled;
+          }
+        }
+      });
+
+      adminCloseForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!currentDetailId || !confirm("Reopen this report to under review?")) {
+          return;
+        }
+
+        clearCloseErrors();
+        adminCloseStatus.textContent = "";
+        const closeWasDisabled = adminCloseButton.disabled;
+        const reopenWasDisabled = adminReopenButton.disabled;
+        adminCloseButton.disabled = true;
+        adminReopenButton.disabled = true;
+        let saved = false;
+        let refreshed = false;
+
+        try {
+          const detailId = currentDetailId;
+          const response = await fetch(
+            `/api/requests/${encodeURIComponent(detailId)}/reopen`,
+            {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                "x-actor-role": actorRole.value,
+              },
+              body: JSON.stringify({ reason: adminCloseReason.value }),
+            },
+          );
+          const result = await response.json();
+
+          if (!response.ok) {
+            showCloseErrors(result.error?.details);
+            adminCloseStatus.textContent =
+              result.error?.message || "Report could not be reopened.";
+            if (result.error?.code === "INVALID_STATUS_TRANSITION") {
+              await loadReportDetail(detailId);
+              refreshed = true;
+              adminCloseStatus.textContent =
+                result.error?.message || "Report could not be reopened.";
+            }
+            return;
+          }
+
+          adminCloseReason.value = "";
+          saved = true;
+          await loadReportDetail(detailId);
+          await loadReports();
+          adminCloseStatus.textContent = "Report reopened.";
+        } catch {
+          adminCloseStatus.textContent = "Report could not be reopened.";
+        } finally {
+          if (!saved && !refreshed) {
+            adminCloseButton.disabled = closeWasDisabled;
+            adminReopenButton.disabled = reopenWasDisabled;
+          }
         }
       });
 

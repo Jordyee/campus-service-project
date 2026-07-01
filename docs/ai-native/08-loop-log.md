@@ -317,7 +317,7 @@ An issue loop can stop only when:
 
 ### Issue #16 - Add technician progress and resolved status flow
 
-**Status:** Draft PR open; tests pass; review pass
+**Status:** Merged to `development`
 
 **Branch:** `implementation/issue-16-technician-progress-resolved`
 
@@ -349,13 +349,35 @@ An issue loop can stop only when:
 
 ### Issue #17 - Add admin close and reopen flow
 
-**Status:** Blocked by #16
+**Status:** Implementation complete; tests pass; PR pending
 
 **Branch:** `implementation/issue-17-close-reopen`
 
 **PR:** Pending
 
-**Owner:** Unassigned
+**Owner:** Main agent
+
+**Blockers:** #16 completed and merged through PR #29.
+
+**Source of Truth:**
+
+- GitHub Issue #17
+- `docs/planning/implementation-queue.md`
+- `docs/requirements/traceability.md`
+- `docs/design/01-architecture.md`
+- `docs/design/02-database-api.md`
+- `docs/design/03-ui.md`
+
+**Cycle 1:**
+
+- Build attempt: Added Administrator-only `POST /api/requests/{id}/close` and `POST /api/requests/{id}/reopen`, close/reopen input validation, `RESOLVED` to `CLOSED` and `RESOLVED`/`CLOSED` to `UNDER_REVIEW` transitions through `transitionRequestStatus`, required reopen reason, Admin detail UI controls, and status/history refresh after actions.
+- Files changed: `worker/requests.ts`, `worker/index.ts`, `public/index.html`, `tests/integration/admin-close-reopen-api.spec.ts`, `tests/unit/new-report-form.spec.ts`, `docs/ai-native/08-loop-log.md`, `docs/planning/implementation-queue.md`, `docs/requirements/traceability.md`, `evidence/implementation-issue-17-ai-evidence.md`, `evidence/human-review-issue-17.md`.
+- AI assumptions: Close reason is optional and defaults to `Report closed.` in status history; reopen reason is required by `CR-001`. Reopened reports keep the existing lifecycle status set and return to `UNDER_REVIEW`. Retention/deletion/archive, extra statuses, notifications, deployment, and dashboard work remain out of scope.
+- Review result: Pass. Review kept the slice to Admin close/reopen and did not add retention/archive behavior, notifications, dashboard summaries, or optional services.
+- Tests/checks run: `npx.cmd vitest tests/integration/admin-close-reopen-api.spec.ts --run`; `npx.cmd vitest tests/integration/admin-close-reopen-api.spec.ts tests/unit/new-report-form.spec.ts --run`; `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
+- Evidence: Focused close/reopen tests failed before implementation with route-level 404, then passed after adding API/UI support. The first full-suite attempt failed before Vitest started because npm could not write cache/logs on a full C: drive (`ENOSPC`); local npm cache was cleaned after verifying `%LOCALAPPDATA%\npm-cache`, and the same required command then passed. Final run passed typecheck and 14 files / 59 tests.
+- Failures: None remaining.
+- Decision: Accept Cycle 1 for PR review and creation.
 
 ### Issue #18 - Build facility manager dashboard summary
 
