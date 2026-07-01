@@ -673,8 +673,15 @@ p { margin: 0; }
 
 @media (max-width: 640px) {
   .app-header-inner {
-    flex-direction: column;
-    align-items: flex-start;
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .app-logo-subtitle {
+    display: none;
+  }
+
+  .role-selector-label {
+    display: none;
   }
 
   .filters-form {
