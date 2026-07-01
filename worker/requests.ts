@@ -6,9 +6,11 @@ import {
   isPriority,
   isRequestStatus,
   readActorContext,
+  REQUEST_STATUSES,
   type ActorContext,
   type ApiErrorDetail,
   type Category,
+  type CommentType,
   type Priority,
   type RequestStatus,
 } from "./foundation";
@@ -40,6 +42,45 @@ export interface RequestListItem {
   assignedTechnicianName: string | null;
   createdAt: string;
 }
+
+export interface RequestDetail {
+  id: string;
+  requestNumber: string;
+  title: string;
+  description: string;
+  location: string;
+  category: Category;
+  priority: Priority;
+  status: RequestStatus;
+  reporterName: string;
+  reporterContact: string;
+  assignedTechnician: { id: string; displayName: string } | null;
+  createdAt: string;
+  updatedAt: string;
+  lifecycle: RequestStatus[];
+  comments: RequestComment[];
+  statusHistory: RequestStatusHistoryItem[];
+}
+
+export interface RequestComment {
+  id: string;
+  authorRole: ActorContext["role"];
+  commentType: CommentType;
+  body: string;
+  createdAt: string;
+}
+
+export interface RequestStatusHistoryItem {
+  fromStatus: RequestStatus | null;
+  toStatus: RequestStatus;
+  changedByRole: ActorContext["role"];
+  reason: string | null;
+  createdAt: string;
+}
+
+export type RequestDetailResult =
+  | { ok: true; data: RequestDetail }
+  | { ok: false; reason: "not_found" | "forbidden" };
 
 export interface ListRequestFilters {
   status?: RequestStatus;
@@ -316,6 +357,152 @@ export async function listServiceRequests(
   }));
 }
 
+function canActorViewRequest(
+  actor: ActorContext,
+  request: {
+    reporter_user_id: string | null;
+    assigned_technician_id: string | null;
+  },
+): boolean {
+  if (actor.role === "ADMINISTRATOR" || actor.role === "FACILITY_MANAGER") {
+    return true;
+  }
+
+  if (actor.role === "REPORTER") {
+    return request.reporter_user_id === actor.id;
+  }
+
+  return request.assigned_technician_id === actor.id;
+}
+
+export async function getServiceRequestDetail(
+  db: D1Database,
+  requestId: string,
+  actor: ActorContext,
+): Promise<RequestDetailResult> {
+  const row = await db
+    .prepare(
+      `SELECT
+        r.id,
+        r.request_number,
+        r.title,
+        r.description,
+        r.location,
+        r.category,
+        r.priority,
+        r.status,
+        r.reporter_user_id,
+        r.reporter_name,
+        r.reporter_contact,
+        r.assigned_technician_id,
+        r.created_at,
+        r.updated_at,
+        technician.display_name AS assigned_technician_name
+       FROM service_requests r
+       LEFT JOIN app_users technician
+         ON technician.id = r.assigned_technician_id
+       WHERE r.id = ?`,
+    )
+    .bind(requestId)
+    .first<{
+      id: string;
+      request_number: string;
+      title: string;
+      description: string;
+      location: string;
+      category: Category;
+      priority: Priority;
+      status: RequestStatus;
+      reporter_user_id: string | null;
+      reporter_name: string;
+      reporter_contact: string;
+      assigned_technician_id: string | null;
+      assigned_technician_name: string | null;
+      created_at: string;
+      updated_at: string;
+    }>();
+
+  if (!row) {
+    return { ok: false, reason: "not_found" };
+  }
+
+  if (!canActorViewRequest(actor, row)) {
+    return { ok: false, reason: "forbidden" };
+  }
+
+  const [comments, history] = await Promise.all([
+    db
+      .prepare(
+        `SELECT id, author_role, comment_type, body, created_at
+         FROM request_comments
+         WHERE service_request_id = ?
+         ORDER BY created_at ASC, id ASC`,
+      )
+      .bind(requestId)
+      .all<{
+        id: string;
+        author_role: ActorContext["role"];
+        comment_type: CommentType;
+        body: string;
+        created_at: string;
+      }>(),
+    db
+      .prepare(
+        `SELECT from_status, to_status, changed_by_role, reason, created_at
+         FROM request_status_history
+         WHERE service_request_id = ?
+         ORDER BY created_at ASC, id ASC`,
+      )
+      .bind(requestId)
+      .all<{
+        from_status: RequestStatus | null;
+        to_status: RequestStatus;
+        changed_by_role: ActorContext["role"];
+        reason: string | null;
+        created_at: string;
+      }>(),
+  ]);
+
+  return {
+    ok: true,
+    data: {
+      id: row.id,
+      requestNumber: row.request_number,
+      title: row.title,
+      description: row.description,
+      location: row.location,
+      category: row.category,
+      priority: row.priority,
+      status: row.status,
+      reporterName: row.reporter_name,
+      reporterContact: row.reporter_contact,
+      assignedTechnician: row.assigned_technician_id
+        ? {
+            id: row.assigned_technician_id,
+            displayName: row.assigned_technician_name ?? "Unknown technician",
+          }
+        : null,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      lifecycle: [...REQUEST_STATUSES],
+      comments: comments.results.map((comment) => ({
+        id: comment.id,
+        authorRole: comment.author_role,
+        commentType: comment.comment_type,
+        body: comment.body,
+        createdAt: comment.created_at,
+      })),
+      statusHistory: history.results.map((entry) => ({
+        fromStatus: entry.from_status,
+        toStatus: entry.to_status,
+        changedByRole: entry.changed_by_role,
+        reason: entry.reason,
+        createdAt: entry.created_at,
+      })),
+    },
+  };
+}
+
 export async function handleCreateRequest(
   request: Request,
   db: D1Database,
@@ -373,5 +560,33 @@ export async function handleListRequests(
     return apiSuccess(await listServiceRequests(db, actor, validation.data));
   } catch {
     return apiError("INTERNAL_ERROR", "Could not load reports.");
+  }
+}
+
+export async function handleGetRequestDetail(
+  request: Request,
+  db: D1Database,
+  requestId: string,
+): Promise<Response> {
+  const actor = readActorContext(request);
+
+  if (!actor || !canRolePerform(actor.role, "VIEW_REQUEST")) {
+    return apiError("FORBIDDEN_ACTION", "This role cannot view report detail.");
+  }
+
+  try {
+    const result = await getServiceRequestDetail(db, requestId, actor);
+
+    if (!result.ok && result.reason === "not_found") {
+      return apiError("NOT_FOUND", "Report not found.");
+    }
+
+    if (!result.ok) {
+      return apiError("FORBIDDEN_ACTION", "You cannot view this report.");
+    }
+
+    return apiSuccess(result.data);
+  } catch {
+    return apiError("INTERNAL_ERROR", "Could not load report detail.");
   }
 }

@@ -130,6 +130,14 @@
         opacity: 0.7;
       }
 
+      .link-button {
+        background: transparent;
+        color: #1d4ed8;
+        padding: 0;
+        font-weight: 700;
+        text-align: left;
+      }
+
       output {
         display: block;
         min-height: 24px;
@@ -187,6 +195,48 @@
         color: #64748b;
       }
 
+      .detail {
+        display: grid;
+        grid-column: 1 / -1;
+        gap: 16px;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px 20px;
+      }
+
+      .detail-grid dt {
+        color: #64748b;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .detail-grid dd {
+        margin: 4px 0 0;
+        color: #0f172a;
+      }
+
+      .lifecycle,
+      .timeline {
+        display: grid;
+        gap: 8px;
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .lifecycle .current {
+        color: #1d4ed8;
+        font-weight: 800;
+      }
+
+      .timeline li {
+        color: #334155;
+        line-height: 1.45;
+      }
+
       @media (max-width: 760px) {
         header,
         .workspace {
@@ -195,6 +245,10 @@
         }
 
         .filters {
+          grid-template-columns: 1fr;
+        }
+
+        .detail-grid {
           grid-template-columns: 1fr;
         }
       }
@@ -342,6 +396,56 @@
           </div>
           <p id="reports-empty" class="empty-state"></p>
         </section>
+
+        <section class="detail" aria-labelledby="detail-title">
+          <h2 id="detail-title">Report Detail</h2>
+          <output id="detail-status">Select a report to view details.</output>
+          <article id="detail-card" hidden>
+            <h3 id="detail-heading"></h3>
+            <dl class="detail-grid">
+              <div>
+                <dt>Status</dt>
+                <dd id="detail-status-value"></dd>
+              </div>
+              <div>
+                <dt>Priority</dt>
+                <dd id="detail-priority"></dd>
+              </div>
+              <div>
+                <dt>Category</dt>
+                <dd id="detail-category"></dd>
+              </div>
+              <div>
+                <dt>Location</dt>
+                <dd id="detail-location"></dd>
+              </div>
+              <div>
+                <dt>Reporter</dt>
+                <dd id="detail-reporter"></dd>
+              </div>
+              <div>
+                <dt>Assigned Technician</dt>
+                <dd id="detail-technician"></dd>
+              </div>
+              <div>
+                <dt>Created</dt>
+                <dd id="detail-created"></dd>
+              </div>
+              <div>
+                <dt>Updated</dt>
+                <dd id="detail-updated"></dd>
+              </div>
+            </dl>
+            <h3>Description</h3>
+            <p id="detail-description"></p>
+            <h3>Lifecycle</h3>
+            <ol id="detail-lifecycle" class="lifecycle"></ol>
+            <h3>Comments / Notes</h3>
+            <ol id="detail-comments" class="timeline"></ol>
+            <h3>Status History</h3>
+            <ol id="detail-history" class="timeline"></ol>
+          </article>
+        </section>
       </div>
     </main>
     <script>
@@ -356,6 +460,21 @@
       const reportsTable = document.getElementById("reports-table");
       const reportsBody = document.getElementById("reports-body");
       const reportsEmpty = document.getElementById("reports-empty");
+      const detailStatus = document.getElementById("detail-status");
+      const detailCard = document.getElementById("detail-card");
+      const detailHeading = document.getElementById("detail-heading");
+      const detailStatusValue = document.getElementById("detail-status-value");
+      const detailPriority = document.getElementById("detail-priority");
+      const detailCategory = document.getElementById("detail-category");
+      const detailLocation = document.getElementById("detail-location");
+      const detailReporter = document.getElementById("detail-reporter");
+      const detailTechnician = document.getElementById("detail-technician");
+      const detailCreated = document.getElementById("detail-created");
+      const detailUpdated = document.getElementById("detail-updated");
+      const detailDescription = document.getElementById("detail-description");
+      const detailLifecycle = document.getElementById("detail-lifecycle");
+      const detailComments = document.getElementById("detail-comments");
+      const detailHistory = document.getElementById("detail-history");
 
       function clearErrors() {
         form.querySelectorAll("[data-error-for]").forEach((element) => {
@@ -398,8 +517,16 @@
 
         reports.forEach((report) => {
           const row = document.createElement("tr");
-          for (const value of [
-            report.requestNumber,
+          const numberCell = document.createElement("td");
+          const detailButton = document.createElement("button");
+          detailButton.type = "button";
+          detailButton.className = "link-button";
+          detailButton.textContent = report.requestNumber;
+          detailButton.addEventListener("click", () => loadReportDetail(report.id));
+          numberCell.append(detailButton);
+          row.append(numberCell);
+
+          [
             report.title,
             report.location,
             report.category,
@@ -407,13 +534,97 @@
             report.status,
             report.assignedTechnicianName || "-",
             report.createdAt,
-          ]) {
+          ].forEach((value) => {
             const cell = document.createElement("td");
             cell.textContent = value;
             row.append(cell);
-          }
+          });
           reportsBody.append(row);
         });
+      }
+
+      function renderTimeline(list, items, emptyText, renderItem) {
+        list.textContent = "";
+        if (items.length === 0) {
+          const item = document.createElement("li");
+          item.textContent = emptyText;
+          list.append(item);
+          return;
+        }
+
+        items.forEach((entry) => {
+          const item = document.createElement("li");
+          item.textContent = renderItem(entry);
+          list.append(item);
+        });
+      }
+
+      function resetDetail() {
+        detailCard.hidden = true;
+        detailStatus.textContent = "Select a report to view details.";
+      }
+
+      function renderDetail(report) {
+        detailHeading.textContent = `${report.requestNumber} - ${report.title}`;
+        detailStatusValue.textContent = report.status;
+        detailPriority.textContent = report.priority;
+        detailCategory.textContent = report.category;
+        detailLocation.textContent = report.location;
+        detailReporter.textContent = `${report.reporterName} (${report.reporterContact})`;
+        detailTechnician.textContent = report.assignedTechnician
+          ? report.assignedTechnician.displayName
+          : "Unassigned";
+        detailCreated.textContent = report.createdAt;
+        detailUpdated.textContent = report.updatedAt;
+        detailDescription.textContent = report.description;
+
+        detailLifecycle.textContent = "";
+        report.lifecycle.forEach((status) => {
+          const item = document.createElement("li");
+          item.textContent = status;
+          if (status === report.status) item.className = "current";
+          detailLifecycle.append(item);
+        });
+
+        renderTimeline(
+          detailComments,
+          report.comments,
+          "No comments or notes yet.",
+          (comment) =>
+            `${comment.commentType} by ${comment.authorRole}: ${comment.body} (${comment.createdAt})`,
+        );
+        renderTimeline(
+          detailHistory,
+          report.statusHistory,
+          "No status history yet.",
+          (entry) =>
+            `${entry.fromStatus || "None"} -> ${entry.toStatus} by ${entry.changedByRole}: ${entry.reason || "No reason"} (${entry.createdAt})`,
+        );
+
+        detailCard.hidden = false;
+        detailStatus.textContent = "";
+      }
+
+      async function loadReportDetail(id) {
+        detailCard.hidden = true;
+        detailStatus.textContent = "Loading report detail...";
+
+        try {
+          const response = await fetch(`/api/requests/${encodeURIComponent(id)}`, {
+            headers: { "x-actor-role": actorRole.value },
+          });
+          const result = await response.json();
+
+          if (!response.ok) {
+            detailStatus.textContent =
+              result.error?.message || "Report detail could not be loaded.";
+            return;
+          }
+
+          renderDetail(result.data);
+        } catch {
+          detailStatus.textContent = "Report detail could not be loaded.";
+        }
       }
 
       async function loadReports() {
@@ -489,7 +700,10 @@
         loadReports();
       });
 
-      actorRole.addEventListener("change", loadReports);
+      actorRole.addEventListener("change", () => {
+        resetDetail();
+        loadReports();
+      });
       loadReports();
     </script>
   </body>

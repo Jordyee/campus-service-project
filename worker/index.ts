@@ -1,5 +1,9 @@
 import { apiError, apiSuccess } from "./foundation";
-import { handleCreateRequest, handleListRequests } from "./requests";
+import {
+  handleCreateRequest,
+  handleGetRequestDetail,
+  handleListRequests,
+} from "./requests";
 
 interface Env {
   DB: D1Database;
@@ -19,6 +23,15 @@ export default {
 
     if (url.pathname === "/api/requests" && request.method === "GET") {
       return handleListRequests(request, env.DB);
+    }
+
+    const detailMatch = url.pathname.match(/^\/api\/requests\/([^/]+)$/);
+    if (detailMatch && request.method === "GET") {
+      return handleGetRequestDetail(
+        request,
+        env.DB,
+        decodeURIComponent(detailMatch[1]),
+      );
     }
 
     return apiError("NOT_FOUND", "Route not found.");

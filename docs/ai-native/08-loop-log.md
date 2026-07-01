@@ -129,7 +129,7 @@ An issue loop can stop only when:
 
 ### Issue #10 - Build report list, search, and filters
 
-**Status:** Draft PR open; review/testing pass
+**Status:** Merged to `development`
 
 **Branch:** `implementation/issue-10-report-list-filters`
 
@@ -160,13 +160,34 @@ An issue loop can stop only when:
 
 ### Issue #11 - Build report detail with status history display
 
-**Status:** Blocked by #8 and #9
+**Status:** Implementation complete; tests pass; PR pending
 
 **Branch:** `implementation/issue-11-report-detail-history`
 
 **PR:** Pending
 
-**Owner:** Unassigned
+**Owner:** Main agent
+
+**Blockers:** #8 and #9 completed and merged through PR #21 and PR #22.
+
+**Source of Truth:**
+
+- GitHub Issue #11
+- `docs/planning/implementation-queue.md`
+- `docs/requirements/traceability.md`
+- `docs/design/02-database-api.md`
+- `docs/design/03-ui.md`
+
+**Cycle 1:**
+
+- Build attempt: Added `GET /api/requests/{id}`, role-sensitive detail access, core report/assignment/comment/status-history response data, lifecycle order data, a same-page detail panel opened from report numbers, loading/error/not-found/forbidden UI messaging, and detail reset on role change.
+- Files changed: `worker/requests.ts`, `worker/index.ts`, `public/index.html`, `tests/integration/request-detail-api.spec.ts`, `tests/unit/new-report-form.spec.ts`, `docs/ai-native/08-loop-log.md`, `docs/planning/implementation-queue.md`, `docs/requirements/traceability.md`, `evidence/implementation-issue-11-ai-evidence.md`, `evidence/human-review-issue-11.md`.
+- AI assumptions: Comments/notes are read-only if already present because creating comments belongs to #12. Detail UI stays in the current static Worker asset because the repo has no React/Vite frontend build yet.
+- Review result: Pass. Review kept add-comment, admin actions, technician actions, close/reopen, dashboard, and deployment out of scope.
+- Tests/checks run: `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
+- Evidence: Focused detail test failed before implementation with route-level 404, then passed after adding API/UI support. Final run passed typecheck and 8 files / 31 tests.
+- Failures: None remaining.
+- Decision: Accept Cycle 1 for draft PR creation and main-agent review.
 
 ### Issue #12 - Add append-only comments and notes
 
