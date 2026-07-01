@@ -4,7 +4,7 @@
 
 - GitHub Issue: #19 - Add automated test coverage and implementation traceability updates
 - Branch: `implementation/issue-19-tests-traceability`
-- Pull Request: Pending
+- Pull Request: https://github.com/Jordyee/campus-service-project/pull/32
 - Date: 2026-07-02
 
 ## Sources Read
