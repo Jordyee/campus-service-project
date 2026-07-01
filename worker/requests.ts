@@ -44,6 +44,18 @@ export interface RequestListItem {
   createdAt: string;
 }
 
+export interface TechnicianTaskItem {
+  id: string;
+  requestNumber: string;
+  title: string;
+  location: string;
+  priority: Priority;
+  status: RequestStatus;
+  accepted: boolean;
+  acceptedAt: string | null;
+  updatedAt: string;
+}
+
 export interface RequestDetail {
   id: string;
   requestNumber: string;
@@ -56,6 +68,7 @@ export interface RequestDetail {
   reporterName: string;
   reporterContact: string;
   assignedTechnician: { id: string; displayName: string } | null;
+  acceptedAt: string | null;
   createdAt: string;
   updatedAt: string;
   lifecycle: RequestStatus[];
@@ -130,6 +143,12 @@ export interface AssignedRequest {
   assignedTechnicianId: string;
 }
 
+export interface AcceptedTask {
+  id: string;
+  status: "ASSIGNED";
+  acceptedAt: string;
+}
+
 export type RequestDetailResult =
   | { ok: true; data: RequestDetail }
   | { ok: false; reason: "not_found" | "forbidden" };
@@ -143,6 +162,13 @@ export type AssignmentResult =
   | {
       ok: false;
       reason: "not_found" | "invalid_technician" | "invalid_transition";
+    };
+
+export type AcceptanceResult =
+  | { ok: true; data: AcceptedTask }
+  | {
+      ok: false;
+      reason: "not_found" | "assignment_conflict" | "invalid_transition";
     };
 
 export interface ListRequestFilters {
@@ -583,6 +609,50 @@ export async function listActiveTechnicians(
   }));
 }
 
+export async function listTechnicianTasks(
+  db: D1Database,
+  actor: ActorContext,
+): Promise<TechnicianTaskItem[]> {
+  const { results } = await db
+    .prepare(
+      `SELECT
+        id,
+        request_number,
+        title,
+        location,
+        priority,
+        status,
+        accepted_at,
+        updated_at
+       FROM service_requests
+       WHERE assigned_technician_id = ?
+       ORDER BY updated_at DESC, request_number DESC`,
+    )
+    .bind(actor.id)
+    .all<{
+      id: string;
+      request_number: string;
+      title: string;
+      location: string;
+      priority: Priority;
+      status: RequestStatus;
+      accepted_at: string | null;
+      updated_at: string;
+    }>();
+
+  return results.map((task) => ({
+    id: task.id,
+    requestNumber: task.request_number,
+    title: task.title,
+    location: task.location,
+    priority: task.priority,
+    status: task.status,
+    accepted: task.accepted_at !== null,
+    acceptedAt: task.accepted_at,
+    updatedAt: task.updated_at,
+  }));
+}
+
 function canActorViewRequest(
   actor: ActorContext,
   request: {
@@ -621,6 +691,7 @@ export async function getServiceRequestDetail(
         r.reporter_name,
         r.reporter_contact,
         r.assigned_technician_id,
+        r.accepted_at,
         r.created_at,
         r.updated_at,
         technician.display_name AS assigned_technician_name
@@ -643,6 +714,7 @@ export async function getServiceRequestDetail(
       reporter_name: string;
       reporter_contact: string;
       assigned_technician_id: string | null;
+      accepted_at: string | null;
       assigned_technician_name: string | null;
       created_at: string;
       updated_at: string;
@@ -708,6 +780,7 @@ export async function getServiceRequestDetail(
             displayName: row.assigned_technician_name ?? "Unknown technician",
           }
         : null,
+      acceptedAt: row.accepted_at,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
       lifecycle: [...REQUEST_STATUSES],
@@ -947,6 +1020,59 @@ export async function assignTechnicianToRequest(
   };
 }
 
+export async function acceptAssignedTask(
+  db: D1Database,
+  requestId: string,
+  actor: ActorContext,
+  now = new Date().toISOString(),
+): Promise<AcceptanceResult> {
+  const request = await db
+    .prepare(
+      `SELECT status, assigned_technician_id, accepted_at
+       FROM service_requests
+       WHERE id = ?`,
+    )
+    .bind(requestId)
+    .first<{
+      status: RequestStatus;
+      assigned_technician_id: string | null;
+      accepted_at: string | null;
+    }>();
+
+  if (!request) {
+    return { ok: false, reason: "not_found" };
+  }
+
+  if (request.assigned_technician_id !== actor.id) {
+    return { ok: false, reason: "assignment_conflict" };
+  }
+
+  if (request.status !== "ASSIGNED") {
+    return { ok: false, reason: "invalid_transition" };
+  }
+
+  if (request.accepted_at) {
+    return {
+      ok: true,
+      data: { id: requestId, status: "ASSIGNED", acceptedAt: request.accepted_at },
+    };
+  }
+
+  await db
+    .prepare(
+      `UPDATE service_requests
+       SET accepted_at = ?, updated_at = ?
+       WHERE id = ?`,
+    )
+    .bind(now, now, requestId)
+    .run();
+
+  return {
+    ok: true,
+    data: { id: requestId, status: "ASSIGNED", acceptedAt: now },
+  };
+}
+
 export async function handleCreateRequest(
   request: Request,
   db: D1Database,
@@ -1012,6 +1138,26 @@ export async function handleListUsers(
     return apiSuccess(await listActiveTechnicians(db));
   } catch {
     return apiError("INTERNAL_ERROR", "Could not list users.");
+  }
+}
+
+export async function handleListTechnicianTasks(
+  request: Request,
+  db: D1Database,
+): Promise<Response> {
+  const actor = readActorContext(request);
+
+  if (!actor || !canRolePerform(actor.role, "ACCEPT_TASK")) {
+    return apiError(
+      "FORBIDDEN_ACTION",
+      "Only a Technician can view assigned tasks.",
+    );
+  }
+
+  try {
+    return apiSuccess(await listTechnicianTasks(db, actor));
+  } catch {
+    return apiError("INTERNAL_ERROR", "Could not list technician tasks.");
   }
 }
 
@@ -1260,5 +1406,46 @@ export async function handleAssignTechnician(
     );
   } catch {
     return apiError("INTERNAL_ERROR", "Could not assign technician.");
+  }
+}
+
+export async function handleAcceptTask(
+  request: Request,
+  db: D1Database,
+  requestId: string,
+): Promise<Response> {
+  const actor = readActorContext(request);
+
+  if (!actor || !canRolePerform(actor.role, "ACCEPT_TASK")) {
+    return apiError(
+      "FORBIDDEN_ACTION",
+      "Only a Technician can accept assigned work.",
+    );
+  }
+
+  try {
+    const result = await acceptAssignedTask(db, requestId, actor);
+
+    if (result.ok) {
+      return apiSuccess(result.data);
+    }
+
+    if (result.reason === "not_found") {
+      return apiError("NOT_FOUND", "Report not found.");
+    }
+
+    if (result.reason === "assignment_conflict") {
+      return apiError(
+        "ASSIGNMENT_CONFLICT",
+        "Only the assigned Technician can accept this task.",
+      );
+    }
+
+    return apiError(
+      "INVALID_STATUS_TRANSITION",
+      "Only assigned tasks can be accepted.",
+    );
+  } catch {
+    return apiError("INTERNAL_ERROR", "Could not accept task.");
   }
 }

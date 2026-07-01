@@ -24,8 +24,15 @@ describe("new report form", () => {
     expect(html).toContain("No reports match the current filters.");
     expect(html).toContain("No reports yet.");
     expect(html).toContain("clear-filters");
+    expect(html).toContain("id=\"technician-tasks-section\"");
+    expect(html).toContain("No assigned tasks.");
+    expect(html).toContain("/api/technician/tasks");
     expect(html).toContain("id=\"detail-card\"");
     expect(html).toContain("id=\"detail-lifecycle\"");
+    expect(html).toContain("id=\"detail-accepted\"");
+    expect(html).toContain("id=\"technician-task-form\"");
+    expect(html).toContain("id=\"accept-task-button\"");
+    expect(html).toContain("/accept");
     expect(html).toContain("Status History");
     expect(html).toContain("Lifecycle");
     expect(html).toContain("id=\"admin-review-form\"");
