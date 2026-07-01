@@ -237,6 +237,10 @@
         line-height: 1.45;
       }
 
+      .comment-form {
+        margin: 12px 0;
+      }
+
       @media (max-width: 760px) {
         header,
         .workspace {
@@ -441,6 +445,23 @@
             <h3>Lifecycle</h3>
             <ol id="detail-lifecycle" class="lifecycle"></ol>
             <h3>Comments / Notes</h3>
+            <form id="comment-form" class="comment-form" hidden>
+              <label>
+                Type
+                <select id="comment-type" name="commentType">
+                  <option value="COMMENT">Comment</option>
+                  <option value="NOTE">Note</option>
+                </select>
+                <span class="error" data-comment-error-for="commentType"></span>
+              </label>
+              <label>
+                Comment or Note
+                <textarea id="comment-body" name="body"></textarea>
+                <span class="error" data-comment-error-for="body"></span>
+              </label>
+              <button type="submit">Add Comment</button>
+              <output id="comment-status"></output>
+            </form>
             <ol id="detail-comments" class="timeline"></ol>
             <h3>Status History</h3>
             <ol id="detail-history" class="timeline"></ol>
@@ -475,6 +496,10 @@
       const detailLifecycle = document.getElementById("detail-lifecycle");
       const detailComments = document.getElementById("detail-comments");
       const detailHistory = document.getElementById("detail-history");
+      const commentForm = document.getElementById("comment-form");
+      const commentStatus = document.getElementById("comment-status");
+      const commentSubmitButton = commentForm.querySelector("button");
+      let currentDetailId = null;
 
       function clearErrors() {
         form.querySelectorAll("[data-error-for]").forEach((element) => {
@@ -486,6 +511,25 @@
         details.forEach((detail) => {
           const element = form.querySelector(
             `[data-error-for="${detail.field}"]`,
+          );
+          if (element) {
+            element.textContent = detail.message;
+          }
+        });
+      }
+
+      function clearCommentErrors() {
+        commentForm
+          .querySelectorAll("[data-comment-error-for]")
+          .forEach((element) => {
+            element.textContent = "";
+          });
+      }
+
+      function showCommentErrors(details = []) {
+        details.forEach((detail) => {
+          const element = commentForm.querySelector(
+            `[data-comment-error-for="${detail.field}"]`,
           );
           if (element) {
             element.textContent = detail.message;
@@ -560,11 +604,13 @@
       }
 
       function resetDetail() {
+        currentDetailId = null;
         detailCard.hidden = true;
         detailStatus.textContent = "Select a report to view details.";
       }
 
       function renderDetail(report) {
+        currentDetailId = report.id;
         detailHeading.textContent = `${report.requestNumber} - ${report.title}`;
         detailStatusValue.textContent = report.status;
         detailPriority.textContent = report.priority;
@@ -601,6 +647,9 @@
             `${entry.fromStatus || "None"} -> ${entry.toStatus} by ${entry.changedByRole}: ${entry.reason || "No reason"} (${entry.createdAt})`,
         );
 
+        commentForm.hidden = actorRole.value === "FACILITY_MANAGER";
+        clearCommentErrors();
+        commentStatus.textContent = "";
         detailCard.hidden = false;
         detailStatus.textContent = "";
       }
@@ -626,6 +675,47 @@
           detailStatus.textContent = "Report detail could not be loaded.";
         }
       }
+
+      commentForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!currentDetailId) return;
+
+        clearCommentErrors();
+        commentStatus.textContent = "";
+        commentSubmitButton.disabled = true;
+        const payload = Object.fromEntries(new FormData(commentForm).entries());
+
+        try {
+          const response = await fetch(
+            `/api/requests/${encodeURIComponent(currentDetailId)}/comments`,
+            {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                "x-actor-role": actorRole.value,
+              },
+              body: JSON.stringify(payload),
+            },
+          );
+          const result = await response.json();
+
+          if (!response.ok) {
+            showCommentErrors(result.error?.details);
+            commentStatus.textContent =
+              result.error?.message || "Comment could not be saved.";
+            return;
+          }
+
+          const detailId = currentDetailId;
+          commentForm.reset();
+          await loadReportDetail(detailId);
+          commentStatus.textContent = "Comment saved.";
+        } catch {
+          commentStatus.textContent = "Comment could not be saved.";
+        } finally {
+          commentSubmitButton.disabled = false;
+        }
+      });
 
       async function loadReports() {
         const params = activeFilters();

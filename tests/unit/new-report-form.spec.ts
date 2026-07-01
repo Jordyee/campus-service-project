@@ -29,6 +29,10 @@ describe("new report form", () => {
     expect(html).toContain("Status History");
     expect(html).toContain("Lifecycle");
     expect(html).toContain("No comments or notes yet.");
+    expect(html).toContain("id=\"comment-form\"");
+    expect(html).toContain("name=\"commentType\"");
+    expect(html).toContain("data-comment-error-for=\"body\"");
+    expect(html).toContain("/comments");
     expect(html).toContain("/api/requests/${encodeURIComponent(id)}");
     expect(html).toContain('"x-actor-role": actorRole.value');
   });

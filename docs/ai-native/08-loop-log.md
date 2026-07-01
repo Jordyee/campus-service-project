@@ -160,7 +160,7 @@ An issue loop can stop only when:
 
 ### Issue #11 - Build report detail with status history display
 
-**Status:** Draft PR open; review/testing pass
+**Status:** Merged to `development`
 
 **Branch:** `implementation/issue-11-report-detail-history`
 
@@ -191,13 +191,34 @@ An issue loop can stop only when:
 
 ### Issue #12 - Add append-only comments and notes
 
-**Status:** Blocked by #11
+**Status:** Draft PR open; review/testing pass
 
 **Branch:** `implementation/issue-12-comments-notes`
 
-**PR:** Pending
+**PR:** https://github.com/Jordyee/campus-service-project/pull/25
 
-**Owner:** Unassigned
+**Owner:** Main agent
+
+**Blockers:** #11 completed and merged through PR #24.
+
+**Source of Truth:**
+
+- GitHub Issue #12
+- `docs/planning/implementation-queue.md`
+- `docs/requirements/traceability.md`
+- `docs/design/02-database-api.md`
+- `docs/design/03-ui.md`
+
+**Cycle 1:**
+
+- Build attempt: Added `POST /api/requests/{id}/comments`, comment/note validation, append-only D1 writes, role/request access checks, detail timeline refresh after submission, UI comment/note form, and tests proving no edit/delete routes exist.
+- Files changed: `worker/requests.ts`, `worker/index.ts`, `public/index.html`, `tests/integration/comments-api.spec.ts`, `tests/unit/new-report-form.spec.ts`, `docs/ai-native/08-loop-log.md`, `docs/planning/implementation-queue.md`, `docs/requirements/traceability.md`, `evidence/implementation-issue-12-ai-evidence.md`, `evidence/human-review-issue-12.md`.
+- AI assumptions: Facility Manager remains read-only for comments because `UI-ACT-10` and the existing role/action map deny `ADD_COMMENT` to Facility Manager. Comment/note edit/delete, duplicate merge, private note policy, notifications, and deployment remain out of scope.
+- Review result: Pass. Review kept comments append-only and did not add admin review, technician progress, duplicate merge, notifications, or deployment.
+- Tests/checks run: `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
+- Evidence: Focused comments test failed before implementation with route-level 404, then passed after adding API/UI support. Final run passed typecheck and 9 files / 35 tests.
+- Failures: None remaining.
+- Decision: Accept Cycle 1 for PR #25 review and merge to `development`.
 
 ### Issue #13 - Add admin review, category, and priority flow
 

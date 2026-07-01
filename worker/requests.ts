@@ -3,6 +3,7 @@ import {
   apiSuccess,
   canRolePerform,
   isCategory,
+  isCommentType,
   isPriority,
   isRequestStatus,
   readActorContext,
@@ -78,8 +79,25 @@ export interface RequestStatusHistoryItem {
   createdAt: string;
 }
 
+export interface AddCommentInput {
+  body: string;
+  commentType: CommentType;
+}
+
+export interface CreatedComment {
+  id: string;
+  authorRole: ActorContext["role"];
+  commentType: CommentType;
+  body: string;
+  createdAt: string;
+}
+
 export type RequestDetailResult =
   | { ok: true; data: RequestDetail }
+  | { ok: false; reason: "not_found" | "forbidden" };
+
+export type AddCommentResult =
+  | { ok: true; data: CreatedComment }
   | { ok: false; reason: "not_found" | "forbidden" };
 
 export interface ListRequestFilters {
@@ -96,6 +114,10 @@ export type ValidationResult =
 
 export type FilterValidationResult =
   | { ok: true; data: ListRequestFilters }
+  | { ok: false; errors: ApiErrorDetail[] };
+
+export type CommentValidationResult =
+  | { ok: true; data: AddCommentInput }
   | { ok: false; errors: ApiErrorDetail[] };
 
 const REQUIRED_FIELDS = [
@@ -191,6 +213,35 @@ export function validateListRequestQuery(
   return errors.length > 0
     ? { ok: false, errors }
     : { ok: true, data: filters };
+}
+
+export function validateAddCommentInput(
+  payload: unknown,
+): CommentValidationResult {
+  const input = asRecord(payload);
+  const errors: ApiErrorDetail[] = [];
+  const body = readRequiredText(
+    input,
+    "body",
+    "Comment body is required.",
+    errors,
+  );
+  const rawCommentType = input.commentType;
+
+  if (typeof rawCommentType !== "string" || rawCommentType.trim() === "") {
+    errors.push({ field: "commentType", message: "Comment type is required." });
+  } else if (!isCommentType(rawCommentType)) {
+    errors.push({ field: "commentType", message: "Comment type is invalid." });
+  }
+
+  if (errors.length > 0) {
+    return { ok: false, errors };
+  }
+
+  return {
+    ok: true,
+    data: { body, commentType: rawCommentType as CommentType },
+  };
 }
 
 async function nextRequestNumber(db: D1Database, now: string): Promise<string> {
@@ -503,6 +554,70 @@ export async function getServiceRequestDetail(
   };
 }
 
+export async function addRequestComment(
+  db: D1Database,
+  requestId: string,
+  actor: ActorContext,
+  input: AddCommentInput,
+  now = new Date().toISOString(),
+): Promise<AddCommentResult> {
+  const request = await db
+    .prepare(
+      `SELECT reporter_user_id, assigned_technician_id
+       FROM service_requests
+       WHERE id = ?`,
+    )
+    .bind(requestId)
+    .first<{
+      reporter_user_id: string | null;
+      assigned_technician_id: string | null;
+    }>();
+
+  if (!request) {
+    return { ok: false, reason: "not_found" };
+  }
+
+  if (!canActorViewRequest(actor, request)) {
+    return { ok: false, reason: "forbidden" };
+  }
+
+  const id = crypto.randomUUID();
+
+  await db
+    .prepare(
+      `INSERT INTO request_comments (
+        id,
+        service_request_id,
+        author_user_id,
+        author_role,
+        comment_type,
+        body,
+        created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    )
+    .bind(
+      id,
+      requestId,
+      actor.id,
+      actor.role,
+      input.commentType,
+      input.body,
+      now,
+    )
+    .run();
+
+  return {
+    ok: true,
+    data: {
+      id,
+      authorRole: actor.role,
+      commentType: input.commentType,
+      body: input.body,
+      createdAt: now,
+    },
+  };
+}
+
 export async function handleCreateRequest(
   request: Request,
   db: D1Database,
@@ -588,5 +703,52 @@ export async function handleGetRequestDetail(
     return apiSuccess(result.data);
   } catch {
     return apiError("INTERNAL_ERROR", "Could not load report detail.");
+  }
+}
+
+export async function handleAddRequestComment(
+  request: Request,
+  db: D1Database,
+  requestId: string,
+): Promise<Response> {
+  const actor = readActorContext(request);
+
+  if (!actor || !canRolePerform(actor.role, "ADD_COMMENT")) {
+    return apiError("FORBIDDEN_ACTION", "This role cannot add comments.");
+  }
+
+  let payload: unknown;
+
+  try {
+    payload = await request.json();
+  } catch {
+    return apiError("BAD_REQUEST", "Request body must be valid JSON.");
+  }
+
+  const validation = validateAddCommentInput(payload);
+
+  if (!validation.ok) {
+    return apiError("VALIDATION_ERROR", "Validation failed.", validation.errors);
+  }
+
+  try {
+    const result = await addRequestComment(
+      db,
+      requestId,
+      actor,
+      validation.data,
+    );
+
+    if (!result.ok && result.reason === "not_found") {
+      return apiError("NOT_FOUND", "Report not found.");
+    }
+
+    if (!result.ok) {
+      return apiError("FORBIDDEN_ACTION", "You cannot comment on this report.");
+    }
+
+    return apiSuccess(result.data, 201);
+  } catch {
+    return apiError("INTERNAL_ERROR", "Could not add comment.");
   }
 }

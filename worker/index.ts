@@ -1,5 +1,6 @@
 import { apiError, apiSuccess } from "./foundation";
 import {
+  handleAddRequestComment,
   handleCreateRequest,
   handleGetRequestDetail,
   handleListRequests,
@@ -23,6 +24,17 @@ export default {
 
     if (url.pathname === "/api/requests" && request.method === "GET") {
       return handleListRequests(request, env.DB);
+    }
+
+    const commentMatch = url.pathname.match(
+      /^\/api\/requests\/([^/]+)\/comments$/,
+    );
+    if (commentMatch && request.method === "POST") {
+      return handleAddRequestComment(
+        request,
+        env.DB,
+        decodeURIComponent(commentMatch[1]),
+      );
     }
 
     const detailMatch = url.pathname.match(/^\/api\/requests\/([^/]+)$/);
