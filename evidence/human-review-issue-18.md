@@ -8,7 +8,7 @@
 
 ## Review Decision
 
-Main-agent review: Pass for draft PR creation.
+Main-agent review: Pass for PR #31 merge to `development`.
 
 Student review: Pending.
 

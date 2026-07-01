@@ -4,7 +4,7 @@
 
 - GitHub Issue: #18 - Build facility manager dashboard summary
 - Branch: `implementation/issue-18-dashboard-summary`
-- Pull Request: Pending
+- Pull Request: https://github.com/Jordyee/campus-service-project/pull/31
 - Date: 2026-07-02
 
 ## Sources Read

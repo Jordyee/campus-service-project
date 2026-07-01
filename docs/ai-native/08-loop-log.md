@@ -381,11 +381,11 @@ An issue loop can stop only when:
 
 ### Issue #18 - Build facility manager dashboard summary
 
-**Status:** Implementation complete; tests pass; PR pending
+**Status:** Draft PR open; tests pass; review pass
 
 **Branch:** `implementation/issue-18-dashboard-summary`
 
-**PR:** Pending
+**PR:** https://github.com/Jordyee/campus-service-project/pull/31
 
 **Owner:** Main agent
 
@@ -409,7 +409,7 @@ An issue loop can stop only when:
 - Tests/checks run: `npx.cmd vitest tests/integration/dashboard-summary-api.spec.ts --run`; `npx.cmd vitest tests/integration/dashboard-summary-api.spec.ts tests/unit/new-report-form.spec.ts --run`; `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
 - Evidence: Focused dashboard test failed before implementation with route-level 404, then passed after adding API/UI support. One test assertion was corrected to check recent report ordering without requiring the response to contain only two reports. Final run passed typecheck and 15 files / 62 tests.
 - Failures: None remaining.
-- Decision: Accept Cycle 1 for PR review and creation.
+- Decision: Accept Cycle 1 for PR #31 review and merge to `development`.
 
 ### Issue #19 - Add automated test coverage and implementation traceability updates
 
