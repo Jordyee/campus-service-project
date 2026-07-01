@@ -3,6 +3,7 @@
 ## Issue
 
 - GitHub Issue: #8 - Implement app data model, role boundary, and lifecycle foundation
+- Draft PR: https://github.com/Jordyee/campus-service-project/pull/21
 - Branch: `implementation/issue-8-foundation`
 - Date: 2026-07-01
 

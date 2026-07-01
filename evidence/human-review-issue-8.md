@@ -3,6 +3,7 @@
 ## Review Scope
 
 - GitHub Issue #8 acceptance checks.
+- Draft PR #21: https://github.com/Jordyee/campus-service-project/pull/21
 - Requirement/design references for NFR-002 through NFR-007, DB-01 through DB-05, ERR-001 through ERR-007, and VAL-DBAPI-001 through VAL-DBAPI-011.
 - Code changes on branch `implementation/issue-8-foundation`.
 

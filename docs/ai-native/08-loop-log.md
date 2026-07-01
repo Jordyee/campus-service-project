@@ -41,11 +41,11 @@ An issue loop can stop only when:
 
 ### Issue #8 - Implement app data model, role boundary, and lifecycle foundation
 
-**Status:** Implemented; tests pass; draft PR pending
+**Status:** Draft PR opened; tests pass
 
 **Branch:** `implementation/issue-8-foundation`
 
-**PR:** Pending
+**PR:** https://github.com/Jordyee/campus-service-project/pull/21
 
 **Owner:** Main agent
 
