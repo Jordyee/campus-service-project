@@ -90,7 +90,7 @@ Optional skill creation:
 | 5 | #12 Append-only comments and notes | AFK | Merged to `development` | #11 complete | Main agent | `implementation/issue-12-comments-notes` | [#25](https://github.com/Jordyee/campus-service-project/pull/25) | Pass / merged |
 | 6 | #13 Admin review, category, priority | AFK | Merged to `development` | #12 complete | Main agent | `implementation/issue-13-admin-review-classification` | [PR #26](https://github.com/Jordyee/campus-service-project/pull/26) | Pass / merged |
 | 7 | #14 Technician assignment | AFK | Merged to `development` | #13 complete | Main agent | `implementation/issue-14-technician-assignment` | [PR #27](https://github.com/Jordyee/campus-service-project/pull/27) | Pass / merged |
-| 8 | #15 Technician task list and acceptance | AFK | Implementation complete; tests pass; PR pending | #14 complete | Main agent | `implementation/issue-15-technician-tasks-acceptance` | Pending | Pending |
+| 8 | #15 Technician task list and acceptance | AFK | Draft PR open; tests pass; review pass | #14 complete | Main agent | `implementation/issue-15-technician-tasks-acceptance` | [PR #28](https://github.com/Jordyee/campus-service-project/pull/28) | Pass / ready to merge to `development` |
 | 9 | #16 Technician progress and resolved | AFK | Blocked | #15 | Unassigned | `implementation/issue-16-technician-progress-resolved` | Pending | Pending |
 | 10 | #17 Admin close and reopen | AFK | Blocked | #16 | Unassigned | `implementation/issue-17-close-reopen` | Pending | Pending |
 | 11 | #18 Facility manager dashboard | AFK | Blocked | #10, #17 | Unassigned | `implementation/issue-18-dashboard-summary` | Pending | Pending |

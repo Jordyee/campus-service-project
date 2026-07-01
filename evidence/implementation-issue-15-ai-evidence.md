@@ -4,7 +4,7 @@
 
 - GitHub Issue: #15 - Build technician task list and acceptance flow
 - Branch: `implementation/issue-15-technician-tasks-acceptance`
-- Pull Request: Pending
+- Pull Request: https://github.com/Jordyee/campus-service-project/pull/28
 - Date: 2026-07-02
 
 ## Sources Read

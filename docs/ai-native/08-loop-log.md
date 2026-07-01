@@ -285,11 +285,11 @@ An issue loop can stop only when:
 
 ### Issue #15 - Build technician task list and acceptance flow
 
-**Status:** Implementation complete; tests pass; PR pending
+**Status:** Draft PR open; tests pass; review pass
 
 **Branch:** `implementation/issue-15-technician-tasks-acceptance`
 
-**PR:** Pending
+**PR:** https://github.com/Jordyee/campus-service-project/pull/28
 
 **Owner:** Main agent
 
@@ -313,7 +313,7 @@ An issue loop can stop only when:
 - Tests/checks run: `npx.cmd vitest tests/integration/technician-tasks-api.spec.ts --run`; `npx.cmd vitest tests/integration/technician-tasks-api.spec.ts tests/unit/new-report-form.spec.ts --run`; `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
 - Evidence: Focused task/acceptance tests failed before implementation with route-level 404 and missing `acceptedAt`, then passed after adding API/UI support. Final run passed typecheck and 12 files / 49 tests.
 - Failures: None remaining.
-- Decision: Accept Cycle 1 for draft PR creation and main-agent review.
+- Decision: Accept Cycle 1 for PR #28 review and merge to `development`.
 
 ### Issue #16 - Add technician progress and resolved status flow
 
