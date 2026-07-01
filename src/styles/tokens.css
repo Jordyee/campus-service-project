@@ -1,0 +1,91 @@
+/* ─── Design Tokens — Trust & Authority ────────────────────────────────────── */
+/* Berdasarkan UI/UX Pro Max skill: Professional navy + blue CTA               */
+
+:root {
+  /* Colors */
+  --color-primary: #0f172a;
+  --color-primary-hover: #1e293b;
+  --color-secondary: #334155;
+  --color-accent: #0369a1;
+  --color-accent-hover: #0284c7;
+  --color-accent-light: #e0f2fe;
+  --color-background: #f8fafc;
+  --color-surface: #ffffff;
+  --color-muted: #e8ecf1;
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+  --color-foreground: #020617;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
+  --color-destructive: #dc2626;
+  --color-destructive-bg: #fef2f2;
+  --color-destructive-border: #fca5a5;
+  --color-success: #166534;
+  --color-success-bg: #f0fdf4;
+  --color-success-border: #bbf7d0;
+  --color-warning: #92400e;
+  --color-warning-bg: #fffbeb;
+  --color-warning-border: #fde68a;
+
+  /* Status Colors */
+  --status-submitted: #7c3aed;
+  --status-submitted-bg: #f5f3ff;
+  --status-under-review: #0369a1;
+  --status-under-review-bg: #e0f2fe;
+  --status-assigned: #d97706;
+  --status-assigned-bg: #fffbeb;
+  --status-in-progress: #ea580c;
+  --status-in-progress-bg: #fff7ed;
+  --status-resolved: #16a34a;
+  --status-resolved-bg: #f0fdf4;
+  --status-closed: #475569;
+  --status-closed-bg: #f1f5f9;
+
+  /* Priority Colors */
+  --priority-low: #16a34a;
+  --priority-low-bg: #f0fdf4;
+  --priority-medium: #d97706;
+  --priority-medium-bg: #fffbeb;
+  --priority-high: #dc2626;
+  --priority-high-bg: #fef2f2;
+
+  /* Typography */
+  --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Open Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+
+  /* Spacing (8dp rhythm) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 200ms ease-in-out;
+}

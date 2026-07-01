@@ -1,79 +1,36 @@
 import { SELF } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
 
+/**
+ * Static shell smoke test — verifies the Vite-built React app shell.
+ *
+ * The frontend is now a React TypeScript app built by Vite.
+ * public/index.html is the build output: a lightweight HTML shell that
+ * mounts React on <div id="root">. All component IDs exist in JS/React code
+ * and are not present in the static HTML served by Wrangler.
+ *
+ * We verify:
+ * - Wrangler serves the shell with HTTP 200
+ * - The root mount point exists
+ * - A bundled JS asset is referenced (Vite build output)
+ * - The page lang and title are set correctly
+ */
 describe("new report form", () => {
   it("renders reporter request fields and field-error targets", async () => {
     const response = await SELF.fetch("https://example.com/");
     const html = await response.text();
 
     expect(response.status).toBe(200);
-    expect(html).toContain('id="backend-banner"');
-    expect(html).toContain('id="backend-title"');
-    expect(html).toContain('id="backend-message"');
-    expect(html).toContain("Backend not connected. Run npm.cmd run dev");
-    expect(html).toContain('id="reporter-section"');
-    expect(html).toContain('id="role-summary"');
-    for (const field of [
-      "title",
-      "description",
-      "location",
-      "category",
-      "reporterName",
-      "reporterContact",
-    ]) {
-      expect(html).toContain(`name="${field}"`);
-      expect(html).toContain(`data-error-for="${field}"`);
-    }
 
-    expect(html).toContain('fetch("/api/requests"');
-    expect(html).toContain('fetch("/api/health"');
-    expect(html).toContain("id=\"report-filters\"");
-    expect(html).toContain("No reports match the current filters.");
-    expect(html).toContain("No reports yet.");
-    expect(html).toContain("clear-filters");
-    expect(html).toContain("id=\"technician-tasks-section\"");
-    expect(html).toContain("No assigned tasks.");
-    expect(html).toContain("/api/technician/tasks");
-    expect(html).toContain("id=\"manager-dashboard-section\"");
-    expect(html).toContain("id=\"dashboard-status-counts\"");
-    expect(html).toContain("id=\"dashboard-category-counts\"");
-    expect(html).toContain("id=\"dashboard-priority-counts\"");
-    expect(html).toContain("id=\"dashboard-recent-table\"");
-    expect(html).toContain("No recent reports yet.");
-    expect(html).toContain("/api/dashboard/summary");
-    expect(html).toContain("id=\"detail-card\"");
-    expect(html).toContain("id=\"detail-lifecycle\"");
-    expect(html).toContain("id=\"detail-accepted\"");
-    expect(html).toContain("id=\"technician-task-form\"");
-    expect(html).toContain("id=\"accept-task-button\"");
-    expect(html).toContain("/accept");
-    expect(html).toContain("id=\"technician-note\"");
-    expect(html).toContain("id=\"mark-progress-button\"");
-    expect(html).toContain("id=\"mark-resolved-button\"");
-    expect(html).toContain("/work-status");
-    expect(html).toContain("Status History");
-    expect(html).toContain("Lifecycle");
-    expect(html).toContain("id=\"admin-review-form\"");
-    expect(html).toContain("id=\"admin-review-button\"");
-    expect(html).toContain("/review");
-    expect(html).toContain("/classification");
-    expect(html).toContain("id=\"assignment-form\"");
-    expect(html).toContain("name=\"technicianId\"");
-    expect(html).toContain("data-assignment-error-for=\"technicianId\"");
-    expect(html).toContain("/api/users?role=TECHNICIAN");
-    expect(html).toContain("/assignment");
-    expect(html).toContain("id=\"admin-close-form\"");
-    expect(html).toContain("id=\"admin-close-button\"");
-    expect(html).toContain("id=\"admin-reopen-button\"");
-    expect(html).toContain("data-close-error-for=\"reason\"");
-    expect(html).toContain("/close");
-    expect(html).toContain("/reopen");
-    expect(html).toContain("No comments or notes yet.");
-    expect(html).toContain("id=\"comment-form\"");
-    expect(html).toContain("name=\"commentType\"");
-    expect(html).toContain("data-comment-error-for=\"body\"");
-    expect(html).toContain("/comments");
-    expect(html).toContain("/api/requests/${encodeURIComponent(id)}");
-    expect(html).toContain('"x-actor-role": actorRole.value');
+    // Root mount point for React app
+    expect(html).toContain('id="root"');
+
+    // Vite build output: bundled JS asset referenced in shell
+    expect(html).toContain("/assets/");
+    expect(html).toContain('type="module"');
+
+    // Page metadata
+    expect(html).toContain('lang="id"');
+    expect(html).toContain("Campus Service Request");
   });
 });
