@@ -83,7 +83,7 @@ Optional skill creation:
 
 | Order | Issue | Mode | Status | Blocked By | Owner | Branch | PR | Main-Agent Decision |
 |---:|---|---|---|---|---|---|---|---|
-| 1 | #8 Foundation data model, role boundary, lifecycle | HITL | Ready to start when student explicitly starts the loop | None | Unassigned | `implementation/issue-8-foundation` | Pending | Pending |
+| 1 | #8 Foundation data model, role boundary, lifecycle | HITL | Draft PR opened; tests pass | None | Main agent | `implementation/issue-8-foundation` | [#21](https://github.com/Jordyee/campus-service-project/pull/21) | Pending |
 | 2 | #9 Reporter request creation | AFK | Blocked | #8 | Unassigned | `implementation/issue-9-create-report` | Pending | Pending |
 | 3 | #10 Report list, search, filters | AFK | Blocked | #8, #9 | Unassigned | `implementation/issue-10-report-list-filters` | Pending | Pending |
 | 4 | #11 Report detail and status history | AFK | Blocked | #8, #9 | Unassigned | `implementation/issue-11-report-detail-history` | Pending | Pending |

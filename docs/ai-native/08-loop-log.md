@@ -41,13 +41,13 @@ An issue loop can stop only when:
 
 ### Issue #8 - Implement app data model, role boundary, and lifecycle foundation
 
-**Status:** Ready to start when student explicitly starts the loop
+**Status:** Draft PR opened; tests pass
 
 **Branch:** `implementation/issue-8-foundation`
 
-**PR:** Pending
+**PR:** https://github.com/Jordyee/campus-service-project/pull/21
 
-**Owner:** Unassigned
+**Owner:** Main agent
 
 **Blockers:** None. Student approved simple role/session mechanism on 2026-07-01.
 
@@ -59,14 +59,14 @@ An issue loop can stop only when:
 
 **Cycle 1:**
 
-- Build attempt:
-- Files changed:
-- AI assumptions:
-- Review result:
-- Tests/checks run:
-- Evidence:
-- Failures:
-- Decision:
+- Build attempt: Added the D1 foundation migration, seeded demo actors, shared enum/role/action/lifecycle helpers, shared API response helpers, and a single status transition/history helper.
+- Files changed: `migrations/0001_foundation.sql`, `worker/foundation.ts`, `worker/status-history.ts`, `worker/index.ts`, `vitest.config.mts`, `tests/unit/foundation.spec.ts`, `tests/integration/foundation-schema.spec.ts`, `tests/integration/health.spec.ts`, `docs/requirements/traceability.md`, `evidence/implementation-issue-8-ai-evidence.md`, `evidence/human-review-issue-8.md`.
+- AI assumptions: Actor context is provided by development headers `x-actor-role` and optional `x-actor-id`; missing actor ID falls back to seeded demo users. No Google login, paid identity service, deployment, or optional-feature tables were added.
+- Review result: Pass after focused fixes. Review found one schema-test false positive from Miniflare internal `_cf_METADATA` table and one status-history safety risk where history could be written after a zero-row update; both were fixed.
+- Tests/checks run: `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
+- Evidence: First run failed 1 schema assertion because `_cf_METADATA` was counted; typecheck then passed; final test run passed 3 files and 15 tests.
+- Failures: None remaining.
+- Decision: Accept Cycle 1 for draft PR creation and main-agent review.
 
 **Cycle 2:**
 
