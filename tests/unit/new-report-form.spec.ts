@@ -20,6 +20,10 @@ describe("new report form", () => {
     }
 
     expect(html).toContain('fetch("/api/requests"');
-    expect(html).toContain('"x-actor-role": "REPORTER"');
+    expect(html).toContain("id=\"report-filters\"");
+    expect(html).toContain("No reports match the current filters.");
+    expect(html).toContain("No reports yet.");
+    expect(html).toContain("clear-filters");
+    expect(html).toContain('"x-actor-role": actorRole.value');
   });
 });

@@ -84,8 +84,8 @@ Optional skill creation:
 | Order | Issue | Mode | Status | Blocked By | Owner | Branch | PR | Main-Agent Decision |
 |---:|---|---|---|---|---|---|---|---|
 | 1 | #8 Foundation data model, role boundary, lifecycle | HITL | Merged to `development` | None | Main agent | `implementation/issue-8-foundation` | [#21](https://github.com/Jordyee/campus-service-project/pull/21) | Pass / merged |
-| 2 | #9 Reporter request creation | AFK | Draft PR opened; tests pass | #8 complete | Main agent | `implementation/issue-9-create-report` | [#22](https://github.com/Jordyee/campus-service-project/pull/22) | Pending |
-| 3 | #10 Report list, search, filters | AFK | Blocked | #8, #9 | Unassigned | `implementation/issue-10-report-list-filters` | Pending | Pending |
+| 2 | #9 Reporter request creation | AFK | Merged to `development` | #8 complete | Main agent | `implementation/issue-9-create-report` | [#22](https://github.com/Jordyee/campus-service-project/pull/22) | Pass / merged |
+| 3 | #10 Report list, search, filters | AFK | Draft PR open; review/testing pass | #8 and #9 complete | Main agent | `implementation/issue-10-report-list-filters` | [#23](https://github.com/Jordyee/campus-service-project/pull/23) | Pass / ready to merge |
 | 4 | #11 Report detail and status history | AFK | Blocked | #8, #9 | Unassigned | `implementation/issue-11-report-detail-history` | Pending | Pending |
 | 5 | #12 Append-only comments and notes | AFK | Blocked | #11 | Unassigned | `implementation/issue-12-comments-notes` | Pending | Pending |
 | 6 | #13 Admin review, category, priority | AFK | Blocked | #12 | Unassigned | `implementation/issue-13-admin-review-classification` | Pending | Pending |

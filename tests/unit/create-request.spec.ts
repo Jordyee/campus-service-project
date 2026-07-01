@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { validateCreateRequestInput } from "../../worker/requests";
+import {
+  validateCreateRequestInput,
+  validateListRequestQuery,
+} from "../../worker/requests";
 
 const validInput = {
   title: "Projector issue",
@@ -49,6 +52,46 @@ describe("create request validation", () => {
         { field: "reporterName", message: "Reporter name is required." },
         { field: "reporterContact", message: "Reporter contact is required." },
         { field: "category", message: "Category is invalid." },
+      ],
+    });
+  });
+});
+
+describe("list request filter validation", () => {
+  it("accepts approved status, category, priority, location, and keyword filters", () => {
+    const params = new URLSearchParams({
+      status: "SUBMITTED",
+      category: "PERALATAN_KELAS",
+      priority: "HIGH",
+      location: "Gedung A",
+      keyword: "projector",
+    });
+
+    expect(validateListRequestQuery(params)).toEqual({
+      ok: true,
+      data: {
+        status: "SUBMITTED",
+        category: "PERALATAN_KELAS",
+        priority: "HIGH",
+        location: "Gedung A",
+        keyword: "projector",
+      },
+    });
+  });
+
+  it("rejects invalid enum filters", () => {
+    const params = new URLSearchParams({
+      status: "OPEN",
+      category: "PHOTO_UPLOAD",
+      priority: "URGENT",
+    });
+
+    expect(validateListRequestQuery(params)).toEqual({
+      ok: false,
+      errors: [
+        { field: "status", message: "Status is invalid." },
+        { field: "category", message: "Category is invalid." },
+        { field: "priority", message: "Priority is invalid." },
       ],
     });
   });
