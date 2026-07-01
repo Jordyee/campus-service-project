@@ -32,6 +32,11 @@ describe("new report form", () => {
     expect(html).toContain("id=\"admin-review-button\"");
     expect(html).toContain("/review");
     expect(html).toContain("/classification");
+    expect(html).toContain("id=\"assignment-form\"");
+    expect(html).toContain("name=\"technicianId\"");
+    expect(html).toContain("data-assignment-error-for=\"technicianId\"");
+    expect(html).toContain("/api/users?role=TECHNICIAN");
+    expect(html).toContain("/assignment");
     expect(html).toContain("No comments or notes yet.");
     expect(html).toContain("id=\"comment-form\"");
     expect(html).toContain("name=\"commentType\"");
