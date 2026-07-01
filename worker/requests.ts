@@ -92,6 +92,27 @@ export interface CreatedComment {
   createdAt: string;
 }
 
+export interface ReviewRequestInput {
+  note?: string;
+}
+
+export interface ClassificationInput {
+  category: Category;
+  priority: Priority;
+  note?: string;
+}
+
+export interface ReviewedRequest {
+  id: string;
+  status: "UNDER_REVIEW";
+}
+
+export interface ClassifiedRequest {
+  id: string;
+  category: Category;
+  priority: Priority;
+}
+
 export type RequestDetailResult =
   | { ok: true; data: RequestDetail }
   | { ok: false; reason: "not_found" | "forbidden" };
@@ -118,6 +139,14 @@ export type FilterValidationResult =
 
 export type CommentValidationResult =
   | { ok: true; data: AddCommentInput }
+  | { ok: false; errors: ApiErrorDetail[] };
+
+export type ReviewValidationResult =
+  | { ok: true; data: ReviewRequestInput }
+  | { ok: false; errors: ApiErrorDetail[] };
+
+export type ClassificationValidationResult =
+  | { ok: true; data: ClassificationInput }
   | { ok: false; errors: ApiErrorDetail[] };
 
 const REQUIRED_FIELDS = [
@@ -148,6 +177,27 @@ function readRequiredText(
   }
 
   return value.trim();
+}
+
+function readOptionalText(
+  input: Record<string, unknown>,
+  field: string,
+  message: string,
+  errors: ApiErrorDetail[],
+): string | undefined {
+  const value = input[field];
+
+  if (value === undefined || value === null || value === "") {
+    return undefined;
+  }
+
+  if (typeof value !== "string") {
+    errors.push({ field, message });
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  return trimmed === "" ? undefined : trimmed;
 }
 
 export function validateCreateRequestInput(payload: unknown): ValidationResult {
@@ -241,6 +291,61 @@ export function validateAddCommentInput(
   return {
     ok: true,
     data: { body, commentType: rawCommentType as CommentType },
+  };
+}
+
+export function validateReviewRequestInput(
+  payload: unknown,
+): ReviewValidationResult {
+  const input = asRecord(payload);
+  const errors: ApiErrorDetail[] = [];
+  const note = readOptionalText(
+    input,
+    "note",
+    "Review note must be text.",
+    errors,
+  );
+
+  return errors.length > 0 ? { ok: false, errors } : { ok: true, data: { note } };
+}
+
+export function validateClassificationInput(
+  payload: unknown,
+): ClassificationValidationResult {
+  const input = asRecord(payload);
+  const errors: ApiErrorDetail[] = [];
+  const rawCategory = input.category;
+  const rawPriority = input.priority;
+  const note = readOptionalText(
+    input,
+    "note",
+    "Review note must be text.",
+    errors,
+  );
+
+  if (typeof rawCategory !== "string" || rawCategory.trim() === "") {
+    errors.push({ field: "category", message: "Category is required." });
+  } else if (!isCategory(rawCategory)) {
+    errors.push({ field: "category", message: "Category is invalid." });
+  }
+
+  if (typeof rawPriority !== "string" || rawPriority.trim() === "") {
+    errors.push({ field: "priority", message: "Priority is required." });
+  } else if (!isPriority(rawPriority)) {
+    errors.push({ field: "priority", message: "Priority is invalid." });
+  }
+
+  if (errors.length > 0) {
+    return { ok: false, errors };
+  }
+
+  return {
+    ok: true,
+    data: {
+      category: rawCategory as Category,
+      priority: rawPriority as Priority,
+      note,
+    },
   };
 }
 
@@ -618,6 +723,96 @@ export async function addRequestComment(
   };
 }
 
+export async function reviewServiceRequest(
+  db: D1Database,
+  requestId: string,
+  actor: ActorContext,
+  input: ReviewRequestInput,
+  now = new Date().toISOString(),
+): Promise<ReviewedRequest | null | "invalid_transition"> {
+  const row = await db
+    .prepare("SELECT status FROM service_requests WHERE id = ?")
+    .bind(requestId)
+    .first<{ status: RequestStatus }>();
+
+  if (!row) {
+    return null;
+  }
+
+  if (row.status !== "SUBMITTED") {
+    return "invalid_transition";
+  }
+
+  await transitionRequestStatus({
+    db,
+    requestId,
+    fromStatus: "SUBMITTED",
+    toStatus: "UNDER_REVIEW",
+    actor,
+    reason: input.note ?? "Review started.",
+    now,
+  });
+
+  await db
+    .prepare(
+      `UPDATE service_requests
+       SET reviewed_by_user_id = ?, updated_at = ?
+       WHERE id = ?`,
+    )
+    .bind(actor.id, now, requestId)
+    .run();
+
+  if (input.note) {
+    await addRequestComment(
+      db,
+      requestId,
+      actor,
+      { commentType: "NOTE", body: input.note },
+      now,
+    );
+  }
+
+  return { id: requestId, status: "UNDER_REVIEW" };
+}
+
+export async function classifyServiceRequest(
+  db: D1Database,
+  requestId: string,
+  actor: ActorContext,
+  input: ClassificationInput,
+  now = new Date().toISOString(),
+): Promise<ClassifiedRequest | null> {
+  const row = await db
+    .prepare("SELECT id FROM service_requests WHERE id = ?")
+    .bind(requestId)
+    .first<{ id: string }>();
+
+  if (!row) {
+    return null;
+  }
+
+  await db
+    .prepare(
+      `UPDATE service_requests
+       SET category = ?, priority = ?, updated_at = ?
+       WHERE id = ?`,
+    )
+    .bind(input.category, input.priority, now, requestId)
+    .run();
+
+  if (input.note) {
+    await addRequestComment(
+      db,
+      requestId,
+      actor,
+      { commentType: "NOTE", body: input.note },
+      now,
+    );
+  }
+
+  return { id: requestId, category: input.category, priority: input.priority };
+}
+
 export async function handleCreateRequest(
   request: Request,
   db: D1Database,
@@ -750,5 +945,98 @@ export async function handleAddRequestComment(
     return apiSuccess(result.data, 201);
   } catch {
     return apiError("INTERNAL_ERROR", "Could not add comment.");
+  }
+}
+
+export async function handleReviewRequest(
+  request: Request,
+  db: D1Database,
+  requestId: string,
+): Promise<Response> {
+  const actor = readActorContext(request);
+
+  if (!actor || !canRolePerform(actor.role, "REVIEW_REQUEST")) {
+    return apiError("FORBIDDEN_ACTION", "Only an Administrator can review.");
+  }
+
+  let payload: unknown;
+
+  try {
+    payload = await request.json();
+  } catch {
+    return apiError("BAD_REQUEST", "Request body must be valid JSON.");
+  }
+
+  const validation = validateReviewRequestInput(payload);
+
+  if (!validation.ok) {
+    return apiError("VALIDATION_ERROR", "Validation failed.", validation.errors);
+  }
+
+  try {
+    const result = await reviewServiceRequest(
+      db,
+      requestId,
+      actor,
+      validation.data,
+    );
+
+    if (result === null) {
+      return apiError("NOT_FOUND", "Report not found.");
+    }
+
+    if (result === "invalid_transition") {
+      return apiError(
+        "INVALID_STATUS_TRANSITION",
+        "Only submitted reports can be moved under review.",
+      );
+    }
+
+    return apiSuccess(result);
+  } catch {
+    return apiError("INTERNAL_ERROR", "Could not review report.");
+  }
+}
+
+export async function handleClassifyRequest(
+  request: Request,
+  db: D1Database,
+  requestId: string,
+): Promise<Response> {
+  const actor = readActorContext(request);
+
+  if (!actor || !canRolePerform(actor.role, "CLASSIFY_REQUEST")) {
+    return apiError("FORBIDDEN_ACTION", "Only an Administrator can classify.");
+  }
+
+  let payload: unknown;
+
+  try {
+    payload = await request.json();
+  } catch {
+    return apiError("BAD_REQUEST", "Request body must be valid JSON.");
+  }
+
+  const validation = validateClassificationInput(payload);
+
+  if (!validation.ok) {
+    return apiError("VALIDATION_ERROR", "Validation failed.", validation.errors);
+  }
+
+  try {
+    const result = await classifyServiceRequest(
+      db,
+      requestId,
+      actor,
+      validation.data,
+    );
+
+    if (!result) {
+      return apiError("NOT_FOUND", "Report not found.");
+    }
+
+    return apiSuccess(result);
+  } catch {
+    return apiError("INTERNAL_ERROR", "Could not classify report.");
   }
 }

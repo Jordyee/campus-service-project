@@ -191,7 +191,7 @@ An issue loop can stop only when:
 
 ### Issue #12 - Add append-only comments and notes
 
-**Status:** Draft PR open; review/testing pass
+**Status:** Merged to `development`
 
 **Branch:** `implementation/issue-12-comments-notes`
 
@@ -222,13 +222,34 @@ An issue loop can stop only when:
 
 ### Issue #13 - Add admin review, category, and priority flow
 
-**Status:** Blocked by #12
+**Status:** Draft PR open; tests pass; review pass
 
 **Branch:** `implementation/issue-13-admin-review-classification`
 
-**PR:** Pending
+**PR:** https://github.com/Jordyee/campus-service-project/pull/26
 
-**Owner:** Unassigned
+**Owner:** Main agent
+
+**Blockers:** #12 completed and merged through PR #25.
+
+**Source of Truth:**
+
+- GitHub Issue #13
+- `docs/planning/implementation-queue.md`
+- `docs/requirements/traceability.md`
+- `docs/design/02-database-api.md`
+- `docs/design/03-ui.md`
+
+**Cycle 1:**
+
+- Build attempt: Added Administrator-only `POST /api/requests/{id}/review` and `PATCH /api/requests/{id}/classification`, approved category/priority validation, `SUBMITTED` to `UNDER_REVIEW` transition with status history, optional append-only review/classification notes, and Admin detail UI controls.
+- Files changed: `worker/requests.ts`, `worker/index.ts`, `public/index.html`, `tests/integration/admin-review-api.spec.ts`, `tests/unit/new-report-form.spec.ts`, `docs/ai-native/08-loop-log.md`, `docs/planning/implementation-queue.md`, `docs/requirements/traceability.md`, `evidence/implementation-issue-13-ai-evidence.md`, `evidence/human-review-issue-13.md`.
+- AI assumptions: Optional review/classification context is stored as `NOTE` comments because #12 established append-only comments/notes. Assignment, duplicate merge, multi-level approval, technician progress, close/reopen, and deployment remain out of scope.
+- Review result: Pass. Review kept admin review/classification scoped to Administrator and did not add assignment or duplicate merge behavior.
+- Tests/checks run: `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
+- Evidence: Focused admin test failed before implementation with route-level 404, then passed after adding API/UI support. Final run passed typecheck and 10 files / 39 tests.
+- Failures: None remaining.
+- Decision: Accept Cycle 1 for PR #26 review and merge to `development`.
 
 ### Issue #14 - Add technician assignment flow
 

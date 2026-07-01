@@ -237,6 +237,7 @@
         line-height: 1.45;
       }
 
+      .admin-form,
       .comment-form {
         margin: 12px 0;
       }
@@ -442,6 +443,38 @@
             </dl>
             <h3>Description</h3>
             <p id="detail-description"></p>
+            <form id="admin-review-form" class="admin-form" hidden>
+              <h3>Admin Review</h3>
+              <button id="admin-review-button" type="button">Start Review</button>
+              <label>
+                Category
+                <select id="admin-category" name="category">
+                  <option value="INTERNET">Internet</option>
+                  <option value="AC">AC</option>
+                  <option value="PERALATAN_KELAS">Peralatan Kelas</option>
+                  <option value="KEBERSIHAN">Kebersihan</option>
+                  <option value="LABORATORIUM">Laboratorium</option>
+                  <option value="LAINNYA">Lainnya</option>
+                </select>
+                <span class="error" data-admin-error-for="category"></span>
+              </label>
+              <label>
+                Priority
+                <select id="admin-priority" name="priority">
+                  <option value="LOW">Low</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="HIGH">High</option>
+                </select>
+                <span class="error" data-admin-error-for="priority"></span>
+              </label>
+              <label>
+                Review Note
+                <textarea id="admin-note" name="note"></textarea>
+                <span class="error" data-admin-error-for="note"></span>
+              </label>
+              <button type="submit">Save Classification</button>
+              <output id="admin-status"></output>
+            </form>
             <h3>Lifecycle</h3>
             <ol id="detail-lifecycle" class="lifecycle"></ol>
             <h3>Comments / Notes</h3>
@@ -496,6 +529,13 @@
       const detailLifecycle = document.getElementById("detail-lifecycle");
       const detailComments = document.getElementById("detail-comments");
       const detailHistory = document.getElementById("detail-history");
+      const adminForm = document.getElementById("admin-review-form");
+      const adminReviewButton = document.getElementById("admin-review-button");
+      const adminCategory = document.getElementById("admin-category");
+      const adminPriority = document.getElementById("admin-priority");
+      const adminNote = document.getElementById("admin-note");
+      const adminStatus = document.getElementById("admin-status");
+      const adminSubmitButton = adminForm.querySelector("button[type='submit']");
       const commentForm = document.getElementById("comment-form");
       const commentStatus = document.getElementById("comment-status");
       const commentSubmitButton = commentForm.querySelector("button");
@@ -530,6 +570,23 @@
         details.forEach((detail) => {
           const element = commentForm.querySelector(
             `[data-comment-error-for="${detail.field}"]`,
+          );
+          if (element) {
+            element.textContent = detail.message;
+          }
+        });
+      }
+
+      function clearAdminErrors() {
+        adminForm.querySelectorAll("[data-admin-error-for]").forEach((element) => {
+          element.textContent = "";
+        });
+      }
+
+      function showAdminErrors(details = []) {
+        details.forEach((detail) => {
+          const element = adminForm.querySelector(
+            `[data-admin-error-for="${detail.field}"]`,
           );
           if (element) {
             element.textContent = detail.message;
@@ -623,6 +680,12 @@
         detailCreated.textContent = report.createdAt;
         detailUpdated.textContent = report.updatedAt;
         detailDescription.textContent = report.description;
+        adminForm.hidden = actorRole.value !== "ADMINISTRATOR";
+        adminCategory.value = report.category;
+        adminPriority.value = report.priority;
+        adminReviewButton.disabled = report.status !== "SUBMITTED";
+        clearAdminErrors();
+        adminStatus.textContent = "";
 
         detailLifecycle.textContent = "";
         report.lifecycle.forEach((status) => {
@@ -675,6 +738,88 @@
           detailStatus.textContent = "Report detail could not be loaded.";
         }
       }
+
+      adminReviewButton.addEventListener("click", async () => {
+        if (!currentDetailId) return;
+
+        clearAdminErrors();
+        adminStatus.textContent = "";
+        adminReviewButton.disabled = true;
+        let saved = false;
+
+        try {
+          const response = await fetch(
+            `/api/requests/${encodeURIComponent(currentDetailId)}/review`,
+            {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                "x-actor-role": actorRole.value,
+              },
+              body: JSON.stringify({ note: adminNote.value }),
+            },
+          );
+          const result = await response.json();
+
+          if (!response.ok) {
+            showAdminErrors(result.error?.details);
+            adminStatus.textContent =
+              result.error?.message || "Review could not be saved.";
+            return;
+          }
+
+          const detailId = currentDetailId;
+          adminNote.value = "";
+          saved = true;
+          await loadReportDetail(detailId);
+          adminStatus.textContent = "Review saved.";
+        } catch {
+          adminStatus.textContent = "Review could not be saved.";
+        } finally {
+          if (!saved) adminReviewButton.disabled = false;
+        }
+      });
+
+      adminForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!currentDetailId) return;
+
+        clearAdminErrors();
+        adminStatus.textContent = "";
+        adminSubmitButton.disabled = true;
+        const payload = Object.fromEntries(new FormData(adminForm).entries());
+
+        try {
+          const response = await fetch(
+            `/api/requests/${encodeURIComponent(currentDetailId)}/classification`,
+            {
+              method: "PATCH",
+              headers: {
+                "content-type": "application/json",
+                "x-actor-role": actorRole.value,
+              },
+              body: JSON.stringify(payload),
+            },
+          );
+          const result = await response.json();
+
+          if (!response.ok) {
+            showAdminErrors(result.error?.details);
+            adminStatus.textContent =
+              result.error?.message || "Classification could not be saved.";
+            return;
+          }
+
+          const detailId = currentDetailId;
+          adminNote.value = "";
+          await loadReportDetail(detailId);
+          adminStatus.textContent = "Classification saved.";
+        } catch {
+          adminStatus.textContent = "Classification could not be saved.";
+        } finally {
+          adminSubmitButton.disabled = false;
+        }
+      });
 
       commentForm.addEventListener("submit", async (event) => {
         event.preventDefault();

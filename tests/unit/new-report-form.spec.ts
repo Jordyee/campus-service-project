@@ -28,6 +28,10 @@ describe("new report form", () => {
     expect(html).toContain("id=\"detail-lifecycle\"");
     expect(html).toContain("Status History");
     expect(html).toContain("Lifecycle");
+    expect(html).toContain("id=\"admin-review-form\"");
+    expect(html).toContain("id=\"admin-review-button\"");
+    expect(html).toContain("/review");
+    expect(html).toContain("/classification");
     expect(html).toContain("No comments or notes yet.");
     expect(html).toContain("id=\"comment-form\"");
     expect(html).toContain("name=\"commentType\"");

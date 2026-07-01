@@ -87,8 +87,8 @@ Optional skill creation:
 | 2 | #9 Reporter request creation | AFK | Merged to `development` | #8 complete | Main agent | `implementation/issue-9-create-report` | [#22](https://github.com/Jordyee/campus-service-project/pull/22) | Pass / merged |
 | 3 | #10 Report list, search, filters | AFK | Merged to `development` | #8 and #9 complete | Main agent | `implementation/issue-10-report-list-filters` | [#23](https://github.com/Jordyee/campus-service-project/pull/23) | Pass / merged |
 | 4 | #11 Report detail and status history | AFK | Merged to `development` | #8 and #9 complete | Main agent | `implementation/issue-11-report-detail-history` | [#24](https://github.com/Jordyee/campus-service-project/pull/24) | Pass / merged |
-| 5 | #12 Append-only comments and notes | AFK | Draft PR open; review/testing pass | #11 complete | Main agent | `implementation/issue-12-comments-notes` | [#25](https://github.com/Jordyee/campus-service-project/pull/25) | Pass / ready to merge |
-| 6 | #13 Admin review, category, priority | AFK | Blocked | #12 | Unassigned | `implementation/issue-13-admin-review-classification` | Pending | Pending |
+| 5 | #12 Append-only comments and notes | AFK | Merged to `development` | #11 complete | Main agent | `implementation/issue-12-comments-notes` | [#25](https://github.com/Jordyee/campus-service-project/pull/25) | Pass / merged |
+| 6 | #13 Admin review, category, priority | AFK | Draft PR open; tests pass; review pass | #12 complete | Main agent | `implementation/issue-13-admin-review-classification` | [PR #26](https://github.com/Jordyee/campus-service-project/pull/26) | Pass / ready to merge to `development` |
 | 7 | #14 Technician assignment | AFK | Blocked | #13 | Unassigned | `implementation/issue-14-technician-assignment` | Pending | Pending |
 | 8 | #15 Technician task list and acceptance | AFK | Blocked | #14 | Unassigned | `implementation/issue-15-technician-tasks-acceptance` | Pending | Pending |
 | 9 | #16 Technician progress and resolved | AFK | Blocked | #15 | Unassigned | `implementation/issue-16-technician-progress-resolved` | Pending | Pending |
