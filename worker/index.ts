@@ -1,9 +1,11 @@
 import { apiError, apiSuccess } from "./foundation";
 import {
+  handleClassifyRequest,
   handleAddRequestComment,
   handleCreateRequest,
   handleGetRequestDetail,
   handleListRequests,
+  handleReviewRequest,
 } from "./requests";
 
 interface Env {
@@ -34,6 +36,26 @@ export default {
         request,
         env.DB,
         decodeURIComponent(commentMatch[1]),
+      );
+    }
+
+    const reviewMatch = url.pathname.match(/^\/api\/requests\/([^/]+)\/review$/);
+    if (reviewMatch && request.method === "POST") {
+      return handleReviewRequest(
+        request,
+        env.DB,
+        decodeURIComponent(reviewMatch[1]),
+      );
+    }
+
+    const classificationMatch = url.pathname.match(
+      /^\/api\/requests\/([^/]+)\/classification$/,
+    );
+    if (classificationMatch && request.method === "PATCH") {
+      return handleClassifyRequest(
+        request,
+        env.DB,
+        decodeURIComponent(classificationMatch[1]),
       );
     }
 
