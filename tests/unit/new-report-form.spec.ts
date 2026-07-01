@@ -33,6 +33,10 @@ describe("new report form", () => {
     expect(html).toContain("id=\"technician-task-form\"");
     expect(html).toContain("id=\"accept-task-button\"");
     expect(html).toContain("/accept");
+    expect(html).toContain("id=\"technician-note\"");
+    expect(html).toContain("id=\"mark-progress-button\"");
+    expect(html).toContain("id=\"mark-resolved-button\"");
+    expect(html).toContain("/work-status");
     expect(html).toContain("Status History");
     expect(html).toContain("Lifecycle");
     expect(html).toContain("id=\"admin-review-form\"");

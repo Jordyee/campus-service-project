@@ -149,6 +149,18 @@ export interface AcceptedTask {
   acceptedAt: string;
 }
 
+export type WorkStatusTarget = "IN_PROGRESS" | "RESOLVED";
+
+export interface WorkStatusInput {
+  status: WorkStatusTarget;
+  note?: string;
+}
+
+export interface UpdatedWorkStatus {
+  id: string;
+  status: WorkStatusTarget;
+}
+
 export type RequestDetailResult =
   | { ok: true; data: RequestDetail }
   | { ok: false; reason: "not_found" | "forbidden" };
@@ -166,6 +178,13 @@ export type AssignmentResult =
 
 export type AcceptanceResult =
   | { ok: true; data: AcceptedTask }
+  | {
+      ok: false;
+      reason: "not_found" | "assignment_conflict" | "invalid_transition";
+    };
+
+export type WorkStatusResult =
+  | { ok: true; data: UpdatedWorkStatus }
   | {
       ok: false;
       reason: "not_found" | "assignment_conflict" | "invalid_transition";
@@ -201,6 +220,10 @@ export type ClassificationValidationResult =
 
 export type AssignmentValidationResult =
   | { ok: true; data: AssignmentInput }
+  | { ok: false; errors: ApiErrorDetail[] };
+
+export type WorkStatusValidationResult =
+  | { ok: true; data: WorkStatusInput }
   | { ok: false; errors: ApiErrorDetail[] };
 
 const REQUIRED_FIELDS = [
@@ -424,6 +447,29 @@ export function validateAssignmentInput(
   return errors.length > 0
     ? { ok: false, errors }
     : { ok: true, data: { technicianId, reason } };
+}
+
+export function validateWorkStatusInput(
+  payload: unknown,
+): WorkStatusValidationResult {
+  const input = asRecord(payload);
+  const errors: ApiErrorDetail[] = [];
+  const rawStatus = input.status;
+  const note =
+    readOptionalText(input, "note", "Progress note must be text.", errors) ??
+    readOptionalText(input, "reason", "Progress reason must be text.", errors);
+
+  if (typeof rawStatus !== "string" || rawStatus.trim() === "") {
+    errors.push({ field: "status", message: "Work status is required." });
+  } else if (rawStatus !== "IN_PROGRESS" && rawStatus !== "RESOLVED") {
+    errors.push({ field: "status", message: "Work status is invalid." });
+  }
+
+  if (errors.length > 0) {
+    return { ok: false, errors };
+  }
+
+  return { ok: true, data: { status: rawStatus as WorkStatusTarget, note } };
 }
 
 async function nextRequestNumber(db: D1Database, now: string): Promise<string> {
@@ -1073,6 +1119,70 @@ export async function acceptAssignedTask(
   };
 }
 
+export async function updateTechnicianWorkStatus(
+  db: D1Database,
+  requestId: string,
+  actor: ActorContext,
+  input: WorkStatusInput,
+  now = new Date().toISOString(),
+): Promise<WorkStatusResult> {
+  const request = await db
+    .prepare(
+      `SELECT status, assigned_technician_id, accepted_at
+       FROM service_requests
+       WHERE id = ?`,
+    )
+    .bind(requestId)
+    .first<{
+      status: RequestStatus;
+      assigned_technician_id: string | null;
+      accepted_at: string | null;
+    }>();
+
+  if (!request) {
+    return { ok: false, reason: "not_found" };
+  }
+
+  if (request.assigned_technician_id !== actor.id) {
+    return { ok: false, reason: "assignment_conflict" };
+  }
+
+  if (
+    (input.status === "IN_PROGRESS" &&
+      (request.status !== "ASSIGNED" || !request.accepted_at)) ||
+    (input.status === "RESOLVED" && request.status !== "IN_PROGRESS")
+  ) {
+    return { ok: false, reason: "invalid_transition" };
+  }
+
+  const defaultReason =
+    input.status === "IN_PROGRESS"
+      ? "Work marked in progress."
+      : "Work resolved.";
+
+  await transitionRequestStatus({
+    db,
+    requestId,
+    fromStatus: request.status,
+    toStatus: input.status,
+    actor,
+    reason: input.note ?? defaultReason,
+    now,
+  });
+
+  if (input.note) {
+    await addRequestComment(
+      db,
+      requestId,
+      actor,
+      { commentType: "NOTE", body: input.note },
+      now,
+    );
+  }
+
+  return { ok: true, data: { id: requestId, status: input.status } };
+}
+
 export async function handleCreateRequest(
   request: Request,
   db: D1Database,
@@ -1447,5 +1557,65 @@ export async function handleAcceptTask(
     );
   } catch {
     return apiError("INTERNAL_ERROR", "Could not accept task.");
+  }
+}
+
+export async function handleUpdateWorkStatus(
+  request: Request,
+  db: D1Database,
+  requestId: string,
+): Promise<Response> {
+  const actor = readActorContext(request);
+
+  if (!actor || !canRolePerform(actor.role, "UPDATE_WORK_STATUS")) {
+    return apiError(
+      "FORBIDDEN_ACTION",
+      "Only a Technician can update assigned work.",
+    );
+  }
+
+  let payload: unknown;
+
+  try {
+    payload = await request.json();
+  } catch {
+    return apiError("BAD_REQUEST", "Request body must be valid JSON.");
+  }
+
+  const validation = validateWorkStatusInput(payload);
+
+  if (!validation.ok) {
+    return apiError("VALIDATION_ERROR", "Validation failed.", validation.errors);
+  }
+
+  try {
+    const result = await updateTechnicianWorkStatus(
+      db,
+      requestId,
+      actor,
+      validation.data,
+    );
+
+    if (result.ok) {
+      return apiSuccess(result.data);
+    }
+
+    if (result.reason === "not_found") {
+      return apiError("NOT_FOUND", "Report not found.");
+    }
+
+    if (result.reason === "assignment_conflict") {
+      return apiError(
+        "ASSIGNMENT_CONFLICT",
+        "Only the assigned Technician can update this task.",
+      );
+    }
+
+    return apiError(
+      "INVALID_STATUS_TRANSITION",
+      "Work status cannot move through that transition.",
+    );
+  } catch {
+    return apiError("INTERNAL_ERROR", "Could not update work status.");
   }
 }

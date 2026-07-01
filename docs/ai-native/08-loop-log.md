@@ -285,7 +285,7 @@ An issue loop can stop only when:
 
 ### Issue #15 - Build technician task list and acceptance flow
 
-**Status:** Draft PR open; tests pass; review pass
+**Status:** Merged to `development`
 
 **Branch:** `implementation/issue-15-technician-tasks-acceptance`
 
@@ -317,13 +317,35 @@ An issue loop can stop only when:
 
 ### Issue #16 - Add technician progress and resolved status flow
 
-**Status:** Blocked by #15
+**Status:** Draft PR open; tests pass; review pass
 
 **Branch:** `implementation/issue-16-technician-progress-resolved`
 
-**PR:** Pending
+**PR:** https://github.com/Jordyee/campus-service-project/pull/29
 
-**Owner:** Unassigned
+**Owner:** Main agent
+
+**Blockers:** #15 completed and merged through PR #28.
+
+**Source of Truth:**
+
+- GitHub Issue #16
+- `docs/planning/implementation-queue.md`
+- `docs/requirements/traceability.md`
+- `docs/design/01-architecture.md`
+- `docs/design/02-database-api.md`
+- `docs/design/03-ui.md`
+
+**Cycle 1:**
+
+- Build attempt: Added Technician-only `PATCH /api/requests/{id}/work-status`, `IN_PROGRESS` and `RESOLVED` transition validation, assigned-technician conflict handling, status history writes through `transitionRequestStatus`, optional progress notes as append-only `NOTE` comments, and Technician detail UI controls for progress and resolved actions.
+- Files changed: `worker/requests.ts`, `worker/index.ts`, `public/index.html`, `tests/integration/technician-work-status-api.spec.ts`, `tests/unit/new-report-form.spec.ts`, `docs/ai-native/08-loop-log.md`, `docs/planning/implementation-queue.md`, `docs/requirements/traceability.md`, `evidence/implementation-issue-16-ai-evidence.md`, `evidence/human-review-issue-16.md`.
+- AI assumptions: `ASSIGNED` to `IN_PROGRESS` requires prior acceptance from #15. Progress notes are stored as append-only `NOTE` comments while the same text is also used as status-history reason. Close/reopen, technician reject/reassign, inventory, vendor management, and deployment remain out of scope.
+- Review result: Pass. Review kept the slice to technician progress/resolved status updates and did not add admin close/reopen or optional inventory/vendor behavior.
+- Tests/checks run: `npx.cmd vitest tests/integration/technician-work-status-api.spec.ts --run`; `npx.cmd vitest tests/integration/technician-work-status-api.spec.ts tests/unit/new-report-form.spec.ts --run`; `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
+- Evidence: Focused work-status tests failed before implementation with route-level 404, then passed after adding API/UI support. One full-suite attempt hit a transient Cloudflare `workerd` `std::bad_alloc`; immediate retry passed. Final run passed typecheck and 13 files / 54 tests.
+- Failures: None remaining.
+- Decision: Accept Cycle 1 for PR #29 review and merge to `development`.
 
 ### Issue #17 - Add admin close and reopen flow
 
