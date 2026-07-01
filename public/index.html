@@ -1,24 +1,15 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Campus Service Project</title>
+    <meta name="description" content="Sistem Permintaan Layanan dan Pemeliharaan Kampus — laporkan masalah fasilitas, pantau status, dan kelola penugasan teknisi." />
+    <title>Campus Service Request — Sistem Layanan Kampus</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏫</text></svg>" />
+    <script type="module" crossorigin src="/assets/index-B_P57fUD.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BB-AMyXr.css">
   </head>
   <body>
-    <main>
-      <h1>Campus Service Request and Maintenance System</h1>
-      <p>Initial Cloudflare setup is ready.</p>
-      <button id="button" type="button">Check API</button>
-      <output id="status" for="button"></output>
-    </main>
-    <script>
-      const button = document.getElementById("button");
-      button.addEventListener("click", async () => {
-        const response = await fetch("/api/health");
-        const result = await response.json();
-        document.getElementById("status").textContent = result.status;
-      });
-    </script>
+    <div id="root"></div>
   </body>
 </html>
