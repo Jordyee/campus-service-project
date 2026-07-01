@@ -4,6 +4,7 @@
 
 - GitHub Issue: #11 - Build report detail with status history display
 - Branch: `implementation/issue-11-report-detail-history`
+- PR: https://github.com/Jordyee/campus-service-project/pull/24
 - Date: 2026-07-02
 
 ## Sources Read

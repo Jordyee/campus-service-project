@@ -160,11 +160,11 @@ An issue loop can stop only when:
 
 ### Issue #11 - Build report detail with status history display
 
-**Status:** Implementation complete; tests pass; PR pending
+**Status:** Draft PR open; review/testing pass
 
 **Branch:** `implementation/issue-11-report-detail-history`
 
-**PR:** Pending
+**PR:** https://github.com/Jordyee/campus-service-project/pull/24
 
 **Owner:** Main agent
 
@@ -187,7 +187,7 @@ An issue loop can stop only when:
 - Tests/checks run: `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
 - Evidence: Focused detail test failed before implementation with route-level 404, then passed after adding API/UI support. Final run passed typecheck and 8 files / 31 tests.
 - Failures: None remaining.
-- Decision: Accept Cycle 1 for draft PR creation and main-agent review.
+- Decision: Accept Cycle 1 for PR #24 review and merge to `development`.
 
 ### Issue #12 - Add append-only comments and notes
 
