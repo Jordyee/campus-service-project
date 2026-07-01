@@ -475,6 +475,23 @@
               <button type="submit">Save Classification</button>
               <output id="admin-status"></output>
             </form>
+            <form id="assignment-form" class="admin-form" hidden>
+              <h3>Technician Assignment</h3>
+              <label>
+                Technician
+                <select id="assignment-technician" name="technicianId">
+                  <option value="">Select technician</option>
+                </select>
+                <span class="error" data-assignment-error-for="technicianId"></span>
+              </label>
+              <label>
+                Assignment Reason
+                <textarea id="assignment-reason" name="reason"></textarea>
+                <span class="error" data-assignment-error-for="reason"></span>
+              </label>
+              <button type="submit">Assign Technician</button>
+              <output id="assignment-status"></output>
+            </form>
             <h3>Lifecycle</h3>
             <ol id="detail-lifecycle" class="lifecycle"></ol>
             <h3>Comments / Notes</h3>
@@ -536,6 +553,11 @@
       const adminNote = document.getElementById("admin-note");
       const adminStatus = document.getElementById("admin-status");
       const adminSubmitButton = adminForm.querySelector("button[type='submit']");
+      const assignmentForm = document.getElementById("assignment-form");
+      const assignmentTechnician = document.getElementById("assignment-technician");
+      const assignmentReason = document.getElementById("assignment-reason");
+      const assignmentStatus = document.getElementById("assignment-status");
+      const assignmentSubmitButton = assignmentForm.querySelector("button");
       const commentForm = document.getElementById("comment-form");
       const commentStatus = document.getElementById("comment-status");
       const commentSubmitButton = commentForm.querySelector("button");
@@ -592,6 +614,61 @@
             element.textContent = detail.message;
           }
         });
+      }
+
+      function clearAssignmentErrors() {
+        assignmentForm
+          .querySelectorAll("[data-assignment-error-for]")
+          .forEach((element) => {
+            element.textContent = "";
+          });
+      }
+
+      function showAssignmentErrors(details = []) {
+        details.forEach((detail) => {
+          const element = assignmentForm.querySelector(
+            `[data-assignment-error-for="${detail.field}"]`,
+          );
+          if (element) {
+            element.textContent = detail.message;
+          }
+        });
+      }
+
+      async function loadTechnicianChoices(selectedId = "") {
+        assignmentTechnician.textContent = "";
+        const blank = document.createElement("option");
+        blank.value = "";
+        blank.textContent = "Select technician";
+        assignmentTechnician.append(blank);
+
+        try {
+          const response = await fetch("/api/users?role=TECHNICIAN", {
+            headers: { "x-actor-role": actorRole.value },
+          });
+          const result = await response.json();
+
+          if (!response.ok) {
+            assignmentStatus.textContent =
+              result.error?.message || "Technicians could not be loaded.";
+            return;
+          }
+
+          result.data.forEach((technician) => {
+            const option = document.createElement("option");
+            option.value = technician.id;
+            option.textContent = technician.displayName;
+            assignmentTechnician.append(option);
+          });
+          assignmentTechnician.value = selectedId;
+          assignmentSubmitButton.disabled =
+            assignmentSubmitButton.disabled || result.data.length === 0;
+          if (result.data.length === 0) {
+            assignmentStatus.textContent = "No active technicians available.";
+          }
+        } catch {
+          assignmentStatus.textContent = "Technicians could not be loaded.";
+        }
       }
 
       function activeFilters() {
@@ -686,6 +763,14 @@
         adminReviewButton.disabled = report.status !== "SUBMITTED";
         clearAdminErrors();
         adminStatus.textContent = "";
+        assignmentForm.hidden = actorRole.value !== "ADMINISTRATOR";
+        assignmentReason.value = "";
+        assignmentSubmitButton.disabled = report.status !== "UNDER_REVIEW";
+        clearAssignmentErrors();
+        assignmentStatus.textContent = "";
+        if (actorRole.value === "ADMINISTRATOR") {
+          loadTechnicianChoices(report.assignedTechnician?.id || "");
+        }
 
         detailLifecycle.textContent = "";
         report.lifecycle.forEach((status) => {
@@ -818,6 +903,52 @@
           adminStatus.textContent = "Classification could not be saved.";
         } finally {
           adminSubmitButton.disabled = false;
+        }
+      });
+
+      assignmentForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!currentDetailId) return;
+
+        clearAssignmentErrors();
+        assignmentStatus.textContent = "";
+        assignmentSubmitButton.disabled = true;
+        let saved = false;
+        const payload = Object.fromEntries(
+          new FormData(assignmentForm).entries(),
+        );
+
+        try {
+          const response = await fetch(
+            `/api/requests/${encodeURIComponent(currentDetailId)}/assignment`,
+            {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                "x-actor-role": actorRole.value,
+              },
+              body: JSON.stringify(payload),
+            },
+          );
+          const result = await response.json();
+
+          if (!response.ok) {
+            showAssignmentErrors(result.error?.details);
+            assignmentStatus.textContent =
+              result.error?.message || "Technician could not be assigned.";
+            return;
+          }
+
+          const detailId = currentDetailId;
+          assignmentReason.value = "";
+          saved = true;
+          await loadReportDetail(detailId);
+          await loadReports();
+          assignmentStatus.textContent = "Technician assigned.";
+        } catch {
+          assignmentStatus.textContent = "Technician could not be assigned.";
+        } finally {
+          if (!saved) assignmentSubmitButton.disabled = false;
         }
       });
 

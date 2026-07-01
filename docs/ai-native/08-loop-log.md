@@ -222,7 +222,7 @@ An issue loop can stop only when:
 
 ### Issue #13 - Add admin review, category, and priority flow
 
-**Status:** Draft PR open; tests pass; review pass
+**Status:** Merged to `development`
 
 **Branch:** `implementation/issue-13-admin-review-classification`
 
@@ -253,13 +253,35 @@ An issue loop can stop only when:
 
 ### Issue #14 - Add technician assignment flow
 
-**Status:** Blocked by #13
+**Status:** Implementation complete; tests pass; PR pending
 
 **Branch:** `implementation/issue-14-technician-assignment`
 
 **PR:** Pending
 
-**Owner:** Unassigned
+**Owner:** Main agent
+
+**Blockers:** #13 completed and merged through PR #26.
+
+**Source of Truth:**
+
+- GitHub Issue #14
+- `docs/planning/implementation-queue.md`
+- `docs/requirements/traceability.md`
+- `docs/design/01-architecture.md`
+- `docs/design/02-database-api.md`
+- `docs/design/03-ui.md`
+
+**Cycle 1:**
+
+- Build attempt: Added Administrator-only `GET /api/users?role=TECHNICIAN` active technician choices, `POST /api/requests/{id}/assignment`, required technician validation, active-Technician validation, `UNDER_REVIEW` to `ASSIGNED` transition, assigned technician fields, status history reason, and Admin detail UI assignment controls.
+- Files changed: `worker/requests.ts`, `worker/index.ts`, `public/index.html`, `tests/integration/technician-assignment-api.spec.ts`, `tests/unit/new-report-form.spec.ts`, `docs/ai-native/08-loop-log.md`, `docs/planning/implementation-queue.md`, `docs/requirements/traceability.md`, `evidence/implementation-issue-14-ai-evidence.md`, `evidence/human-review-issue-14.md`.
+- AI assumptions: Assignment reason is stored in status history rather than a separate assignment-history table because design keeps one current assigned technician and no reassign/reject workflow. Technician reject/reassign, assignment history table, vendor routing, technician acceptance/progress, close/reopen, and deployment remain out of scope.
+- Review result: Pass. Review kept the slice to assignment only and did not add technician task acceptance, work progress, reassign/reject, assignment history, vendor routing, or deployment.
+- Tests/checks run: `npx.cmd vitest tests/integration/technician-assignment-api.spec.ts --run`; `npx.cmd vitest tests/integration/technician-assignment-api.spec.ts tests/unit/new-report-form.spec.ts --run`; `npx.cmd tsc --noEmit`; `npm.cmd test -- --run`.
+- Evidence: Focused assignment test failed before implementation with route-level 404, then passed after adding API/UI support. Final run passed typecheck and 11 files / 44 tests.
+- Failures: None remaining.
+- Decision: Accept Cycle 1 for draft PR creation and main-agent review.
 
 ### Issue #15 - Build technician task list and acceptance flow
 

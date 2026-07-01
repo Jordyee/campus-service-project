@@ -113,6 +113,23 @@ export interface ClassifiedRequest {
   priority: Priority;
 }
 
+export interface TechnicianChoice {
+  id: string;
+  displayName: string;
+  contact: string | null;
+}
+
+export interface AssignmentInput {
+  technicianId: string;
+  reason?: string;
+}
+
+export interface AssignedRequest {
+  id: string;
+  status: "ASSIGNED";
+  assignedTechnicianId: string;
+}
+
 export type RequestDetailResult =
   | { ok: true; data: RequestDetail }
   | { ok: false; reason: "not_found" | "forbidden" };
@@ -120,6 +137,13 @@ export type RequestDetailResult =
 export type AddCommentResult =
   | { ok: true; data: CreatedComment }
   | { ok: false; reason: "not_found" | "forbidden" };
+
+export type AssignmentResult =
+  | { ok: true; data: AssignedRequest }
+  | {
+      ok: false;
+      reason: "not_found" | "invalid_technician" | "invalid_transition";
+    };
 
 export interface ListRequestFilters {
   status?: RequestStatus;
@@ -147,6 +171,10 @@ export type ReviewValidationResult =
 
 export type ClassificationValidationResult =
   | { ok: true; data: ClassificationInput }
+  | { ok: false; errors: ApiErrorDetail[] };
+
+export type AssignmentValidationResult =
+  | { ok: true; data: AssignmentInput }
   | { ok: false; errors: ApiErrorDetail[] };
 
 const REQUIRED_FIELDS = [
@@ -349,6 +377,29 @@ export function validateClassificationInput(
   };
 }
 
+export function validateAssignmentInput(
+  payload: unknown,
+): AssignmentValidationResult {
+  const input = asRecord(payload);
+  const errors: ApiErrorDetail[] = [];
+  const technicianId = readRequiredText(
+    input,
+    "technicianId",
+    "Technician is required.",
+    errors,
+  );
+  const reason = readOptionalText(
+    input,
+    "reason",
+    "Assignment reason must be text.",
+    errors,
+  );
+
+  return errors.length > 0
+    ? { ok: false, errors }
+    : { ok: true, data: { technicianId, reason } };
+}
+
 async function nextRequestNumber(db: D1Database, now: string): Promise<string> {
   const datePart = now.slice(0, 10).replaceAll("-", "");
   const row = await db
@@ -510,6 +561,25 @@ export async function listServiceRequests(
     status: row.status,
     assignedTechnicianName: row.assigned_technician_name,
     createdAt: row.created_at,
+  }));
+}
+
+export async function listActiveTechnicians(
+  db: D1Database,
+): Promise<TechnicianChoice[]> {
+  const { results } = await db
+    .prepare(
+      `SELECT id, display_name, contact
+       FROM app_users
+       WHERE role = 'TECHNICIAN' AND is_active = 1
+       ORDER BY display_name ASC`,
+    )
+    .all<{ id: string; display_name: string; contact: string | null }>();
+
+  return results.map((technician) => ({
+    id: technician.id,
+    displayName: technician.display_name,
+    contact: technician.contact,
   }));
 }
 
@@ -813,6 +883,70 @@ export async function classifyServiceRequest(
   return { id: requestId, category: input.category, priority: input.priority };
 }
 
+export async function assignTechnicianToRequest(
+  db: D1Database,
+  requestId: string,
+  actor: ActorContext,
+  input: AssignmentInput,
+  now = new Date().toISOString(),
+): Promise<AssignmentResult> {
+  const request = await db
+    .prepare("SELECT status FROM service_requests WHERE id = ?")
+    .bind(requestId)
+    .first<{ status: RequestStatus }>();
+
+  if (!request) {
+    return { ok: false, reason: "not_found" };
+  }
+
+  if (request.status !== "UNDER_REVIEW") {
+    return { ok: false, reason: "invalid_transition" };
+  }
+
+  const technician = await db
+    .prepare(
+      `SELECT id
+       FROM app_users
+       WHERE id = ? AND role = 'TECHNICIAN' AND is_active = 1`,
+    )
+    .bind(input.technicianId)
+    .first<{ id: string }>();
+
+  if (!technician) {
+    return { ok: false, reason: "invalid_technician" };
+  }
+
+  await transitionRequestStatus({
+    db,
+    requestId,
+    fromStatus: "UNDER_REVIEW",
+    toStatus: "ASSIGNED",
+    actor,
+    reason: input.reason ?? "Assigned to technician.",
+    now,
+  });
+
+  await db
+    .prepare(
+      `UPDATE service_requests
+       SET assigned_technician_id = ?,
+           assigned_by_user_id = ?,
+           updated_at = ?
+       WHERE id = ?`,
+    )
+    .bind(input.technicianId, actor.id, now, requestId)
+    .run();
+
+  return {
+    ok: true,
+    data: {
+      id: requestId,
+      status: "ASSIGNED",
+      assignedTechnicianId: input.technicianId,
+    },
+  };
+}
+
 export async function handleCreateRequest(
   request: Request,
   db: D1Database,
@@ -847,6 +981,37 @@ export async function handleCreateRequest(
     );
   } catch {
     return apiError("INTERNAL_ERROR", "Could not create service request.");
+  }
+}
+
+export async function handleListUsers(
+  request: Request,
+  db: D1Database,
+): Promise<Response> {
+  const actor = readActorContext(request);
+
+  if (!actor || !canRolePerform(actor.role, "ASSIGN_TECHNICIAN")) {
+    return apiError(
+      "FORBIDDEN_ACTION",
+      "Only an Administrator can view technician choices.",
+    );
+  }
+
+  const role = new URL(request.url).searchParams.get("role");
+
+  if (role !== "TECHNICIAN") {
+    return apiError("VALIDATION_ERROR", "Validation failed.", [
+      {
+        field: "role",
+        message: "Only TECHNICIAN role choices are supported.",
+      },
+    ]);
+  }
+
+  try {
+    return apiSuccess(await listActiveTechnicians(db));
+  } catch {
+    return apiError("INTERNAL_ERROR", "Could not list users.");
   }
 }
 
@@ -1038,5 +1203,62 @@ export async function handleClassifyRequest(
     return apiSuccess(result);
   } catch {
     return apiError("INTERNAL_ERROR", "Could not classify report.");
+  }
+}
+
+export async function handleAssignTechnician(
+  request: Request,
+  db: D1Database,
+  requestId: string,
+): Promise<Response> {
+  const actor = readActorContext(request);
+
+  if (!actor || !canRolePerform(actor.role, "ASSIGN_TECHNICIAN")) {
+    return apiError(
+      "FORBIDDEN_ACTION",
+      "Only an Administrator can assign technicians.",
+    );
+  }
+
+  let payload: unknown;
+
+  try {
+    payload = await request.json();
+  } catch {
+    return apiError("BAD_REQUEST", "Request body must be valid JSON.");
+  }
+
+  const validation = validateAssignmentInput(payload);
+
+  if (!validation.ok) {
+    return apiError("VALIDATION_ERROR", "Validation failed.", validation.errors);
+  }
+
+  try {
+    const result = await assignTechnicianToRequest(
+      db,
+      requestId,
+      actor,
+      validation.data,
+    );
+
+    if (result.ok) {
+      return apiSuccess(result.data);
+    }
+
+    if (result.reason === "not_found") {
+      return apiError("NOT_FOUND", "Report not found.");
+    }
+
+    if (result.reason === "invalid_technician") {
+      return apiError("NOT_FOUND", "Technician not found.");
+    }
+
+    return apiError(
+      "INVALID_STATUS_TRANSITION",
+      "Only under-review reports can be assigned.",
+    );
+  } catch {
+    return apiError("INTERNAL_ERROR", "Could not assign technician.");
   }
 }
