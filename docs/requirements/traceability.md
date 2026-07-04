@@ -171,8 +171,8 @@ This section records the validation status from `docs/requirements/05-validation
 | SDN-V-001 | `CR-001` reopen target clarification | Complete |
 | SDN-V-002 | `CR-002` comments/notes visibility clarification | Complete |
 | SDN-V-003 | `CR-003` simple role/auth boundary clarification | Complete |
-| SDN-V-004 | Numeric NFR target decision | Pending |
-| SDN-V-005 | Retention/deletion/archive policy decision | Pending |
+| SDN-V-004 | Numeric NFR target decision | Deferred / future work for final submission |
+| SDN-V-005 | Retention/deletion/archive policy decision | Deferred / future work for final submission |
 
 ## 9. Human Review Notes
 
@@ -382,7 +382,7 @@ This section records GitHub Issues created during the Issue Planning stage. It d
 
 ### Issue Planning Update Status
 
-- GitHub Issues #8 to #19 were created directly in `Jordyee/campus-service-project`.
+- GitHub Issues #8 to #19 were created directly in `Jordyee/campus-service-project` and closed after their linked implementation PRs were merged and verified.
 - Execution mode was added to GitHub Issues #8 to #19.
 - Functional and non-functional requirement rows now include issue IDs.
 - Code and test references were completed during implementation and finalized by Issue #19.

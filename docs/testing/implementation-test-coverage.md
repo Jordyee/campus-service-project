@@ -77,5 +77,5 @@ Result:
 
 - UI coverage is static Worker asset smoke coverage, not browser end-to-end automation.
 - Deployment is intentionally not tested in Issue #19.
-- Numeric NFR targets and retention/deletion/archive policy remain pending student decisions outside the implementation queue.
+- Numeric NFR targets and retention/deletion/archive policy are deferred as future work for final submission because the case does not provide enough evidence to invent measurable targets or institutional retention rules.
 - Optional features remain deferred: photo upload, email notifications, Google login, room QR code, AI categorization, spare-part inventory, and vendor management.

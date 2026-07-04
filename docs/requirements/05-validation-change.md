@@ -185,8 +185,8 @@ These change requests were approved by the student on 2026-06-30. They clarify e
 | SDN-V-001 | Decide whether to approve, revise, reject, or defer `CR-001`. | Approved: reopen returns to Under Review and history records reason/context. | Complete |
 | SDN-V-002 | Decide whether to approve, revise, reject, or defer `CR-002`. | Approved: comments/notes are append-only and visible to authorized report viewers. | Complete |
 | SDN-V-003 | Decide whether to approve, revise, reject, or defer `CR-003`. | Approved: simple educational role boundary; Google login remains deferred. | Complete |
-| SDN-V-004 | Decide whether numeric NFR targets are needed now. | Defer unless the instructor/student requires measurable targets before testing. | Pending |
-| SDN-V-005 | Decide whether retention/deletion/archive policy needs a formal change request. | Defer unless project scope needs deletion/archive behavior. | Pending |
+| SDN-V-004 | Decide whether numeric NFR targets are needed now. | Deferred as future work for final submission; do not invent unsupported numeric targets. | Deferred |
+| SDN-V-005 | Decide whether retention/deletion/archive policy needs a formal change request. | Deferred as future work for final submission; do not add deletion/archive behavior without approved scope. | Deferred |
 
 ## 11. Human Review Notes
 

@@ -19,13 +19,17 @@ Users can report campus facility problems, administrators can review and assign 
 - Traceability matrix
 - AI usage evidence and human review notes
 
-## Planned Stack
+## Stack
 
 - Frontend: React with TypeScript
 - Backend: Cloudflare Worker
 - Database: Cloudflare D1
 - Tests: Vitest
 - Deployment: Cloudflare Workers
+
+## Deployment
+
+Public Cloudflare URL: <https://campus-service-project.gerungan-dj.workers.dev>
 
 ## Repository Structure
 
@@ -42,5 +46,10 @@ evidence/            AI prompts, AI outputs, human reviews, and final correction
 
 ## Current Status
 
-Initial repository structure is being prepared.
+Core workflow implementation, automated tests, acceptance documentation, traceability, and Cloudflare deployment are complete for final demonstration readiness.
 
+Known limitations and remaining final packaging tasks are documented in:
+
+- `docs/testing/02-acceptance-test-results.md`
+- `docs/testing/test-execution-report-2026-07-02.md`
+- `docs/deployment/01-deployment-notes.md`

@@ -129,13 +129,15 @@ It is intended to capture:
 
 ## 8. Evidence Still Useful To Add
 
-- visual screenshots for each flow (optional for automated verification, required only if rubric mandates it)
-- Screenshot evidence is decided to be left for the student to capture during final project packaging if required by the rubric, as the agent operates in a headless/terminal context.
+- final visual screenshots for each flow (optional for automated verification, required only if rubric mandates it)
+- Existing files under `evidence/Screenshoots/` are draft captures only. Final demo screenshots will be captured again after the project is fully finalized and should be treated as the official visual evidence.
 
 ## 9. Current Problems / Limitations
 
 - Role handling still uses development-friendly actor switching and should not be treated as real production authentication.
-- Dependency audit remains unresolved because local environment storage/tooling blocked the upgrade path.
+- Final demo defense for role handling: the role selector provides a demo actor context for testing role-based workflow. It is not claimed as production authentication; in production, the actor context would come from a real identity/session provider.
+- Optional feature defense: upload photo and email notification remain deferred. A login page is a next iteration after this readiness grill, not a blocker for the current final demo; it should only proceed after the current data flow is confirmed stable and after the student approves the exact authentication approach.
+- Dependency audit remains unresolved and is treated as a known limitation, not a submission blocker, because the findings are in development/test tooling dependencies while application workflow checks, type-checking, automated tests, and deployment verification passed.
 - Full Vitest reruns may intermittently fail from `workerd` memory pressure even when targeted tests pass.
 - One UI polish fix was applied after acceptance browsing: Reporter role summary now restores its own submitted-request text when switching back from another role.
 
@@ -150,13 +152,17 @@ Reason:
 
 ## 11. Next Required Work
 
-1. Attach screenshots if the course requires visual evidence in the final report.
+1. Capture and attach final screenshots if the course requires visual evidence in the final report.
 2. Record any reproduction steps if a later manual retest finds a failure.
 3. Use the final reviewed version of this file as submission evidence.
 
-## 12. Human Review Checklist
+## 12. Final Demo Data Strategy
+
+Final demonstration should start from an empty service-request dataset with the seeded demo actors only. The student will create one request live and move it through the required end-to-end workflow so the demo proves the lifecycle instead of relying on pre-existing request records.
+
+## 13. Human Review Checklist
 
 - Confirm that each flow result reflects real observed behavior.
 - Confirm that no required flow is marked `Pass` without evidence.
-- Confirm that manual UI screenshots are attached or referenced before final submission.
+- Confirm that final manual UI screenshots, not only draft captures, are attached or referenced before final submission.
 - Confirm that limitations are written clearly and do not hide known failures.
