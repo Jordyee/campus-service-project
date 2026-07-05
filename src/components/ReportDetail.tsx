@@ -50,7 +50,7 @@ export default function ReportDetail({ role, requestId, onUpdated }: ReportDetai
 
   if (!requestId) {
     return (
-      <section className="card detail" aria-labelledby="detail-title">
+      <section id="request-detail-section" className="card detail scroll-anchor" aria-labelledby="detail-title">
         <h2 id="detail-title" className="card-title">Request Detail</h2>
         <div className="detail-placeholder">
           <p id="detail-status">Pilih laporan untuk melihat detail.</p>
@@ -61,7 +61,7 @@ export default function ReportDetail({ role, requestId, onUpdated }: ReportDetai
 
   if (loading) {
     return (
-      <section className="card detail" aria-labelledby="detail-title">
+      <section id="request-detail-section" className="card detail scroll-anchor" aria-labelledby="detail-title">
         <h2 id="detail-title" className="card-title">Request Detail</h2>
         <p id="detail-status" className="muted-text">Memuat detail...</p>
       </section>
@@ -70,7 +70,7 @@ export default function ReportDetail({ role, requestId, onUpdated }: ReportDetai
 
   if (error || !detail) {
     return (
-      <section className="card detail" aria-labelledby="detail-title">
+      <section id="request-detail-section" className="card detail scroll-anchor" aria-labelledby="detail-title">
         <h2 id="detail-title" className="card-title">Request Detail</h2>
         <p className="form-status-error" role="alert">{error ?? "Laporan tidak ditemukan."}</p>
       </section>
@@ -80,7 +80,7 @@ export default function ReportDetail({ role, requestId, onUpdated }: ReportDetai
   const currentStatusIndex = ALL_STATUSES.indexOf(detail.status as typeof ALL_STATUSES[number]);
 
   return (
-    <section className="card detail" aria-labelledby="detail-title">
+    <section id="request-detail-section" className="card detail scroll-anchor" aria-labelledby="detail-title">
       <article id="detail-card">
         <div className="detail-header">
           <div>

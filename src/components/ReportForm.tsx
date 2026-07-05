@@ -70,7 +70,7 @@ export default function ReportForm({ role, onCreated }: ReportFormProps) {
   }
 
   return (
-    <section className="card" aria-labelledby="report-form-title">
+    <section id="create-report-section" className="card scroll-anchor" aria-labelledby="report-form-title">
       <div className="section-heading-row">
         <div>
           <h2 id="report-form-title" className="card-title">Create Report</h2>

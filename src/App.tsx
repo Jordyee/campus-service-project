@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import type { Role } from "./types/api";
 import { SEEDED_ACTORS } from "./types/api";
 import BackendBanner from "./components/BackendBanner";
@@ -47,22 +47,22 @@ const ROLE_BADGES: Record<Role, string> = {
   FACILITY_MANAGER: "Facility Manager",
 };
 
-const ROLE_NAV: Record<Role, Array<{ label: string; marker: string }>> = {
+const ROLE_NAV: Record<Role, Array<{ label: string; marker: string; targetId: string }>> = {
   REPORTER: [
-    { label: "Create Report", marker: "+" },
-    { label: "My Reports", marker: "L" },
+    { label: "Create Report", marker: "+", targetId: "create-report-section" },
+    { label: "My Reports", marker: "#", targetId: "reports-section" },
   ],
   ADMINISTRATOR: [
-    { label: "Review Queue", marker: "R" },
-    { label: "All Reports", marker: "A" },
+    { label: "Review Queue", marker: "!", targetId: "admin-review-section" },
+    { label: "All Reports", marker: "#", targetId: "reports-section" },
   ],
   TECHNICIAN: [
-    { label: "My Tasks", marker: "T" },
-    { label: "Task Detail", marker: "D" },
+    { label: "My Tasks", marker: "*", targetId: "technician-tasks-section" },
+    { label: "Task Detail", marker: ">", targetId: "request-detail-section" },
   ],
   FACILITY_MANAGER: [
-    { label: "Dashboard", marker: "D" },
-    { label: "Recent Reports", marker: "R" },
+    { label: "Dashboard", marker: "=", targetId: "manager-dashboard-section" },
+    { label: "Recent Reports", marker: "#", targetId: "reports-section" },
   ],
 };
 
@@ -71,6 +71,8 @@ export default function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [lastCreated, setLastCreated] = useState<{ id: string; requestNumber: string } | null>(null);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [topbarSearch, setTopbarSearch] = useState("");
   const actor = resolveDemoSession(session);
 
   function refresh() {
@@ -82,6 +84,7 @@ export default function App() {
     setSession(nextSession);
     setSelectedId(null);
     setLastCreated(null);
+    setTopbarSearch("");
     refresh();
   }
 
@@ -90,6 +93,7 @@ export default function App() {
     setSession(null);
     setSelectedId(null);
     setLastCreated(null);
+    setTopbarSearch("");
   }
 
   function handleCreated(id: string, requestNumber: string) {
@@ -107,6 +111,40 @@ export default function App() {
   const isAdmin = role === "ADMINISTRATOR";
   const isTech = role === "TECHNICIAN";
   const isManager = role === "FACILITY_MANAGER";
+  const navItems = useMemo(() => ROLE_NAV[role], [role]);
+
+  useEffect(() => {
+    setActiveSection(navItems[0]?.targetId ?? null);
+  }, [navItems]);
+
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+
+    const sections = navItems
+      .map((item) => document.getElementById(item.targetId))
+      .filter((section): section is HTMLElement => Boolean(section));
+
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible?.target.id) setActiveSection(visible.target.id);
+      },
+      { rootMargin: "-96px 0px -55% 0px", threshold: [0.15, 0.35, 0.6] },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [navItems, refreshTrigger, selectedId]);
+
+  function handleNavClick(event: React.MouseEvent<HTMLAnchorElement>, targetId: string) {
+    event.preventDefault();
+    setActiveSection(targetId);
+    document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   return (
     <div className="app-shell">
@@ -120,8 +158,13 @@ export default function App() {
         </div>
 
         <nav className="side-nav" aria-label="Navigasi peran aktif">
-          {ROLE_NAV[role].map((item, index) => (
-            <a key={item.label} className={`side-nav-item${index === 0 ? " side-nav-item--active" : ""}`} href="#workspace">
+          {navItems.map((item) => (
+            <a
+              key={item.label}
+              className={`side-nav-item${activeSection === item.targetId ? " side-nav-item--active" : ""}`}
+              href={`#${item.targetId}`}
+              onClick={(event) => handleNavClick(event, item.targetId)}
+            >
               <span className="side-nav-icon" aria-hidden="true">{item.marker}</span>
               <span>{item.label}</span>
             </a>
@@ -146,10 +189,18 @@ export default function App() {
 
       <div className="app-content">
         <header className="app-topbar">
-          <div className="topbar-search" aria-hidden="true">
-            <span className="topbar-search-icon">/</span>
-            <span>Search reports...</span>
-          </div>
+          <label className="topbar-search" htmlFor="topbar-report-search">
+            <span className="topbar-search-icon" aria-hidden="true">/</span>
+            <input
+              id="topbar-report-search"
+              type="search"
+              value={topbarSearch}
+              onChange={(event) => setTopbarSearch(event.target.value)}
+              placeholder="Search visible reports"
+              aria-label="Search visible reports"
+              autoComplete="off"
+            />
+          </label>
           <div className="topbar-actions">
             <div className="session-summary" aria-label="Pengguna aktif">
               <span className="session-summary-label">Logged in as</span>
@@ -172,7 +223,7 @@ export default function App() {
             </div>
           </section>
 
-          <div className="role-dashboard">
+          <div id={isAdmin ? "admin-review-section" : undefined} className="role-dashboard scroll-anchor">
             {isManager && <Dashboard role={role} refreshTrigger={refreshTrigger} />}
             {isAdmin && <AdminDashboard role={role} refreshTrigger={refreshTrigger} onSelectReport={setSelectedId} />}
             {isTech && <TechnicianDashboard role={role} refreshTrigger={refreshTrigger} onSelectReport={setSelectedId} />}
@@ -201,6 +252,7 @@ export default function App() {
                 role={role}
                 refreshTrigger={refreshTrigger}
                 onSelectReport={(id) => setSelectedId(id)}
+                topbarKeyword={topbarSearch}
               />
             </div>
 
