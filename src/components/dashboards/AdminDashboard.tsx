@@ -4,31 +4,13 @@ import { REQUEST_STATUSES } from "../../types/api";
 import { listRequests } from "../../api/client";
 import { StatusBadge, formatDate } from "../Badges";
 
-const STATUS_ORDER: RequestStatus[] = [
-  "SUBMITTED",
-  "UNDER_REVIEW",
-  "ASSIGNED",
-  "IN_PROGRESS",
-  "RESOLVED",
-  "CLOSED",
-];
-
 const STATUS_LABELS: Record<RequestStatus, string> = {
-  SUBMITTED: "Perlu Review",
-  UNDER_REVIEW: "Perlu Penugasan",
-  ASSIGNED: "Ditugaskan",
-  IN_PROGRESS: "Dikerjakan",
-  RESOLVED: "Selesai",
-  CLOSED: "Ditutup",
-};
-
-const STATUS_ICON: Record<RequestStatus, string> = {
-  SUBMITTED: "🚨",
-  UNDER_REVIEW: "📋",
-  ASSIGNED: "👷",
-  IN_PROGRESS: "⚙️",
-  RESOLVED: "✅",
-  CLOSED: "📁",
+  SUBMITTED: "Submitted",
+  UNDER_REVIEW: "Under Review",
+  ASSIGNED: "Assigned",
+  IN_PROGRESS: "In Progress",
+  RESOLVED: "Resolved",
+  CLOSED: "Closed",
 };
 
 interface AdminDashboardProps {
@@ -37,11 +19,7 @@ interface AdminDashboardProps {
   onSelectReport: (id: string) => void;
 }
 
-export default function AdminDashboard({
-  role,
-  refreshTrigger,
-  onSelectReport,
-}: AdminDashboardProps) {
+export default function AdminDashboard({ role, refreshTrigger, onSelectReport }: AdminDashboardProps) {
   const [reports, setReports] = useState<RequestListItem[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -55,167 +33,60 @@ export default function AdminDashboard({
     load();
   }, [role, refreshTrigger]);
 
-  const countsByStatus = REQUEST_STATUSES.reduce(
-    (acc, s) => {
-      acc[s] = reports.filter((r) => r.status === s).length;
-      return acc;
-    },
-    {} as Record<RequestStatus, number>
-  );
+  const countsByStatus = REQUEST_STATUSES.reduce((acc, status) => {
+    acc[status] = reports.filter((report) => report.status === status).length;
+    return acc;
+  }, {} as Record<RequestStatus, number>);
 
-  const pendingActionCount = countsByStatus["SUBMITTED"] + countsByStatus["UNDER_REVIEW"];
-  const needsAttention = reports
-    .filter((r) => r.status === "SUBMITTED" || r.status === "UNDER_REVIEW")
-    .slice(0, 5); // Ambil 5 teratas yang butuh tindakan
+  const actionCount = countsByStatus.SUBMITTED + countsByStatus.UNDER_REVIEW;
+  const reviewQueue = reports
+    .filter((report) => report.status === "SUBMITTED" || report.status === "UNDER_REVIEW")
+    .slice(0, 5);
 
   return (
-    <div style={{ display: "grid", gap: "var(--space-5)" }}>
-      {/* ─── Greeting + Summary ──────────────────── */}
-      <div
-        className="dashboard-header-grid"
-        style={{
-          background: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)", // Darker premium look for admin
-          borderRadius: "var(--radius-xl)",
-          padding: "var(--space-6)",
-          color: "#fff",
-        }}
-      >
+    <div className="dashboard-panel">
+      <div className="overview-banner overview-banner--dark">
         <div>
-          <h2 style={{ color: "#fff", fontFamily: "var(--font-heading)", fontSize: "var(--text-xl)", marginBottom: "var(--space-2)" }}>
-            Dashboard Administrator
-          </h2>
-          <p style={{ opacity: 0.85, fontSize: "var(--text-sm)", lineHeight: 1.6 }}>
-            Pantau dan kelola seluruh permintaan layanan. Segera proses laporan yang masih berstatus Submitted atau Under Review.
-          </p>
+          <h2>Review Queue</h2>
+          <p>Proses laporan baru, simpan klasifikasi, dan tugaskan teknisi sesuai prioritas.</p>
         </div>
-        <div
-          style={{
-            textAlign: "center",
-            background: pendingActionCount > 0 ? "var(--color-danger)" : "rgba(255,255,255,0.12)",
-            borderRadius: "var(--radius-xl)",
-            padding: "var(--space-4) var(--space-5)",
-            boxShadow: pendingActionCount > 0 ? "0 4px 12px rgba(220, 38, 38, 0.3)" : "none",
-          }}
-        >
-          <div style={{ fontSize: "2.5rem", fontWeight: 800, lineHeight: 1 }}>
-            {loading ? "—" : pendingActionCount}
-          </div>
-          <div style={{ fontSize: "var(--text-xs)", opacity: 0.9, marginTop: "4px", fontWeight: 600 }}>
-            Perlu Tindakan
-          </div>
+        <div className="overview-metric">
+          <strong>{loading ? "-" : actionCount}</strong>
+          <span>Need action</span>
         </div>
       </div>
 
-      {/* ─── Status Grid ─────────────────────────── */}
       <div className="dashboard-status-grid">
-        {STATUS_ORDER.map((s) => (
+        {REQUEST_STATUSES.map((status) => (
           <button
-            key={s}
+            key={status}
+            className="status-summary-card"
+            disabled={countsByStatus[status] === 0}
             onClick={() => {
-              const found = reports.find((r) => r.status === s);
-              if (found) onSelectReport(found.id);
-            }}
-            disabled={countsByStatus[s] === 0}
-            style={{
-              background: "var(--color-surface)",
-              border: "1px solid var(--color-border)",
-              borderRadius: "var(--radius-lg)",
-              padding: "var(--space-3) var(--space-4)",
-              cursor: countsByStatus[s] > 0 ? "pointer" : "default",
-              textAlign: "left",
-              transition: "all var(--transition-fast)",
-              opacity: countsByStatus[s] === 0 ? 0.5 : 1,
-            }}
-            onMouseEnter={(e) => {
-              if (countsByStatus[s] > 0)
-                (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--color-accent)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--color-border)";
+              const report = reports.find((item) => item.status === status);
+              if (report) onSelectReport(report.id);
             }}
           >
-            <div style={{ fontSize: "1.2rem", marginBottom: "var(--space-1)" }}>{STATUS_ICON[s]}</div>
-            <div style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--color-primary)" }}>
-              {loading ? "—" : countsByStatus[s]}
-            </div>
-            <div style={{ fontSize: "var(--text-xs)", color: "var(--color-text-muted)", fontWeight: 600 }}>
-              {STATUS_LABELS[s]}
-            </div>
+            <span>{STATUS_LABELS[status]}</span>
+            <strong>{loading ? "-" : countsByStatus[status]}</strong>
           </button>
         ))}
       </div>
 
-      {/* ─── Butuh Perhatian ─────────────────────── */}
-      {!loading && needsAttention.length > 0 && (
-        <div className="card" style={{ padding: "var(--space-4)" }}>
-          <h3
-            style={{
-              fontSize: "var(--text-sm)",
-              fontWeight: 700,
-              color: "var(--color-danger)",
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-              marginBottom: "var(--space-4)",
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--space-2)",
-            }}
-          >
-            🚨 Butuh Perhatian Segera
-          </h3>
-          <div style={{ display: "grid", gap: "var(--space-2)" }}>
-            {needsAttention.map((r) => (
-              <button
-                key={r.id}
-                className="dashboard-report-item"
-                onClick={() => onSelectReport(r.id)}
-                style={{
-                  background: "var(--color-background)",
-                  border: "1px solid var(--color-border)",
-                  borderLeft: `4px solid ${r.status === "SUBMITTED" ? "var(--color-danger)" : "var(--color-warning)"}`,
-                  borderRadius: "var(--radius-md)",
-                  padding: "var(--space-3) var(--space-4)",
-                  cursor: "pointer",
-                  textAlign: "left",
-                  transition: "all var(--transition-fast)",
-                  width: "100%",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "var(--color-accent-light)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "var(--color-background)";
-                }}
-              >
-                <div>
-                  <div
-                    style={{
-                      fontSize: "var(--text-xs)",
-                      fontWeight: 700,
-                      color: "var(--color-accent)",
-                      marginBottom: "2px",
-                    }}
-                  >
-                    {r.requestNumber}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "var(--text-sm)",
-                      fontWeight: 600,
-                      color: "var(--color-primary)",
-                    }}
-                  >
-                    {r.title}
-                  </div>
-                  <div style={{ fontSize: "var(--text-xs)", color: "var(--color-text-muted)" }}>
-                    {formatDate(r.createdAt)}
-                  </div>
-                </div>
-                <StatusBadge status={r.status} />
+      {reviewQueue.length > 0 && (
+        <section className="card compact-card" aria-labelledby="admin-queue-title">
+          <h3 id="admin-queue-title" className="section-kicker">Needs Review</h3>
+          <div className="report-card-list">
+            {reviewQueue.map((report) => (
+              <button key={report.id} className="report-mini-card" onClick={() => onSelectReport(report.id)}>
+                <span className="table-row-number">{report.requestNumber}</span>
+                <strong>{report.title}</strong>
+                <small>{formatDate(report.createdAt)}</small>
+                <StatusBadge status={report.status} />
               </button>
             ))}
           </div>
-        </div>
+        </section>
       )}
     </div>
   );
