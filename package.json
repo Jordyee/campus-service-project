@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "wrangler dev",
-    "start": "wrangler dev",
+    "dev": "wrangler dev worker/index.ts --assets public",
+    "start": "wrangler dev worker/index.ts --assets public",
     "deploy": "wrangler deploy",
     "test": "vitest",
     "cf-typegen": "wrangler types",
