@@ -51,3 +51,45 @@ npm.cmd run deploy
 - `assets.not_found_handling` is set to `single-page-application` so browser navigation can load the React app for client-side routes.
 - `assets.run_worker_first` is set for `/api/*` so API routes are always handled by the Worker before static assets.
 - No secrets or tokens were added to the repository.
+
+## Final Deployment Sync - 2026-07-05
+
+- Date/time: 2026-07-05 23:44 +07:00
+- Platform: existing Cloudflare Worker with Static Assets
+- Worker name: `campus-service-project`
+- Public URL: <https://campus-service-project.gerungan-dj.workers.dev>
+- Version ID: `7d8b7e54-649a-46d4-a616-c47cdfcc31fa`
+
+### Commands Run
+
+```powershell
+npx.cmd tsc --noEmit
+npm.cmd test -- --run
+npm.cmd run build:frontend
+npm.cmd run deploy
+```
+
+### Verification Results
+
+- TypeScript check: passed.
+- Automated tests: 66 passed across 16 test files.
+- Frontend production build: passed.
+- Deploy target: existing Worker `campus-service-project`; no new Worker or Pages project was created.
+- Root HTML: `GET /` returned 200.
+- Static assets: public URL asset paths matched local `public/index.html`:
+  - `/assets/index-Chp3Y0af.js`
+  - `/assets/index-BMZqSDhn.css`
+- Asset responses: both public asset URLs returned 200 with expected byte lengths.
+- Health check: `GET /api/health` returned status `ok`.
+- Login/demo session UI: public URL rendered the login screen with email/password fields and Reporter/Admin/Technician/Manager role presets.
+- Reporter demo session smoke: signing in as seeded Reporter reached the Reporter Portal with Create Report, My Service Requests, and connected Worker API status visible.
+- Form validation smoke: submitting the empty Create Report form showed required-field validation without creating remote data.
+- Read-only public API smoke:
+  - `GET /api/requests` as Reporter returned 200 and an empty list.
+  - `GET /api/users?role=TECHNICIAN` as Administrator returned 200 and the seeded technician.
+  - `GET /api/dashboard/summary` as Facility Manager returned 200 with zero counts.
+
+### Notes
+
+- `npm audit fix` was not run. The dependency audit remains a documented known limitation in testing notes.
+- The final sync preserved the demo data strategy: no service request record was created during public smoke verification.
