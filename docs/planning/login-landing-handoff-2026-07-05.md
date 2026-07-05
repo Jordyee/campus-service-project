@@ -39,7 +39,8 @@ These are outside the approved scope unless explicitly requested later.
 
 ## Important Files
 
-- `src/components/LoginLanding.tsx`
+- `src/components/LoginPage.tsx`
+- `src/session/demoSession.ts`
 - `src/App.tsx`
 - `src/styles/main.css`
 - `public/index.html`

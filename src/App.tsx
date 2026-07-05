@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import type { Role } from "./types/api";
 import { SEEDED_ACTORS } from "./types/api";
 import BackendBanner from "./components/BackendBanner";
-import RoleSelector from "./components/RoleSelector";
+import LoginPage from "./components/LoginPage";
 import ReportForm from "./components/ReportForm";
 import ReportList from "./components/ReportList";
 import ReportDetail from "./components/ReportDetail";
@@ -11,7 +11,13 @@ import Dashboard from "./components/Dashboard";
 import ReporterDashboard from "./components/dashboards/ReporterDashboard";
 import AdminDashboard from "./components/dashboards/AdminDashboard";
 import TechnicianDashboard from "./components/dashboards/TechnicianDashboard";
-import LoginLanding from "./components/LoginLanding";
+import {
+  clearDemoSession,
+  loadDemoSession,
+  resolveDemoSession,
+  saveDemoSession,
+} from "./session/demoSession";
+import type { DemoSession } from "./session/demoSession";
 
 const ROLE_DESCRIPTIONS: Record<Role, string> = {
   REPORTER: "Reporter dapat mengirim laporan masalah fasilitas baru, melihat laporan mereka, dan menambahkan komentar.",
@@ -61,14 +67,29 @@ const ROLE_NAV: Record<Role, Array<{ label: string; marker: string }>> = {
 };
 
 export default function App() {
-  const [role, setRole] = useState<Role>("REPORTER");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [session, setSession] = useState<DemoSession | null>(() => loadDemoSession(window.localStorage));
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [lastCreated, setLastCreated] = useState<{ id: string; requestNumber: string } | null>(null);
+  const actor = resolveDemoSession(session);
 
   function refresh() {
     setRefreshTrigger((n) => n + 1);
+  }
+
+  function handleLogin(nextSession: DemoSession) {
+    saveDemoSession(window.localStorage, nextSession);
+    setSession(nextSession);
+    setSelectedId(null);
+    setLastCreated(null);
+    refresh();
+  }
+
+  function handleLogout() {
+    clearDemoSession(window.localStorage);
+    setSession(null);
+    setSelectedId(null);
+    setLastCreated(null);
   }
 
   function handleCreated(id: string, requestNumber: string) {
@@ -77,38 +98,15 @@ export default function App() {
     refresh();
   }
 
-  function handleRoleChange(newRole: Role) {
-    setRole(newRole);
-    setSelectedId(null);
-    setLastCreated(null);
-    refresh();
+  if (!actor) {
+    return <LoginPage onLogin={handleLogin} />;
   }
 
-  function handleEnter(nextRole: Role) {
-    handleRoleChange(nextRole);
-    setIsAuthenticated(true);
-  }
-
-  function handleSignOut() {
-    setSelectedId(null);
-    setLastCreated(null);
-    setIsAuthenticated(false);
-  }
-
+  const role = actor.role;
   const isReporter = role === "REPORTER";
   const isAdmin = role === "ADMINISTRATOR";
   const isTech = role === "TECHNICIAN";
   const isManager = role === "FACILITY_MANAGER";
-
-  if (!isAuthenticated) {
-    return (
-      <LoginLanding
-        selectedRole={role}
-        onSelectRole={setRole}
-        onEnter={handleEnter}
-      />
-    );
-  }
 
   return (
     <div className="app-shell">
@@ -133,6 +131,10 @@ export default function App() {
         <div className="side-footer">
           <div className="sidebar-role-badge">{ROLE_BADGES[SEEDED_ACTORS[role].role]}</div>
           <p className="sidebar-description">{ROLE_DESCRIPTIONS[role]}</p>
+          <div className="sidebar-last-created">
+            <div className="sidebar-last-created-label">Logged in as</div>
+            <p className="sidebar-highlight">{actor.displayName}</p>
+          </div>
           {isReporter && lastCreated && (
             <div className="sidebar-last-created">
               <div className="sidebar-last-created-label">Laporan terakhir</div>
@@ -149,8 +151,11 @@ export default function App() {
             <span>Search reports...</span>
           </div>
           <div className="topbar-actions">
-            <RoleSelector currentRole={role} onChange={handleRoleChange} />
-            <button type="button" className="btn btn-secondary btn-sm" onClick={handleSignOut}>
+            <div className="session-summary" aria-label="Pengguna aktif">
+              <span className="session-summary-label">Logged in as</span>
+              <strong>{actor.displayName}</strong>
+            </div>
+            <button type="button" className="btn btn-secondary btn-sm" onClick={handleLogout}>
               Sign Out
             </button>
           </div>

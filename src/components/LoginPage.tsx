@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import type { Role } from "../types/api";
+import { authenticateDemoLogin, listSeededActors } from "../session/demoSession";
+import type { DemoSession } from "../session/demoSession";
 
 const ROLE_LABELS: Record<Role, string> = {
   REPORTER: "Reporter",
@@ -71,19 +73,37 @@ const WORKFLOW_STEPS = [
   },
 ];
 
-interface LoginLandingProps {
-  selectedRole: Role;
-  onSelectRole: (role: Role) => void;
-  onEnter: (role: Role) => void;
+interface LoginPageProps {
+  onLogin: (session: DemoSession) => void;
 }
 
-export default function LoginLanding({ selectedRole, onSelectRole, onEnter }: LoginLandingProps) {
-  const [email, setEmail] = useState("j.doe@university.edu");
-  const [password, setPassword] = useState("campusops");
+export default function LoginPage({ onLogin }: LoginPageProps) {
+  const actors = listSeededActors();
+  const [role, setRole] = useState<Role>("REPORTER");
+  const selectedActor = actors.find((actor) => actor.role === role) ?? actors[0];
+  const [username, setUsername] = useState(selectedActor.id);
+  const [password, setPassword] = useState(selectedActor.id);
+  const [error, setError] = useState<string | null>(null);
+
+  function selectRole(nextRole: Role) {
+    const nextActor = actors.find((actor) => actor.role === nextRole) ?? actors[0];
+    setRole(nextActor.role);
+    setUsername(nextActor.id);
+    setPassword(nextActor.id);
+    setError(null);
+  }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    onEnter(selectedRole);
+    const session = authenticateDemoLogin({ username, role, password });
+
+    if (!session) {
+      setError("Username, role, atau password tidak cocok dengan seeded user demo.");
+      return;
+    }
+
+    setError(null);
+    onLogin(session);
   }
 
   return (
@@ -104,9 +124,12 @@ export default function LoginLanding({ selectedRole, onSelectRole, onEnter }: Lo
             <span>Email or Campus ID</span>
             <input
               type="text"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="e.g. j.doe@university.edu"
+              value={username}
+              onChange={(event) => {
+                setUsername(event.target.value);
+                setError(null);
+              }}
+              placeholder="e.g. user-reporter-1"
               autoComplete="username"
             />
           </label>
@@ -121,11 +144,20 @@ export default function LoginLanding({ selectedRole, onSelectRole, onEnter }: Lo
             <input
               type="password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(event) => {
+                setPassword(event.target.value);
+                setError(null);
+              }}
               placeholder="Enter password"
               autoComplete="current-password"
             />
           </label>
+
+          {error && (
+            <div className="form-status-error" role="alert">
+              {error}
+            </div>
+          )}
 
           <button type="submit" className="login-submit">
             Sign In
@@ -140,9 +172,9 @@ export default function LoginLanding({ selectedRole, onSelectRole, onEnter }: Lo
               <button
                 key={item.role}
                 type="button"
-                className={`login-role-button${selectedRole === item.role ? " login-role-button--active" : ""}`}
-                onClick={() => onSelectRole(item.role)}
-                aria-pressed={selectedRole === item.role}
+                className={`login-role-button${role === item.role ? " login-role-button--active" : ""}`}
+                onClick={() => selectRole(item.role)}
+                aria-pressed={role === item.role}
               >
                 <span className="login-role-icon" aria-hidden="true">{ROLE_ICONS[item.role]}</span>
                 <span>{ROLE_LABELS[item.role]}</span>

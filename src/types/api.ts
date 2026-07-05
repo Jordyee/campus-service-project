@@ -48,11 +48,17 @@ export type CommentType = (typeof COMMENT_TYPES)[number];
 export const ACTOR_ID_HEADER = "x-actor-id";
 export const ACTOR_ROLE_HEADER = "x-actor-role";
 
-export const SEEDED_ACTORS: Record<Role, { id: string; role: Role }> = {
-  REPORTER: { id: "user-reporter-1", role: "REPORTER" },
-  ADMINISTRATOR: { id: "user-admin-1", role: "ADMINISTRATOR" },
-  TECHNICIAN: { id: "user-tech-1", role: "TECHNICIAN" },
-  FACILITY_MANAGER: { id: "user-manager-1", role: "FACILITY_MANAGER" },
+export interface SeededActor {
+  id: string;
+  role: Role;
+  displayName: string;
+}
+
+export const SEEDED_ACTORS: Record<Role, SeededActor> = {
+  REPORTER: { id: "user-reporter-1", role: "REPORTER", displayName: "Rina Reporter" },
+  ADMINISTRATOR: { id: "user-admin-1", role: "ADMINISTRATOR", displayName: "Agus Administrator" },
+  TECHNICIAN: { id: "user-tech-1", role: "TECHNICIAN", displayName: "Tono Technician" },
+  FACILITY_MANAGER: { id: "user-manager-1", role: "FACILITY_MANAGER", displayName: "Maya Facility Manager" },
 };
 
 // ─── Request / Response Shapes (sesuai worker/requests.ts) ────────────────────

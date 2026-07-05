@@ -74,43 +74,91 @@ p { margin: 0; }
   gap: var(--space-5);
 }
 
-/* ─── Role Selector ─────────────────────────────────────────────────────────── */
-.role-selector {
-  display: flex;
-  align-items: center;
+/* Demo Login / Session */
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: var(--space-6);
+}
+
+.login-panel {
+  width: min(100%, 480px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-8);
+  display: grid;
+  gap: var(--space-6);
+}
+
+.login-brand,
+.login-copy {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.login-copy h1 {
+  font-size: var(--text-2xl);
+}
+
+.login-copy p {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+.login-selected-user {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-background);
+  padding: var(--space-4);
+  display: grid;
   gap: var(--space-3);
 }
 
-.role-selector-label {
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-secondary);
-  white-space: nowrap;
+.login-selected-user div {
+  display: grid;
+  gap: 2px;
 }
 
-.role-select {
-  appearance: none;
-  background: var(--color-background);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  padding: var(--space-2) var(--space-6) var(--space-2) var(--space-3);
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  font-weight: 600;
+.login-selected-label,
+.session-summary-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.login-selected-user strong,
+.session-summary strong {
   color: var(--color-primary);
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.role-select:focus {
-  outline: none;
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgb(3 105 161 / 0.15);
+.login-selected-user p {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
 }
 
+.session-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.session-summary div {
+  display: grid;
+  gap: 2px;
+  text-align: right;
+}
+
+.session-summary span:last-child {
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+}
+
+/* ─── Role Selector ─────────────────────────────────────────────────────────── */
 /* ─── Backend Banner ────────────────────────────────────────────────────────── */
 .backend-banner {
   border-radius: var(--radius-lg);
@@ -691,8 +739,10 @@ p { margin: 0; }
     display: none;
   }
 
-  .role-selector-label {
-    display: none;
+  .session-summary {
+    align-items: flex-end;
+    flex-direction: column;
+    gap: var(--space-2);
   }
 
   .filters-form {
