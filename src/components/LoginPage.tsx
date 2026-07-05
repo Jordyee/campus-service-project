@@ -10,12 +10,54 @@ const ROLE_LABELS: Record<Role, string> = {
   FACILITY_MANAGER: "Manager",
 };
 
-const ROLE_ICONS: Record<Role, string> = {
-  REPORTER: "U",
-  ADMINISTRATOR: "S",
-  TECHNICIAN: "T",
-  FACILITY_MANAGER: "B",
-};
+function RoleIcon({ role }: { role: Role }) {
+  if (role === "ADMINISTRATOR") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3l7 3v5c0 4.6-2.9 8.2-7 10-4.1-1.8-7-5.4-7-10V6l7-3z" />
+        <path d="M9 12l2 2 4-5" />
+      </svg>
+    );
+  }
+
+  if (role === "TECHNICIAN") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M14.7 6.3a4 4 0 0 0-5 5L4 17v3h3l5.7-5.7a4 4 0 0 0 5-5l-3 3-3-3 3-3z" />
+      </svg>
+    );
+  }
+
+  if (role === "FACILITY_MANAGER") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 19V5" />
+        <path d="M8 17v-5" />
+        <path d="M12 17V8" />
+        <path d="M16 17v-7" />
+        <path d="M20 17V6" />
+        <path d="M4 19h17" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+      <path d="M5 20a7 7 0 0 1 14 0" />
+    </svg>
+  );
+}
+
+function PasswordVisibilityIcon({ visible }: { visible: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" />
+      <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+      {!visible && <path d="M4 4l16 16" />}
+    </svg>
+  );
+}
 
 const ROLE_GUIDES: Array<{ role: Role; title: string; description: string }> = [
   {
@@ -83,6 +125,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
   const selectedActor = actors.find((actor) => actor.role === role) ?? actors[0];
   const [username, setUsername] = useState(selectedActor.id);
   const [password, setPassword] = useState(selectedActor.id);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   function selectRole(nextRole: Role) {
@@ -135,22 +178,27 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           </label>
 
           <label className="login-field">
-            <span className="login-label-row">
-              <span>Password</span>
-              <button type="button" className="login-link-button">
-                Forgot password?
+            <span>Password</span>
+            <span className="login-password-control">
+              <input
+                type={isPasswordVisible ? "text" : "password"}
+                value={password}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  setError(null);
+                }}
+                placeholder="Enter password"
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                className="password-visibility-button"
+                onClick={() => setIsPasswordVisible((visible) => !visible)}
+                aria-label={isPasswordVisible ? "Hide password" : "Show password"}
+              >
+                <PasswordVisibilityIcon visible={isPasswordVisible} />
               </button>
             </span>
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => {
-                setPassword(event.target.value);
-                setError(null);
-              }}
-              placeholder="Enter password"
-              autoComplete="current-password"
-            />
           </label>
 
           {error && (
@@ -176,7 +224,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                 onClick={() => selectRole(item.role)}
                 aria-pressed={role === item.role}
               >
-                <span className="login-role-icon" aria-hidden="true">{ROLE_ICONS[item.role]}</span>
+                <span className="login-role-icon" aria-hidden="true"><RoleIcon role={item.role} /></span>
                 <span>{ROLE_LABELS[item.role]}</span>
               </button>
             ))}
@@ -199,7 +247,14 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
           <section className="guide-section" aria-labelledby="workflow-title">
             <div className="guide-section-title">
-              <span aria-hidden="true">F</span>
+              <span aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 6h7" />
+                  <path d="M4 12h12" />
+                  <path d="M4 18h16" />
+                  <path d="M15 5l4 4-4 4" />
+                </svg>
+              </span>
               <h3 id="workflow-title">System Workflow</h3>
             </div>
             <div className="workflow-step-grid">
@@ -221,14 +276,21 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
           <section className="guide-section" aria-labelledby="how-to-use-title">
             <div className="guide-section-title">
-              <span aria-hidden="true">G</span>
+              <span aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 3v18" />
+                  <path d="M5 8h14" />
+                  <path d="M7 16h10" />
+                  <path d="M9 21h6" />
+                </svg>
+              </span>
               <h3 id="how-to-use-title">How To Use It</h3>
             </div>
             <div className="role-guide-grid">
               {ROLE_GUIDES.map((item) => (
                 <article key={item.role} className="role-guide-card">
                   <div className="role-guide-heading">
-                    <span className="role-guide-icon" aria-hidden="true">{ROLE_ICONS[item.role]}</span>
+                    <span className="role-guide-icon" aria-hidden="true"><RoleIcon role={item.role} /></span>
                     <h4>{item.title}</h4>
                   </div>
                   <p>{item.description}</p>

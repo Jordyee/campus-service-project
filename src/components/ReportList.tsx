@@ -33,14 +33,20 @@ interface ReportListProps {
   role: Role;
   refreshTrigger: number;
   onSelectReport: (id: string) => void;
+  topbarKeyword?: string;
 }
 
-export default function ReportList({ role, refreshTrigger, onSelectReport }: ReportListProps) {
+export default function ReportList({ role, refreshTrigger, onSelectReport, topbarKeyword = "" }: ReportListProps) {
   const [reports, setReports] = useState<RequestListItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<ListRequestFilters>({});
   const [draft, setDraft] = useState<ListRequestFilters>({});
+  const trimmedTopbarKeyword = topbarKeyword.trim();
+  const effectiveFilters: ListRequestFilters = {
+    ...filters,
+    keyword: trimmedTopbarKeyword || filters.keyword,
+  };
 
   async function load(f: ListRequestFilters) {
     setLoading(true);
@@ -55,9 +61,9 @@ export default function ReportList({ role, refreshTrigger, onSelectReport }: Rep
   }
 
   useEffect(() => {
-    load(filters);
+    load(effectiveFilters);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [role, refreshTrigger, filters]);
+  }, [role, refreshTrigger, filters, trimmedTopbarKeyword]);
 
   function handleApply(e: React.FormEvent) {
     e.preventDefault();
@@ -70,7 +76,7 @@ export default function ReportList({ role, refreshTrigger, onSelectReport }: Rep
   }
 
   return (
-    <section className="card" aria-labelledby="reports-title">
+    <section id="reports-section" className="card scroll-anchor" aria-labelledby="reports-title">
       <div className="section-heading-row">
         <div>
           <h2 id="reports-title" className="card-title">{LIST_TITLES[role]}</h2>

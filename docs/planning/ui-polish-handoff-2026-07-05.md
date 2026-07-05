@@ -87,6 +87,12 @@ Local visual check:
 
 - The current UI polish changes are not committed yet.
 - The Vite build regenerated hashed files in `public/assets/`; this is expected.
+- Login UX follow-up on branch `implementation/login-ux-fixes`:
+  - removed the out-of-scope forgot password control;
+  - added an accessible show/hide password toggle;
+  - replaced placeholder letter icons in the login guide with simple inline SVG icons;
+  - kept sidebar navigation as in-page anchors with smooth scrolling and active-section state;
+  - wired topbar report search into `ReportList` without replacing the existing list filters.
 - If the app appears blank in a browser, make sure the dev server is started with:
 
 ```text
