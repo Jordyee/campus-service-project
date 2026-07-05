@@ -127,10 +127,21 @@ It is intended to capture:
 - local D1 migration evidence
 - end-to-end API smoke evidence in `docs/testing/test-execution-report-2026-07-02.md`
 
-## 8. Evidence Still Useful To Add
+## 8. Final Visual Evidence
 
-- final visual screenshots for each flow (optional for automated verification, required only if rubric mandates it)
-- Existing files under `evidence/Screenshoots/` are draft captures only. Capture final screenshots using `docs/testing/03-final-screenshot-guide.md` and treat the new captures as the official visual evidence.
+Final visual screenshots are available under `evidence/Screenshoots/final/`.
+
+| File | Evidence |
+|---|---|
+| `01-login-page.png` | Public login page with seeded demo actor fields and role choices. |
+| `02-reporter-create-report.png` | Reporter portal with Create Report form filled using demo data. |
+| `03-reporter-created-detail.png` | Reporter flow after successful request creation, detail panel, list, and status history. |
+| `04-reporter-comment-history.png` | Reporter detail showing submitted request, comment, and status history. |
+| `05-admin-review-assign.png` | Administrator view after review and technician assignment. |
+| `06-technician-progress-resolved.png` | Technician workspace showing resolved task and lifecycle history. |
+| `07-admin-close-reopen.png` | Administrator close/reopen area and lifecycle history after closure. |
+| `08-manager-dashboard.png` | Facility Manager dashboard with summaries and recent reports. |
+| `09-health-check.png` | Public `/api/health` endpoint returning status `ok`. |
 
 ## 9. Current Problems / Limitations
 
@@ -153,7 +164,7 @@ Reason:
 
 ## 11. Next Required Work
 
-1. Capture and attach final screenshots using `docs/testing/03-final-screenshot-guide.md` if the course requires visual evidence in the final report.
+1. Reference the final screenshots under `evidence/Screenshoots/final/` if the course requires visual evidence in the final report.
 2. Record any reproduction steps if a later manual retest finds a failure.
 3. Use the final reviewed version of this file as submission evidence.
 
@@ -165,5 +176,5 @@ Final demonstration should start from an empty service-request dataset with the 
 
 - Confirm that each flow result reflects real observed behavior.
 - Confirm that no required flow is marked `Pass` without evidence.
-- Confirm that final manual UI screenshots, not only draft captures, are attached or referenced before final submission.
+- Confirm that final manual UI screenshots under `evidence/Screenshoots/final/` are attached or referenced before final submission.
 - Confirm that limitations are written clearly and do not hide known failures.

@@ -25,13 +25,16 @@ Use clear file names so the screenshots can be referenced from a report:
 ```text
 01-login-page.png
 02-reporter-create-report.png
-03-reporter-detail-comment.png
-04-admin-review-assign.png
-05-technician-progress-resolved.png
-06-admin-close-reopen.png
-07-manager-dashboard.png
-08-health-check.png
+03-reporter-created-detail.png
+04-reporter-comment-history.png
+05-admin-review-assign.png
+06-technician-progress-resolved.png
+07-admin-close-reopen.png
+08-manager-dashboard.png
+09-health-check.png
 ```
+
+Current final screenshots have been captured in this folder and indexed in `evidence/Screenshoots/final/README.md`.
 
 ## Demo Login Accounts
 
@@ -79,6 +82,7 @@ This is a demo-only actor context, not production authentication.
 6. Capture the filled form before submit as `02-reporter-create-report.png`.
 7. Click `Submit Report`.
 8. Confirm the report appears in `My Service Requests`.
+9. Capture the created request detail/list state as `03-reporter-created-detail.png`.
 
 ### 3. Reporter Detail And Comment
 
@@ -86,7 +90,7 @@ This is a demo-only actor context, not production authentication.
 2. Confirm status is `Submitted`.
 3. Add a comment such as `Mohon dicek sebelum jadwal kelas berikutnya.`
 4. Confirm the comment appears in the detail timeline.
-5. Capture `03-reporter-detail-comment.png`.
+5. Capture `04-reporter-comment-history.png`.
 6. Click `Sign Out`.
 
 ### 4. Administrator Review And Assignment
@@ -99,7 +103,7 @@ This is a demo-only actor context, not production authentication.
 4. Set category/priority if needed.
 5. Assign the seeded technician.
 6. Confirm status becomes `Assigned`.
-7. Capture `04-admin-review-assign.png`.
+7. Capture `05-admin-review-assign.png`.
 8. Click `Sign Out`.
 
 ### 5. Technician Progress And Resolution
@@ -113,7 +117,7 @@ This is a demo-only actor context, not production authentication.
 5. Add a short progress note.
 6. Mark it `Resolved`.
 7. Confirm status history shows the technician progress.
-8. Capture `05-technician-progress-resolved.png`.
+8. Capture `06-technician-progress-resolved.png`.
 9. Click `Sign Out`.
 
 ### 6. Administrator Close And Reopen
@@ -124,7 +128,7 @@ This is a demo-only actor context, not production authentication.
 4. Capture the closed state if visible.
 5. Reopen it with a reason such as `Reporter requested follow-up check.`
 6. Confirm status returns to `Under Review` and history records the reason.
-7. Capture `06-admin-close-reopen.png`.
+7. Capture `07-admin-close-reopen.png`.
 8. Click `Sign Out`.
 
 ### 7. Facility Manager Dashboard
@@ -134,7 +138,7 @@ This is a demo-only actor context, not production authentication.
    - Password: `user-manager-1`
 2. Open the dashboard.
 3. Confirm counts by status, category, priority, and recent reports are visible.
-4. Capture `07-manager-dashboard.png`.
+4. Capture `08-manager-dashboard.png`.
 5. Click `Sign Out`.
 
 ### 8. Health Check
@@ -146,7 +150,7 @@ https://campus-service-project.gerungan-dj.workers.dev/api/health
 ```
 
 2. Confirm it returns JSON with status `ok`.
-3. Capture `08-health-check.png`.
+3. Capture `09-health-check.png`.
 
 ## After Capturing
 
