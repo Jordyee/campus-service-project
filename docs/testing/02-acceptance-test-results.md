@@ -127,17 +127,31 @@ It is intended to capture:
 - local D1 migration evidence
 - end-to-end API smoke evidence in `docs/testing/test-execution-report-2026-07-02.md`
 
-## 8. Evidence Still Useful To Add
+## 8. Final Visual Evidence
 
-- visual screenshots for each flow (optional for automated verification, required only if rubric mandates it)
-- Screenshot evidence is decided to be left for the student to capture during final project packaging if required by the rubric, as the agent operates in a headless/terminal context.
+Final visual screenshots are available under `evidence/Screenshoots/final/`.
+
+| File | Evidence |
+|---|---|
+| `01-login-page.png` | Public login page with seeded demo actor fields and role choices. |
+| `02-reporter-create-report.png` | Reporter portal with Create Report form filled using demo data. |
+| `03-reporter-created-detail.png` | Reporter flow after successful request creation, detail panel, list, and status history. |
+| `04-reporter-comment-history.png` | Reporter detail showing submitted request, comment, and status history. |
+| `05-admin-review-assign.png` | Administrator view after review and technician assignment. |
+| `06-technician-progress-resolved.png` | Technician workspace showing resolved task and lifecycle history. |
+| `07-admin-close-reopen.png` | Administrator close/reopen area and lifecycle history after closure. |
+| `08-manager-dashboard.png` | Facility Manager dashboard with summaries and recent reports. |
+| `09-health-check.png` | Public `/api/health` endpoint returning status `ok`. |
 
 ## 9. Current Problems / Limitations
 
 - Role handling still uses development-friendly actor switching and should not be treated as real production authentication.
-- Dependency audit remains unresolved because local environment storage/tooling blocked the upgrade path.
+- Final demo defense for role handling: the login page uses seeded demo actors to create a development-friendly actor context for testing role-based workflow. It is not claimed as production authentication; in production, the actor context would come from a real identity/session provider.
+- Optional feature defense: upload photo, email notification, Google login, QR code, AI categorization, spare-part inventory, and vendor management remain deferred.
+- Dependency audit remains unresolved and is treated as a known limitation, not a submission blocker, because the findings are in development/test tooling dependencies while application workflow checks, type-checking, automated tests, and deployment verification passed.
 - Full Vitest reruns may intermittently fail from `workerd` memory pressure even when targeted tests pass.
 - One UI polish fix was applied after acceptance browsing: Reporter role summary now restores its own submitted-request text when switching back from another role.
+- A final verification on 2026-07-06 passed type-checking, 66 automated tests across 16 files, frontend build, and public URL health smoke.
 
 ## 10. Current Acceptance Decision
 
@@ -150,13 +164,17 @@ Reason:
 
 ## 11. Next Required Work
 
-1. Attach screenshots if the course requires visual evidence in the final report.
+1. Reference the final screenshots under `evidence/Screenshoots/final/` if the course requires visual evidence in the final report.
 2. Record any reproduction steps if a later manual retest finds a failure.
 3. Use the final reviewed version of this file as submission evidence.
 
-## 12. Human Review Checklist
+## 12. Final Demo Data Strategy
+
+Final demonstration should start from an empty service-request dataset with the seeded demo actors only. The student will create one request live and move it through the required end-to-end workflow so the demo proves the lifecycle instead of relying on pre-existing request records.
+
+## 13. Human Review Checklist
 
 - Confirm that each flow result reflects real observed behavior.
 - Confirm that no required flow is marked `Pass` without evidence.
-- Confirm that manual UI screenshots are attached or referenced before final submission.
+- Confirm that final manual UI screenshots under `evidence/Screenshoots/final/` are attached or referenced before final submission.
 - Confirm that limitations are written clearly and do not hide known failures.

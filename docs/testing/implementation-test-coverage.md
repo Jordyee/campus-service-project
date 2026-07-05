@@ -13,8 +13,10 @@ Issue #19 does not add product scope. It confirms that the implemented workflow 
 | Audit issue | GitHub Issue #19 |
 | Branch | `implementation/issue-19-tests-traceability` |
 | Required command | `npm.cmd test -- --run` |
-| Automated test files | 15 |
-| Automated tests | 62 |
+| Issue #19 audited automated test files | 15 |
+| Issue #19 audited automated tests | 62 |
+| Latest final automated test files | 16 |
+| Latest final automated tests | 66 |
 | Minimum required tests | 20 |
 | Product code changed for #19 | No |
 | Optional features added | No |
@@ -25,6 +27,7 @@ Issue #19 does not add product scope. It confirms that the implemented workflow 
 |---|---:|---|
 | `tests/unit/foundation.spec.ts` | 9 | Approved enums, role/action boundary, actor header context, lifecycle transitions, shared error shape |
 | `tests/unit/create-request.spec.ts` | 5 | Reporter request validation and list filter validation |
+| `tests/unit/demo-session.spec.ts` | 4 | Seeded demo login/session creation, validation, persistence, and stale-session rejection |
 | `tests/unit/new-report-form.spec.ts` | 1 | Static UI smoke coverage for implemented controls and state targets |
 | `tests/integration/health.spec.ts` | 1 | Worker health route |
 | `tests/integration/foundation-schema.spec.ts` | 5 | Core D1 tables, seeded users, schema constraints, status history helper |
@@ -43,7 +46,7 @@ Issue #19 does not add product scope. It confirms that the implemented workflow 
 
 | Area | Requirements / Changes | Evidence |
 |---|---|---|
-| Role boundary and actor context | NFR-002, CR-003 | `tests/unit/foundation.spec.ts`, `tests/integration/foundation-schema.spec.ts`, role rejection tests across integration files |
+| Role boundary and actor context | NFR-002, CR-003 | `tests/unit/foundation.spec.ts`, `tests/unit/demo-session.spec.ts`, `tests/integration/foundation-schema.spec.ts`, role rejection tests across integration files |
 | Report creation | FR-001, FR-002, US-001, AC-001, AC-002 | `tests/unit/create-request.spec.ts`, `tests/integration/create-request-api.spec.ts` |
 | Report list, search, and filters | FR-003, FR-004, US-002, US-003, AC-003, AC-005, AC-006 | `tests/integration/list-requests-api.spec.ts`, `tests/unit/create-request.spec.ts` |
 | Report detail and status history | FR-005, FR-013, US-002, US-008, AC-003, AC-004, AC-015, AC-016 | `tests/integration/request-detail-api.spec.ts`, `tests/integration/foundation-schema.spec.ts`, `tests/unit/foundation.spec.ts` |
@@ -73,9 +76,26 @@ Result:
 - 62 tests passed.
 - At least 20 automated tests exist and run with the project test command.
 
+Latest final verification on `development` after the demo login/session iteration:
+
+```powershell
+npx.cmd tsc --noEmit
+npm.cmd test -- --run
+npm.cmd run build:frontend
+```
+
+Result:
+
+- TypeScript check passed.
+- Full Vitest suite passed.
+- 16 test files passed.
+- 66 tests passed.
+- Frontend production build passed.
+- Public deployment smoke checks are recorded in `docs/deployment/01-deployment-notes.md`.
+
 ## Known Limitations
 
 - UI coverage is static Worker asset smoke coverage, not browser end-to-end automation.
-- Deployment is intentionally not tested in Issue #19.
-- Numeric NFR targets and retention/deletion/archive policy remain pending student decisions outside the implementation queue.
+- Deployment was intentionally not tested in Issue #19; final deployment verification is recorded separately in `docs/deployment/01-deployment-notes.md`.
+- Numeric NFR targets and retention/deletion/archive policy are deferred as future work for final submission because the case does not provide enough evidence to invent measurable targets or institutional retention rules.
 - Optional features remain deferred: photo upload, email notifications, Google login, room QR code, AI categorization, spare-part inventory, and vendor management.

@@ -79,6 +79,6 @@ The implemented application workflow passed compile, automated tests, local migr
 
 Submission risk remaining:
 
-- Dependency audit is not clean because dev/test tooling needs a coordinated upgrade after freeing more disk space.
+- Dependency audit is not clean and is documented as a known limitation rather than a submission blocker because the affected packages are development/test tooling dependencies and the application workflow, type-checking, automated tests, local migration, and deployment checks passed.
 - Browser UI visual testing was not performed; the smoke test covered Worker/API behavior.
 

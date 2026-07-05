@@ -87,7 +87,7 @@ export default function TechnicianPanel({ role, detail, onUpdated }: TechnicianP
             Terima Pekerjaan
           </button>
         )}
-        {detail.status === "ASSIGNED" && (
+        {detail.status === "ASSIGNED" && detail.acceptedAt && (
           <button id="mark-progress-button" type="button" className="btn btn-primary" onClick={handleMarkInProgress} disabled={loading}>
             Tandai In Progress
           </button>

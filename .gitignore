@@ -6,4 +6,5 @@ dist/
 .env.local
 npm-debug.log*
 coverage/
-
+.agents/
+skills/ui-ux-pro-max-skill/

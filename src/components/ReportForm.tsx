@@ -70,11 +70,16 @@ export default function ReportForm({ role, onCreated }: ReportFormProps) {
   }
 
   return (
-    <section className="card" aria-labelledby="report-form-title">
-      <h2 id="report-form-title" className="card-title">Laporan Layanan Baru</h2>
+    <section id="create-report-section" className="card scroll-anchor" aria-labelledby="report-form-title">
+      <div className="section-heading-row">
+        <div>
+          <h2 id="report-form-title" className="card-title">Create Report</h2>
+          <p>Submit a campus service issue for administrator review.</p>
+        </div>
+      </div>
       <form id="request-form" className="form" onSubmit={handleSubmit} noValidate>
         <div className="form-field">
-          <label className="form-label" htmlFor="report-title">Judul</label>
+          <label className="form-label" htmlFor="report-title">Issue Title</label>
           <input
             id="report-title"
             name="title"
@@ -82,13 +87,14 @@ export default function ReportForm({ role, onCreated }: ReportFormProps) {
             value={form.title}
             onChange={(e) => set("title", e.target.value)}
             autoComplete="off"
+            placeholder="Briefly describe the problem"
             aria-describedby="err-title"
           />
           <span id="err-title" className="form-error">{errors.title ?? ""}</span>
         </div>
 
         <div className="form-field">
-          <label className="form-label" htmlFor="report-location">Lokasi</label>
+          <label className="form-label" htmlFor="report-location">Location</label>
           <input
             id="report-location"
             name="location"
@@ -96,13 +102,14 @@ export default function ReportForm({ role, onCreated }: ReportFormProps) {
             value={form.location}
             onChange={(e) => set("location", e.target.value)}
             autoComplete="off"
+            placeholder="Building, room, or campus area"
             aria-describedby="err-location"
           />
           <span id="err-location" className="form-error">{errors.location ?? ""}</span>
         </div>
 
         <div className="form-field">
-          <label className="form-label" htmlFor="report-category">Kategori</label>
+          <label className="form-label" htmlFor="report-category">Category</label>
           <select
             id="report-category"
             name="category"
@@ -119,7 +126,7 @@ export default function ReportForm({ role, onCreated }: ReportFormProps) {
         </div>
 
         <div className="form-field">
-          <label className="form-label" htmlFor="report-reporter-name">Nama Pelapor</label>
+          <label className="form-label" htmlFor="report-reporter-name">Reporter Name</label>
           <input
             id="report-reporter-name"
             name="reporterName"
@@ -133,7 +140,7 @@ export default function ReportForm({ role, onCreated }: ReportFormProps) {
         </div>
 
         <div className="form-field">
-          <label className="form-label" htmlFor="report-reporter-contact">Kontak Pelapor</label>
+          <label className="form-label" htmlFor="report-reporter-contact">Reporter Contact</label>
           <input
             id="report-reporter-contact"
             name="reporterContact"
@@ -147,20 +154,21 @@ export default function ReportForm({ role, onCreated }: ReportFormProps) {
         </div>
 
         <div className="form-field">
-          <label className="form-label" htmlFor="report-description">Deskripsi</label>
+          <label className="form-label" htmlFor="report-description">Detailed Description</label>
           <textarea
             id="report-description"
             name="description"
             className="form-textarea"
             value={form.description}
             onChange={(e) => set("description", e.target.value)}
+            placeholder="Provide clear context, impact, and exact location details."
             aria-describedby="err-description"
           />
           <span id="err-description" className="form-error">{errors.description ?? ""}</span>
         </div>
 
         <button id="submit-report-btn" type="submit" className="btn btn-primary" disabled={loading}>
-          {loading ? "Mengirim..." : "Kirim Laporan"}
+          {loading ? "Submitting..." : "Submit Report"}
         </button>
 
         {status && (

@@ -315,10 +315,10 @@ A test area is `Fail` if:
 
 ## 12. Current Planning Notes
 
-- Automated coverage has already exceeded the minimum requirement with 62 tests across 15 files.
-- Browser-based acceptance evidence still needs to be recorded in a dedicated results file.
+- Automated coverage has already exceeded the minimum requirement. The latest final verification on 2026-07-06 passed 66 tests across 16 files.
+- Browser-based acceptance results are recorded in `docs/testing/02-acceptance-test-results.md`; final demo screenshots should be captured using `docs/testing/03-final-screenshot-guide.md` if visual evidence is required for submission.
 - Current role handling is still development-friendly and must be interpreted carefully during acceptance review.
-- Numeric NFR targets remain pending and should not be invented during test reporting.
+- Numeric NFR targets are deferred as future work and should not be invented during test reporting.
 
 ## 13. Human Review Checklist
 

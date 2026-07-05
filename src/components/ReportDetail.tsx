@@ -7,8 +7,12 @@ import TechnicianPanel from "./TechnicianPanel";
 import CommentForm, { CommentTimeline, HistoryTimeline } from "./CommentForm";
 
 const CATEGORY_LABELS: Record<string, string> = {
-  INTERNET: "Internet", AC: "AC", PERALATAN_KELAS: "Peralatan Kelas",
-  KEBERSIHAN: "Kebersihan", LABORATORIUM: "Laboratorium", LAINNYA: "Lainnya",
+  INTERNET: "Internet",
+  AC: "AC",
+  PERALATAN_KELAS: "Peralatan Kelas",
+  KEBERSIHAN: "Kebersihan",
+  LABORATORIUM: "Laboratorium",
+  LAINNYA: "Lainnya",
 };
 
 const ALL_STATUSES = ["SUBMITTED", "UNDER_REVIEW", "ASSIGNED", "IN_PROGRESS", "RESOLVED", "CLOSED"] as const;
@@ -46,8 +50,8 @@ export default function ReportDetail({ role, requestId, onUpdated }: ReportDetai
 
   if (!requestId) {
     return (
-      <section className="card detail" aria-labelledby="detail-title">
-        <h2 id="detail-title" className="card-title">Detail Laporan</h2>
+      <section id="request-detail-section" className="card detail scroll-anchor" aria-labelledby="detail-title">
+        <h2 id="detail-title" className="card-title">Request Detail</h2>
         <div className="detail-placeholder">
           <p id="detail-status">Pilih laporan untuk melihat detail.</p>
         </div>
@@ -57,94 +61,97 @@ export default function ReportDetail({ role, requestId, onUpdated }: ReportDetai
 
   if (loading) {
     return (
-      <section className="card detail" aria-labelledby="detail-title">
-        <h2 id="detail-title" className="card-title">Detail Laporan</h2>
-        <p id="detail-status" style={{ color: "var(--color-text-muted)", fontSize: "var(--text-sm)" }}>Memuat detail...</p>
+      <section id="request-detail-section" className="card detail scroll-anchor" aria-labelledby="detail-title">
+        <h2 id="detail-title" className="card-title">Request Detail</h2>
+        <p id="detail-status" className="muted-text">Memuat detail...</p>
       </section>
     );
   }
 
   if (error || !detail) {
     return (
-      <section className="card detail" aria-labelledby="detail-title">
-        <h2 id="detail-title" className="card-title">Detail Laporan</h2>
+      <section id="request-detail-section" className="card detail scroll-anchor" aria-labelledby="detail-title">
+        <h2 id="detail-title" className="card-title">Request Detail</h2>
         <p className="form-status-error" role="alert">{error ?? "Laporan tidak ditemukan."}</p>
       </section>
     );
   }
 
-  return (
-    <section className="card detail" aria-labelledby="detail-title">
-      <h2 id="detail-title" className="card-title">Detail Laporan</h2>
-      <article id="detail-card">
-        <h3 id="detail-heading" style={{ marginBottom: "var(--space-4)", fontSize: "var(--text-lg)" }}>
-          [{detail.requestNumber}] {detail.title}
-        </h3>
+  const currentStatusIndex = ALL_STATUSES.indexOf(detail.status as typeof ALL_STATUSES[number]);
 
-        {/* ─── Lifecycle Steps ───────────────── */}
-        <ol id="detail-lifecycle" className="lifecycle" style={{ marginBottom: "var(--space-5)" }}>
-          {ALL_STATUSES.map((s, i) => {
-            const idx = ALL_STATUSES.indexOf(detail.status as typeof ALL_STATUSES[number]);
-            const stepIdx = i;
-            const isActive = s === detail.status;
-            const isPast = stepIdx < idx;
+  return (
+    <section id="request-detail-section" className="card detail scroll-anchor" aria-labelledby="detail-title">
+      <article id="detail-card">
+        <div className="detail-header">
+          <div>
+            <div className="detail-meta-row">
+              <span className="table-row-number">{detail.requestNumber}</span>
+              <StatusBadge status={detail.status} />
+              <PriorityBadge priority={detail.priority} />
+            </div>
+            <h2 id="detail-title" className="detail-title">{detail.title}</h2>
+          </div>
+        </div>
+
+        <ol id="detail-lifecycle" className="lifecycle">
+          {ALL_STATUSES.map((status, index) => {
+            const isActive = status === detail.status;
+            const isPast = index < currentStatusIndex;
             return (
-              <React.Fragment key={s}>
+              <React.Fragment key={status}>
                 <li className={`lifecycle-step${isActive ? " lifecycle-step--active" : ""}${isPast ? " lifecycle-step--past" : ""}`}>
-                  {s.replace(/_/g, " ")}
+                  {status.replace(/_/g, " ")}
                 </li>
-                {i < ALL_STATUSES.length - 1 && <span className="lifecycle-arrow" aria-hidden="true">›</span>}
+                {index < ALL_STATUSES.length - 1 && <span className="lifecycle-arrow" aria-hidden="true">&gt;</span>}
               </React.Fragment>
             );
           })}
         </ol>
 
-        {/* ─── Detail Fields ────────────────── */}
+        <section className="detail-section" aria-labelledby="description-title">
+          <h3 id="description-title" className="section-kicker">Report Description</h3>
+          <p id="detail-description">{detail.description}</p>
+        </section>
+
         <dl className="detail-grid">
           <div className="detail-field">
             <dt>Status</dt>
             <dd id="detail-status-value"><StatusBadge status={detail.status} /></dd>
           </div>
           <div className="detail-field">
-            <dt>Prioritas</dt>
+            <dt>Priority</dt>
             <dd id="detail-priority"><PriorityBadge priority={detail.priority} /></dd>
           </div>
           <div className="detail-field">
-            <dt>Kategori</dt>
+            <dt>Category</dt>
             <dd id="detail-category">{CATEGORY_LABELS[detail.category] ?? detail.category}</dd>
           </div>
           <div className="detail-field">
-            <dt>Lokasi</dt>
+            <dt>Location</dt>
             <dd id="detail-location">{detail.location}</dd>
           </div>
           <div className="detail-field">
-            <dt>Pelapor</dt>
+            <dt>Reporter</dt>
             <dd id="detail-reporter">{detail.reporterName} ({detail.reporterContact})</dd>
           </div>
           <div className="detail-field">
-            <dt>Teknisi Ditugaskan</dt>
-            <dd id="detail-technician">{detail.assignedTechnician?.displayName ?? "—"}</dd>
+            <dt>Assigned Technician</dt>
+            <dd id="detail-technician">{detail.assignedTechnician?.displayName ?? "-"}</dd>
           </div>
           <div className="detail-field">
-            <dt>Diterima</dt>
-            <dd id="detail-accepted">{detail.acceptedAt ? formatDate(detail.acceptedAt) : "—"}</dd>
+            <dt>Accepted</dt>
+            <dd id="detail-accepted">{detail.acceptedAt ? formatDate(detail.acceptedAt) : "-"}</dd>
           </div>
           <div className="detail-field">
-            <dt>Dibuat</dt>
+            <dt>Created</dt>
             <dd id="detail-created">{formatDate(detail.createdAt)}</dd>
           </div>
           <div className="detail-field">
-            <dt>Diperbarui</dt>
+            <dt>Updated</dt>
             <dd id="detail-updated">{formatDate(detail.updatedAt)}</dd>
           </div>
         </dl>
 
-        <h3 style={{ marginBottom: "var(--space-3)" }}>Deskripsi</h3>
-        <p id="detail-description" style={{ color: "var(--color-text-secondary)", marginBottom: "var(--space-5)" }}>
-          {detail.description}
-        </p>
-
-        {/* ─── Admin Panel ──────────────────── */}
         {canAdminActions && (
           <AdminPanel
             role={role}
@@ -153,7 +160,6 @@ export default function ReportDetail({ role, requestId, onUpdated }: ReportDetai
           />
         )}
 
-        {/* ─── Technician Panel ─────────────── */}
         {canTechnicianActions && (
           <TechnicianPanel
             role={role}
@@ -162,18 +168,20 @@ export default function ReportDetail({ role, requestId, onUpdated }: ReportDetai
           />
         )}
 
-        {/* ─── Comments ─────────────────────── */}
-        <h3 style={{ margin: "var(--space-5) 0 var(--space-3)" }}>Komentar / Catatan</h3>
-        {canComment && (
-          <div className="subpanel" style={{ marginBottom: "var(--space-4)" }}>
-            <CommentForm role={role} requestId={detail.id} onCommentAdded={load} />
-          </div>
-        )}
-        <CommentTimeline comments={detail.comments} />
+        <section className="detail-section" aria-labelledby="comment-title">
+          <h3 id="comment-title" className="section-kicker">Comments and Notes</h3>
+          {canComment && (
+            <div className="subpanel comment-composer">
+              <CommentForm role={role} requestId={detail.id} onCommentAdded={load} />
+            </div>
+          )}
+          <CommentTimeline comments={detail.comments} />
+        </section>
 
-        {/* ─── Status History ───────────────── */}
-        <h3 style={{ margin: "var(--space-5) 0 var(--space-3)" }}>Riwayat Status</h3>
-        <HistoryTimeline history={detail.statusHistory} />
+        <section className="detail-section" aria-labelledby="history-title">
+          <h3 id="history-title" className="section-kicker">Status History</h3>
+          <HistoryTimeline history={detail.statusHistory} />
+        </section>
       </article>
     </section>
   );
