@@ -220,3 +220,38 @@ Deployment documentation:
 Status: final demo ready with documented limitations.
 
 The implemented system satisfies the approved campus service request workflow, has passing automated verification, is deployed publicly on Cloudflare Workers, includes final screenshot evidence, and keeps requirement-to-design-to-issue-to-code-to-test traceability current.
+
+## Reflection Questions
+
+The assignment reflection questions are in `AI_Assisted_Campus_Service_Project.md`, section `# 5. Pertanyaan Refleksi`.
+
+Questions to answer:
+
+1. Bagian mana yang paling membantu ketika menggunakan AI?
+2. Kesalahan apa yang paling sering dibuat AI?
+3. Fitur apa yang pernah dibuat AI tetapi tidak terdapat pada requirement?
+4. Test apa yang gagal dan apa penyebabnya?
+5. Perubahan apa yang dilakukan setelah human review?
+6. Mengapa output AI tidak boleh langsung dianggap benar?
+7. Bagaimana traceability membantu proyek?
+8. Apa yang akan diperbaiki jika proyek diulang?
+
+## Submission Format
+
+```text
+Nama: Dave Jordy Gerungan
+NIM: [isi NIM]
+Kelas: [isi kelas]
+Anggota tim: [isi anggota tim atau tulis "Individu"]
+Repository URL: https://github.com/Jordyee/campus-service-project
+Cloudflare URL: https://campus-service-project.gerungan-dj.workers.dev
+Commit terakhir: [isi hash commit terakhir dari branch final saat pengumpulan]
+Jumlah test: 66 automated tests across 16 files
+AI yang digunakan: OpenAI ChatGPT / Codex
+Known limitations:
+- Demo login/session uses seeded educational actors, not production authentication.
+- Google login, upload photo, email notification, room QR code, AI categorization, spare-part inventory, and vendor management are deferred.
+- Numeric performance/security NFR targets are deferred because exact targets were not defined in the case.
+- Retention, deletion, and archive policy are deferred because they were not specified in the case.
+- npm audit remains a documented known limitation for development/test tooling dependencies; npm audit fix was not run.
+```
