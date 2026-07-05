@@ -215,6 +215,7 @@ Implementation/testing update status:
 
 - Issues #8 through #18 implemented the approved functional workflow.
 - Issue #19 audited 62 automated tests across 15 files against FR-001 to FR-015, NFR-001 to NFR-007, US-001 to US-011, AC-001 to AC-022, CR-001, CR-002, and CR-003.
+- Final verification on 2026-07-06 passed 66 automated tests across 16 files after the demo login/session iteration was added.
 - Active FR/NFR rows now include issue IDs, code references, and test references where implemented.
 - `docs/testing/implementation-test-coverage.md` records the coverage inventory and known limitations.
 - No optional features were added during the coverage audit.
@@ -223,7 +224,7 @@ Acceptance testing update status:
 
 - Acceptance tests were planned in `docs/testing/01-test-plan.md` with 5 main flows (Flow A-E).
 - Results recorded in `docs/testing/02-acceptance-test-results.md` confirm passes for core workflows.
-- Visual screenshot evidence is deferred to the student's manual final packaging.
+- Visual screenshot evidence is deferred to the student's manual final packaging and should follow `docs/testing/03-final-screenshot-guide.md`.
 
 ## 10. Architecture Design Traceability
 

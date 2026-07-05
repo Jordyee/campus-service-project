@@ -130,16 +130,17 @@ It is intended to capture:
 ## 8. Evidence Still Useful To Add
 
 - final visual screenshots for each flow (optional for automated verification, required only if rubric mandates it)
-- Existing files under `evidence/Screenshoots/` are draft captures only. Final demo screenshots will be captured again after the project is fully finalized and should be treated as the official visual evidence.
+- Existing files under `evidence/Screenshoots/` are draft captures only. Capture final screenshots using `docs/testing/03-final-screenshot-guide.md` and treat the new captures as the official visual evidence.
 
 ## 9. Current Problems / Limitations
 
 - Role handling still uses development-friendly actor switching and should not be treated as real production authentication.
-- Final demo defense for role handling: the role selector provides a demo actor context for testing role-based workflow. It is not claimed as production authentication; in production, the actor context would come from a real identity/session provider.
-- Optional feature defense: upload photo and email notification remain deferred. A login page is a next iteration after this readiness grill, not a blocker for the current final demo; it should only proceed after the current data flow is confirmed stable and after the student approves the exact authentication approach.
+- Final demo defense for role handling: the login page uses seeded demo actors to create a development-friendly actor context for testing role-based workflow. It is not claimed as production authentication; in production, the actor context would come from a real identity/session provider.
+- Optional feature defense: upload photo, email notification, Google login, QR code, AI categorization, spare-part inventory, and vendor management remain deferred.
 - Dependency audit remains unresolved and is treated as a known limitation, not a submission blocker, because the findings are in development/test tooling dependencies while application workflow checks, type-checking, automated tests, and deployment verification passed.
 - Full Vitest reruns may intermittently fail from `workerd` memory pressure even when targeted tests pass.
 - One UI polish fix was applied after acceptance browsing: Reporter role summary now restores its own submitted-request text when switching back from another role.
+- A final verification on 2026-07-06 passed type-checking, 66 automated tests across 16 files, frontend build, and public URL health smoke.
 
 ## 10. Current Acceptance Decision
 
@@ -152,7 +153,7 @@ Reason:
 
 ## 11. Next Required Work
 
-1. Capture and attach final screenshots if the course requires visual evidence in the final report.
+1. Capture and attach final screenshots using `docs/testing/03-final-screenshot-guide.md` if the course requires visual evidence in the final report.
 2. Record any reproduction steps if a later manual retest finds a failure.
 3. Use the final reviewed version of this file as submission evidence.
 
