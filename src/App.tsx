@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import type { Role } from "./types/api";
 import { SEEDED_ACTORS } from "./types/api";
 import BackendBanner from "./components/BackendBanner";
-import RoleSelector from "./components/RoleSelector";
+import LoginPage from "./components/LoginPage";
 import ReportForm from "./components/ReportForm";
 import ReportList from "./components/ReportList";
 import ReportDetail from "./components/ReportDetail";
@@ -11,6 +11,13 @@ import Dashboard from "./components/Dashboard";
 import ReporterDashboard from "./components/dashboards/ReporterDashboard";
 import AdminDashboard from "./components/dashboards/AdminDashboard";
 import TechnicianDashboard from "./components/dashboards/TechnicianDashboard";
+import {
+  clearDemoSession,
+  loadDemoSession,
+  resolveDemoSession,
+  saveDemoSession,
+} from "./session/demoSession";
+import type { DemoSession } from "./session/demoSession";
 
 const ROLE_DESCRIPTIONS: Record<Role, string> = {
   REPORTER: "Reporter dapat mengirim laporan masalah fasilitas baru, melihat laporan mereka, dan menambahkan komentar.",
@@ -20,12 +27,27 @@ const ROLE_DESCRIPTIONS: Record<Role, string> = {
 };
 
 export default function App() {
-  const [role, setRole] = useState<Role>("REPORTER");
+  const [session, setSession] = useState<DemoSession | null>(() => loadDemoSession(window.localStorage));
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [lastCreated, setLastCreated] = useState<{ id: string; requestNumber: string } | null>(null);
+  const actor = resolveDemoSession(session);
 
   function refresh() { setRefreshTrigger((n) => n + 1); }
+
+  if (!actor) {
+    return (
+      <LoginPage
+        onLogin={(nextSession) => {
+          saveDemoSession(window.localStorage, nextSession);
+          setSession(nextSession);
+          setSelectedId(null);
+          setLastCreated(null);
+          refresh();
+        }}
+      />
+    );
+  }
 
   function handleCreated(id: string, requestNumber: string) {
     setLastCreated({ id, requestNumber });
@@ -33,12 +55,14 @@ export default function App() {
     refresh();
   }
 
-  function handleRoleChange(newRole: Role) {
-    setRole(newRole);
+  function handleLogout() {
+    clearDemoSession(window.localStorage);
+    setSession(null);
     setSelectedId(null);
     setLastCreated(null);
-    refresh();
   }
+
+  const role = actor.role;
 
   const isReporter = role === "REPORTER";
   const isAdmin = role === "ADMINISTRATOR";
@@ -54,7 +78,16 @@ export default function App() {
             <span className="app-logo-title">Campus Service</span>
             <span className="app-logo-subtitle">Sistem Permintaan Layanan Kampus</span>
           </div>
-          <RoleSelector currentRole={role} onChange={handleRoleChange} />
+          <div className="session-summary" aria-label="Pengguna aktif">
+            <div>
+              <span className="session-summary-label">Logged in as</span>
+              <strong>{actor.displayName}</strong>
+              <span>{actor.role} / {actor.id}</span>
+            </div>
+            <button className="btn btn-secondary btn-sm" type="button" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
         </div>
       </header>
 
@@ -101,6 +134,9 @@ export default function App() {
                 <div>
                   <div className="sidebar-role-badge">{SEEDED_ACTORS[role].role}</div>
                 </div>
+                <p style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--color-primary)" }}>
+                  {actor.displayName}
+                </p>
                 <p className="sidebar-description">{ROLE_DESCRIPTIONS[role]}</p>
                 {isReporter && lastCreated && (
                   <div className="sidebar-last-created">
