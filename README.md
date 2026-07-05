@@ -225,24 +225,24 @@ The implemented system satisfies the approved campus service request workflow, h
 
 The assignment reflection questions are in `AI_Assisted_Campus_Service_Project.md`, section `# 5. Pertanyaan Refleksi`.
 
-Questions to answer:
+Answers:
 
-1. Bagian mana yang paling membantu ketika menggunakan AI?
-2. Kesalahan apa yang paling sering dibuat AI?
-3. Fitur apa yang pernah dibuat AI tetapi tidak terdapat pada requirement?
-4. Test apa yang gagal dan apa penyebabnya?
-5. Perubahan apa yang dilakukan setelah human review?
-6. Mengapa output AI tidak boleh langsung dianggap benar?
-7. Bagaimana traceability membantu proyek?
-8. Apa yang akan diperbaiki jika proyek diulang?
+1. Bagian yang paling membantu ketika menggunakan AI adalah planning dan coding.
+2. Kesalahan yang paling sering muncul adalah ketika AI perlu mengakses atau memahami konteks GitHub/repository, sehingga tetap perlu dicek ulang oleh manusia.
+3. Tidak ada fitur di luar requirement yang dipertahankan. AI tetap konsisten mengikuti PRD dan scope project, terutama pada bagian code generation.
+4. Pada final verification tidak ada test yang gagal: 66 automated tests passed across 16 files. Kendala yang pernah dicatat adalah full Vitest rerun dapat terkena `workerd` memory pressure, sehingga itu diperlakukan sebagai keterbatasan tooling/environment, bukan kegagalan workflow utama.
+5. Setelah human review, beberapa flow diubah dan disesuaikan karena ada bagian yang ternyata kurang cocok untuk kebutuhan demo dan requirement.
+6. Output AI tidak boleh langsung dianggap benar karena AI bisa membuat kesalahan kecil yang sulit terlihat. Jika tidak diperiksa dengan teliti, masalah kecil seperti itu bisa perlahan merusak kualitas project.
+7. Traceability sangat membantu karena setiap action dapat ditelusuri dari requirement, design, issue, code, test, sampai evidence. Ini meminimalisir AI mengulang kesalahan yang sama.
+8. Jika project diulang, hal yang ingin diperbaiki adalah penggunaan `grill me` di awal, `grill with docs` di akhir, dan juga pada tahap design. Bagian-bagian itu penting untuk mempertajam keputusan, tetapi belum digunakan semaksimal mungkin.
 
 ## Submission Format
 
 ```text
 Nama: Dave Jordy Gerungan
-NIM: [isi NIM]
-Kelas: [isi kelas]
-Anggota tim: [isi anggota tim atau tulis "Individu"]
+NIM: 105022410105
+Kelas: Software Engineering Summer
+Anggota tim: -
 Repository URL: https://github.com/Jordyee/campus-service-project
 Cloudflare URL: https://campus-service-project.gerungan-dj.workers.dev
 Commit terakhir: [isi hash commit terakhir dari branch final saat pengumpulan]
