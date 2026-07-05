@@ -74,6 +74,8 @@ export default function App() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [topbarSearch, setTopbarSearch] = useState("");
   const actor = resolveDemoSession(session);
+  const role = actor?.role;
+  const navItems = useMemo(() => (role ? ROLE_NAV[role] : []), [role]);
 
   function refresh() {
     setRefreshTrigger((n) => n + 1);
@@ -101,17 +103,6 @@ export default function App() {
     setSelectedId(id);
     refresh();
   }
-
-  if (!actor) {
-    return <LoginPage onLogin={handleLogin} />;
-  }
-
-  const role = actor.role;
-  const isReporter = role === "REPORTER";
-  const isAdmin = role === "ADMINISTRATOR";
-  const isTech = role === "TECHNICIAN";
-  const isManager = role === "FACILITY_MANAGER";
-  const navItems = useMemo(() => ROLE_NAV[role], [role]);
 
   useEffect(() => {
     setActiveSection(navItems[0]?.targetId ?? null);
@@ -145,6 +136,15 @@ export default function App() {
     setActiveSection(targetId);
     document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+
+  if (!actor || !role) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
+
+  const isReporter = role === "REPORTER";
+  const isAdmin = role === "ADMINISTRATOR";
+  const isTech = role === "TECHNICIAN";
+  const isManager = role === "FACILITY_MANAGER";
 
   return (
     <div className="app-shell">
