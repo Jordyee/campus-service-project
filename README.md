@@ -245,7 +245,7 @@ Kelas: Software Engineering Summer
 Anggota tim: -
 Repository URL: https://github.com/Jordyee/campus-service-project
 Cloudflare URL: https://campus-service-project.gerungan-dj.workers.dev
-Commit terakhir: 321b7cb
+Commit terakhir: 66e6584
 Jumlah test: 66 automated tests across 16 files
 AI yang digunakan: OpenAI ChatGPT / Codex
 Known limitations:
